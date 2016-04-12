@@ -1,2 +1,2 @@
-# GroceryListApp
-CS190 Grocery List App
+# FoodTinder
+CS190 Food Tinder App
