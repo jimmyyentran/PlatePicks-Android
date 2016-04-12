@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+    <TextView
+        android:id="@+id/content_path"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/content_cache_summary_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/content_cache_summary_text" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp">
+        <TextView
+            android:id="@+id/content_cache_limit_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="58dp"
+            android:layout_marginRight="34dp"
+            android:layout_marginEnd="34dp"
+            android:layout_alignParentTop="true"
+            android:text="@string/content_cache_limit_text" />
+        <TextView
+            android:id="@+id/content_cache_use_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="58dp"
+            android:layout_marginRight="34dp"
+            android:layout_marginEnd="34dp"
+            android:layout_toRightOf="@id/content_cache_limit_label"
+            android:layout_toEndOf="@id/content_cache_limit_label"
+            android:text="@string/content_cache_use_text" />
+        <TextView
+            android:id="@+id/content_cache_available_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="58dp"
+            android:layout_marginRight="34dp"
+            android:layout_marginEnd="34dp"
+            android:layout_toRightOf="@id/content_cache_use_label"
+            android:layout_toEndOf="@id/content_cache_use_label"
+            android:text="@string/content_cache_available_text" />
+        <TextView
+            android:id="@+id/content_cache_pinned_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="58dp"
+            android:layout_toRightOf="@id/content_cache_available_label"
+            android:layout_toEndOf="@id/content_cache_available_label"
+            android:text="@string/content_cache_pinned_text" />
+        <TextView
+            android:id="@+id/content_cache_limit_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/content_cache_limit_label"
+            android:layout_alignLeft="@id/content_cache_limit_label"
+            android:layout_alignStart="@id/content_cache_limit_label" />
+        <TextView
+            android:id="@+id/content_cache_use_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/content_cache_use_label"
+            android:layout_alignLeft="@id/content_cache_use_label"
+            android:layout_alignStart="@id/content_cache_use_label" />
+        <TextView
+            android:id="@+id/content_cache_available_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/content_cache_available_label"
+            android:layout_alignLeft="@id/content_cache_available_label"
+            android:layout_alignStart="@id/content_cache_available_label" />
+        <TextView
+            android:id="@+id/content_cache_pinned_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/content_cache_pinned_label"
+            android:layout_alignLeft="@id/content_cache_pinned_label"
+            android:layout_alignStart="@id/content_cache_pinned_label" />
+    </RelativeLayout>
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
+    </ListView>
+</LinearLayout>

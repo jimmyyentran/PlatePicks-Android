@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="content_context_menu_refresh" type="id"/>
+  <item name="content_context_menu_download_recent" type="id"/>
+  <item name="content_context_menu_clear_cache" type="id"/>
+  <item name="content_context_menu_set_cache_size" type="id"/>
+  <item name="content_context_menu_pin" type="id"/>
+  <item name="content_context_menu_unpin" type="id"/>
+  <item name="content_context_menu_delete_local" type="id"/>
+  <item name="content_context_menu_open" type="id"/>
+  <item name="content_context_menu_download" type="id"/>
+  <item name="content_context_menu_download_latest" type="id"/>
+  <item name="content_context_menu_download_pin" type="id"/>
+</resources>

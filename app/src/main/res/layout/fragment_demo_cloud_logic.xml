@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:layout_margin="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="FUNCTION"
+        android:id="@+id/cloudLogic_textView_function"
+        android:layout_marginTop="5dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text|textNoSuggestions"
+        android:ems="10"
+        android:id="@+id/cloudLogic_editText_function"
+        android:layout_gravity="center_horizontal"
+        android:text=""
+        android:background="@android:drawable/editbox_background_normal"
+        android:imeOptions="actionDone"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/cloud_logic_request"
+        android:id="@+id/cloudLogic_textView_request"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textNoSuggestions"
+        android:singleLine="false"
+        android:ems="10"
+        android:id="@+id/cloudLogic_editText_request"
+        android:layout_gravity="center_horizontal"
+        android:lines="6"
+        android:text=""
+        android:background="@android:drawable/editbox_background_normal"
+        android:imeOptions="actionNone"
+        />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cloud_logic_reset"
+            android:id="@+id/cloudLogic_button_reset"
+            android:layout_gravity="left" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cloud_logic_invoke"
+            android:id="@+id/cloudLogic_button_invoke"
+            android:layout_gravity="right" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/cloud_logic_result"
+        android:id="@+id/cloudLogic_textView_result"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textNoSuggestions"
+        android:ems="10"
+        android:id="@+id/cloudLogic_editText_result"
+        android:layout_gravity="center_horizontal"
+        android:lines="6"
+        android:text=""
+        android:background="@android:drawable/editbox_background_normal"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        />
+</LinearLayout>
