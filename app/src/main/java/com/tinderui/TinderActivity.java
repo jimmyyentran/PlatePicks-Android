@@ -6,6 +6,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.foodtinder.R;
@@ -16,15 +18,41 @@ import com.foodtinder.R;
 public class TinderActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
+    /* onCreate():
+     * First function called by Android when creating an activity
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.activity_tinderui);
 
+        /* Toolbar: The red bar at the top of the app
+         * Will contain our heart-shaped like button and last-recently-liked button */
         setupToolbar();
-
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Food Tinder");
+
+        /* Yes and No Buttons:
+         * Finding reference to buttons in xml layout to keep as objects in Java */
+        Button noButton = (Button) findViewById(R.id.button_no);
+        Button yesButton = (Button) findViewById(R.id.button_yes);
+
+        /* On Click Listeners:
+         * Functions that are called whenever the user clicks on the buttons */
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TinderActivity.this, "I clicked No!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

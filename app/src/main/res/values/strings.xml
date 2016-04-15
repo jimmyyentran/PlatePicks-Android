@@ -16,6 +16,7 @@
   <string name="contentDescription_tinder">Image of suggested food</string>
 
   <string name="action_like_list">Like list</string>
+  <string name="action_last_liked">Last liked image of food</string>
 
   <!-- REQUIRED FOR GENERAL APP FUNCTIONALITY - YOU MAY WANT TO KEEP THESE -->
 

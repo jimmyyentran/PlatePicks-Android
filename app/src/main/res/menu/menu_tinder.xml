@@ -5,4 +5,8 @@
         android:id="@+id/item_like_list"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="ifRoom"/>
+    <item android:title="@string/action_last_liked"
+        android:id="@+id/item_last_liked"
+        android:icon="@android:drawable/ic_input_get"
+        app:showAsAction="ifRoom"/>
 </menu>
