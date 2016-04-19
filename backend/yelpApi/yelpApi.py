@@ -1,7 +1,8 @@
-from yelp.client import Client
-from yelp.oauth1_authenticator import Oauth1Authenticator
 import io
 import json
+from pprint import pprint
+from yelp.client import Client
+from yelp.oauth1_authenticator import Oauth1Authenticator
 
 params = {
     'lang': 'en'
@@ -13,6 +14,10 @@ with io.open('config_secret.json') as cred:
     client = Client(auth)
     response = client.search('San Francisco', **params)
 
+# print full object attribute of first object
+pprint(vars(response.businesses[0]))
+
+# print all business id's
 for bus in response.businesses:
     print (bus.id)
 
