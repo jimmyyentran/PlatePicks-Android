@@ -3,6 +3,7 @@
   <!-- CUSTOMIZE THESE FOR YOUR APP -->
 
   <string name="app_name">Chowder (like Tinder)</string>
+  <string name="liked_list">Liked List</string>
   <!-- This can be anything, but it should be unique to the app. -->
   <string name="content_file_provider_authority">com.mysampleapp.fileprovider</string>
   <!-- Suffix after '-' must be the app package name as specified in the build.gradle file. This

@@ -50,4 +50,5 @@ dependencies {
     compile('com.amazonaws:aws-android-sdk-mobileanalytics:2.2.11')
     compile('com.amazonaws:aws-android-sdk-lambda:2.2.11')
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

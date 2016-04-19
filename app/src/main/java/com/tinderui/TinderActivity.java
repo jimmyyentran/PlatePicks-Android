@@ -1,5 +1,6 @@
 package com.tinderui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -65,7 +66,8 @@ public class TinderActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.item_like_list) {
-            Toast.makeText(this, "Like list", Toast.LENGTH_SHORT).show();
+            Intent listbutton = new Intent(this, LikedListActivity.class);
+            startActivity(listbutton);
         }
 
         return super.onOptionsItemSelected(item);

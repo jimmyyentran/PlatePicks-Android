@@ -6,7 +6,8 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tomato_red"
+        android:backgroundTint="#b12727"
+        android:background="#b12727"
         android:id="@+id/toolbar_tinder"/>
 
     <FrameLayout
