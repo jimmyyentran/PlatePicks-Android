@@ -4,6 +4,9 @@ from pprint import pprint
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 
+#  class YelpAPI(object):
+    #  def __init__(self, )
+
 params = {
     'lang': 'en'
 }
