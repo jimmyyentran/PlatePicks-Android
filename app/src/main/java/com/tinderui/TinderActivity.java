@@ -7,10 +7,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.foodtinder.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by pokeforce on 4/12/16.
@@ -27,6 +30,17 @@ public class TinderActivity extends AppCompatActivity {
 
         /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.activity_tinderui);
+
+
+        ArrayList<String> data = new ArrayList<>();
+        data.add("This");
+        data.add("Eliza");
+        data.add("Jordan");
+        data.add("Alyza");
+        data.add("Divvy");
+        data.add("Jimmy");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_icon_text_with_subtitle, data);
 
         /* Toolbar: The red bar at the top of the app
          * Will contain our heart-shaped like button and last-recently-liked button */
@@ -55,6 +69,8 @@ public class TinderActivity extends AppCompatActivity {
         });
     }
 
+    /* onCreateOptionsMenu():
+     * Creates the menu by loading the items in the xml into the toolbar */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -62,6 +78,8 @@ public class TinderActivity extends AppCompatActivity {
         return true;
     }
 
+    /* OnOptionsItemSelected():
+     * The function that is called when a menu option is clicked */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.item_like_list) {
@@ -71,6 +89,9 @@ public class TinderActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /* setupToolbar():
+     * Fetches toolbar from loaded xml file and sets as the "action bar" (what Android calls the
+     * top bar. Toolbar is a new class with extra features.) */
     void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar_tinder);
         setSupportActionBar(toolbar);
