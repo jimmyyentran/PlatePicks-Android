@@ -22,25 +22,12 @@
         android:id="@+id/toolbar_tinder"/>
 
     <!--Container for Tinder Images-->
-    <FrameLayout
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="5">
-
-        <!--Square images (custom ImageView class in tinderui/support java folder)-->
-        <com.tinderui.support.SquareImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/imageview_tinder"
-            android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:contentDescription="@string/contentDescription_tinder"
-            android:src="@drawable/main_screen_no_checkers"
-            android:scaleType="centerInside"
-            android:background="#c8000000" />
-    </FrameLayout>
+        android:layout_weight="5"
+        android:id="@+id/viewPager_images"/>
 
     <!--Container for Yes/No buttons-->
     <RelativeLayout

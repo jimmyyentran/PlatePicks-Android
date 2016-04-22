@@ -1,6 +1,10 @@
 package com.tinderui;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -57,6 +61,11 @@ public class TinderActivity extends AppCompatActivity {
                 Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        /* ViewPager:
+         * A view that enables swiping images left and right */
+        ViewPager imagePager = (ViewPager) findViewById(R.id.viewPager_images);
+        imagePager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
     }
 
     /* onCreateOptionsMenu():
@@ -87,8 +96,31 @@ public class TinderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+    /* ImagePagerAdapter:
+     * Feeds ViewPager the imageViews for its pages */
+    class ImagePagerAdapter extends FragmentStatePagerAdapter {
+        public ImagePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        /* getItem():
+         * Create SwipeImageFragment object, then give it the position as an argument to determine
+         * which picture to display for that fragment. Different arguments will be used for images
+         * from the internet. */
+        @Override
+        public Fragment getItem(int position) {
+            SwipeImageFragment imageFragment = new SwipeImageFragment();
+            Bundle arguments = new Bundle();
+
+            arguments.putInt(SwipeImageFragment.INDEX, position);
+            imageFragment.setArguments(arguments);
+
+            return imageFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
     }
 }

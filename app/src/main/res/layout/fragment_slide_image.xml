@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tinderui.support.SquareImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/imageview_tinder"
+    android:layout_gravity="center"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:contentDescription="@string/contentDescription_tinder"
+    android:src="@drawable/main_screen_no_checkers"
+    android:scaleType="centerInside"
+    android:background="#c8000000" />
