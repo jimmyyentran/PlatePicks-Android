@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,17 +31,6 @@ public class TinderActivity extends AppCompatActivity {
 
         /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.activity_tinderui);
-
-
-        ArrayList<String> data = new ArrayList<>();
-        data.add("This");
-        data.add("Eliza");
-        data.add("Jordan");
-        data.add("Alyza");
-        data.add("Divvy");
-        data.add("Jimmy");
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_icon_text_with_subtitle, data);
 
         /* Toolbar: The red bar at the top of the app
          * Will contain our heart-shaped like button and last-recently-liked button */
@@ -95,5 +85,10 @@ public class TinderActivity extends AppCompatActivity {
     void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar_tinder);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 }
