@@ -24,7 +24,7 @@ public class SwipeImageFragment extends Fragment {
         if (getArguments() != null)
             index = getArguments().getInt(INDEX);
 
-        View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, true);
+        View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
         ImageView foodPicture = (ImageView) fragmentView.findViewById(R.id.imageview_tinder);
 
         if (index == 0) foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
