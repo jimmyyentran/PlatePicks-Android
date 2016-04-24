@@ -47,7 +47,7 @@ public class TinderActivity extends AppCompatActivity {
 
         /* Tinder-like image:
          * Finding reference to SquareImageView in xml layout */
-        SquareImageView foodPic = (SquareImageView) findViewById(R.id.imageview_tinder);
+        final SquareImageView foodPic = (SquareImageView) findViewById(R.id.imageview_tinder);
 
         /* On Click Listeners:
          * Functions that are called whenever the user clicks on the buttons or image*/
@@ -82,14 +82,16 @@ public class TinderActivity extends AppCompatActivity {
     }
 
     /* OnOptionsItemSelected():
-     * The function that is called when a menu option is clicked */
+     * The function that is called when a menu option is clicked. If true is returned, we should
+     * handle the menu click here. If false, Android will try to handle it.*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.item_like_list) {
             Toast.makeText(this, "Like list", Toast.LENGTH_SHORT).show();
+            return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     /* setupToolbar():
