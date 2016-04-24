@@ -4,6 +4,7 @@
 
   <!--App name-->
   <string name="app_name">Chowder (like Tinder)</string>
+  <string name="about_food">Activity for information about food</string>
 
   <!--Text for xml views-->
   <string name="yes_button">Yes</string>
