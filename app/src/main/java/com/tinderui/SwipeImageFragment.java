@@ -27,8 +27,11 @@ public class SwipeImageFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
         ImageView foodPicture = (ImageView) fragmentView.findViewById(R.id.imageview_tinder);
 
-        if (index == 0) foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
-        else foodPicture.setImageResource(R.drawable.com_facebook_button_icon);
+        if (index == 1) {
+            foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
+            foodPicture.setBackgroundColor(0xc8000000);
+        } else
+            foodPicture.setImageResource(R.drawable.com_facebook_button_background);
         
         return fragmentView;
     }

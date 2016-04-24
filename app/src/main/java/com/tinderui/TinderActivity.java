@@ -7,12 +7,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -64,8 +63,17 @@ public class TinderActivity extends AppCompatActivity {
 
         /* ViewPager:
          * A view that enables swiping images left and right */
-        ViewPager imagePager = (ViewPager) findViewById(R.id.viewPager_images);
+        final ViewPager imagePager = (ViewPager) findViewById(R.id.viewPager_images);
         imagePager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
+
+        /* Ensure that we start on page 1. The goal is to display swiping and use a viewpager
+         * to imitate Tinder's image animation. The issue with this is that viewpager does not have
+         * an unlimited number of imageViews. It's like a list - reach the end, and don't loop back
+         * to the beginning = a limited number of times we can swipe left or right. More on this
+         * with the onPageChangeListener code. */
+        imagePager.setCurrentItem(1, false);
+
+//        imagePager.addOnPageChangeListener(new ImageChangeListener(imagePager));
     }
 
     /* onCreateOptionsMenu():
@@ -120,7 +128,58 @@ public class TinderActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
+        }
+    }
+
+    /* To use viewpager, we need to show an empty page temporarily when the user swipes, change the
+     * second page to the correct image, then jump to the other empty page we have (0 or 2) and
+     * animate a page change back to two. */
+    enum PageState { NOT_CHANGING, ON_SWIPE, BACK_TO_CENTER };
+
+    class ImageChangeListener implements ViewPager.OnPageChangeListener {
+        ViewPager imagePager;
+        PageState state = PageState.NOT_CHANGING;
+
+        public ImageChangeListener(ViewPager imagePager) {
+            this.imagePager = imagePager;
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            // FIXME
+            // States to consider
+            // Not changing -> Change to 0 or 2 -> Change to 1 -> No change
+
+            switch (state) {
+                case NOT_CHANGING:
+                    Log.d("TinderActivity", "changed page on swipe");
+                    state = PageState.ON_SWIPE;
+
+                    if (position == 0) imagePager.setCurrentItem(2, false);
+                    else if (position == 2) imagePager.setCurrentItem(0, false);
+
+                    break;
+                case ON_SWIPE:
+                    Log.d("TinderActivity", "back to center");
+                    state = PageState.BACK_TO_CENTER;
+                    imagePager.setCurrentItem(1, true);
+                    break;
+                case BACK_TO_CENTER:
+                    Log.d("TinderActivity", "not changing");
+                    state = PageState.NOT_CHANGING;
+                    break;
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
         }
     }
 }

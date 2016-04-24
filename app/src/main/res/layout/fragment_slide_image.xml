@@ -7,6 +7,4 @@
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
     android:contentDescription="@string/contentDescription_tinder"
-    android:src="@drawable/main_screen_no_checkers"
-    android:scaleType="centerInside"
-    android:background="#c8000000" />
+    android:scaleType="centerInside" />
