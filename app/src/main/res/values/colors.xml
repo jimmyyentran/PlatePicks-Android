@@ -1,6 +1,8 @@
 <resources>
+    <!--Daniel: I made this color up. Look at Jordan's ppt for color codes-->
     <color name="tomato_red">#FF9F0000</color>
 
+    <!--Amazon colors-->
     <color name="top_bar_background">#F58535</color>
     <color name="splash_text">#F58535</color>
     <color name="splash_background">#FFFFFF</color>

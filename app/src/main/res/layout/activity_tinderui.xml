@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Container for whole layout-->
+
+<!--Notice that some child containers have height=0dp. For LinearLayout, specifying a-->
+<!--layout weight and setting height/width to 0dp sets height/width to a fraction of -->
+<!--of the screen. Like setting weights for two containers, 5 and 5, would split     -->
+<!--height or width in half.                                                         -->
+
+<!--The proportion can be set however one wants (3 and 9, 2 & 8 & 14, etc.). However,-->
+<!--objects that have a set height/width (eg. the toolbar) will still be its stated  -->
+<!--height. So in this layout, FrameLayout and RelativeLayout are splitting the      -->
+<!--remainder of the screen.                                                         -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--Top bar-->
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -10,12 +22,14 @@
         android:background="#b12727"
         android:id="@+id/toolbar_tinder"/>
 
+    <!--Container for Tinder Images-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="5">
 
+        <!--Square images (custom ImageView class in tinderui/support java folder)-->
         <com.tinderui.support.SquareImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -29,6 +43,7 @@
             android:background="#c8000000" />
     </FrameLayout>
 
+    <!--Container for Yes/No buttons-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -36,6 +51,7 @@
         android:layout_weight="1"
         android:background="@color/tomato_red">
 
+        <!--A "nothing" view. Useful for layout tricks-->
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -43,6 +59,7 @@
             android:layout_centerHorizontal="true"
             android:id="@+id/space_middle" />
 
+        <!--No Button, left of space-->
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -58,6 +75,7 @@
             android:textSize="@dimen/abc_text_size_display_1_material"
             android:textColor="@color/tomato_red" />
 
+        <!--Yes Button, right of space-->
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
