@@ -61,19 +61,16 @@ public class TinderActivity extends AppCompatActivity {
             }
         });
 
-        /* ViewPager:
-         * A view that enables swiping images left and right */
+        /* ViewPager: A view that enables swiping images left and right
+         * Has 3 pages, 0-2 (reason is explained in class definition below). */
         final ViewPager imagePager = (ViewPager) findViewById(R.id.viewPager_images);
         imagePager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
 
-        /* Ensure that we start on page 1. The goal is to display swiping and use a viewpager
-         * to imitate Tinder's image animation. The issue with this is that viewpager does not have
-         * an unlimited number of imageViews. It's like a list - reach the end, and don't loop back
-         * to the beginning = a limited number of times we can swipe left or right. More on this
-         * with the onPageChangeListener code. */
+        /* Ensure that we start on page 1, the middle page with the image. */
         imagePager.setCurrentItem(1, false);
 
-//        imagePager.addOnPageChangeListener(new ImageChangeListener(imagePager));
+        /* Listen for change in swipe animation's current state */
+        imagePager.addOnPageChangeListener(new ImageChangeListener(imagePager));
     }
 
     /* onCreateOptionsMenu():
@@ -132,14 +129,19 @@ public class TinderActivity extends AppCompatActivity {
         }
     }
 
-    /* To use viewpager, we need to show an empty page temporarily when the user swipes, change the
-     * second page to the correct image, then jump to the other empty page we have (0 or 2) and
-     * animate a page change back to two. */
-    enum PageState { NOT_CHANGING, ON_SWIPE, BACK_TO_CENTER };
-
-    class ImageChangeListener implements ViewPager.OnPageChangeListener {
+    /* Algorithm for Tinder Image Swiping Infinitely
+     *
+     * The goal is to display swiping and use a viewpager to imitate Tinder's image animation. The
+     * issue with this is that viewpager does not let us loop pages. It's like a list - reach the
+     * end, and don't loop back to the beginning = a limited number of times we can swipe left or
+     * right.
+     *
+     * To get around this, we need to show an empty page temporarily when the user swipes,
+     * change the second page to the correct image, then jump to the other empty page we have (0 or
+     * 2) and animate a page change back to 1. This fakes a new image coming in from the correct
+     * side. */
+    class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         ViewPager imagePager;
-        PageState state = PageState.NOT_CHANGING;
 
         public ImageChangeListener(ViewPager imagePager) {
             this.imagePager = imagePager;
@@ -152,34 +154,28 @@ public class TinderActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
-            // FIXME
-            // States to consider
-            // Not changing -> Change to 0 or 2 -> Change to 1 -> No change
 
-            switch (state) {
-                case NOT_CHANGING:
-                    Log.d("TinderActivity", "changed page on swipe");
-                    state = PageState.ON_SWIPE;
-
-                    if (position == 0) imagePager.setCurrentItem(2, false);
-                    else if (position == 2) imagePager.setCurrentItem(0, false);
-
-                    break;
-                case ON_SWIPE:
-                    Log.d("TinderActivity", "back to center");
-                    state = PageState.BACK_TO_CENTER;
-                    imagePager.setCurrentItem(1, true);
-                    break;
-                case BACK_TO_CENTER:
-                    Log.d("TinderActivity", "not changing");
-                    state = PageState.NOT_CHANGING;
-                    break;
-            }
         }
 
+        /* onPageScrollStateChanged()
+         * Tracks what state the swiping animation is in.
+         * 0 -> idle, 1 -> dragging, 2 -> settling */
         @Override
         public void onPageScrollStateChanged(int state) {
+            /* Only do this animation if swiping away from the image */
+            if (imagePager.getCurrentItem() != 1) {
+                int otherPage;
 
+                /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
+                if (imagePager.getCurrentItem() == 0) otherPage = 2;
+                else otherPage = 0;
+
+                /* The "new image" animation. Only do it if an animation is idle. */
+                if (state == 0) {
+                    imagePager.setCurrentItem(otherPage, false);
+                    imagePager.setCurrentItem(1, true);
+                }
+            }
         }
     }
 }
