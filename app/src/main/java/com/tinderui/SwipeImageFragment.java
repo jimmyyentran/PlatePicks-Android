@@ -31,7 +31,7 @@ public class SwipeImageFragment extends Fragment {
             foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
             foodPicture.setBackgroundColor(0xc8000000);
         } else
-            foodPicture.setImageResource(R.drawable.com_facebook_button_background);
+            foodPicture.setImageResource(R.drawable.com_facebook_close);
         
         return fragmentView;
     }
