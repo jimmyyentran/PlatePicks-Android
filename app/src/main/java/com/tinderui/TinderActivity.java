@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.foodtinder.R;
+import com.foodtinder.util.AWSIntegrator;
 
 import java.util.ArrayList;
 
@@ -55,9 +56,12 @@ public class TinderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
+
             }
         });
+        AWSIntegrator.call("hello-world", "{\n  \"key1\" : \"value1\",\n  \"key2\" : \"value2\",\n  \"key3\" : \"value3\"\n}");
     }
+
 
     /* onCreateOptionsMenu():
      * Creates the menu by loading the items in the xml into the toolbar */
