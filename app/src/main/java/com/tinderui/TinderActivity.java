@@ -13,11 +13,28 @@ import android.widget.Toast;
 
 import com.foodtinder.R;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Created by pokeforce on 4/12/16.
  */
 public class TinderActivity extends AppCompatActivity {
     private Toolbar toolbar;
+
+    /* makeQueue():
+     * A queue (using a LinkedList) storing images utilized by onCreate()
+     */
+    public static void makeQueue(String[] args) {
+        Queue queue = new LinkedList();
+
+        // add elements
+
+
+        // remove elements
+
+
+    }
 
     /* onCreate():
      * First function called by Android when creating an activity
