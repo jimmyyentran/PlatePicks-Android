@@ -79,11 +79,14 @@ public class TinderActivity extends AppCompatActivity {
             }
         });
 
+        /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
+         * calling networks requests in this activity (vs. a splash screen activity) */
         FrameLayout splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
+        splashScreen.setVisibility(View.VISIBLE);
         splashScreen.animate()
                 .alpha(0f)
                 .setStartDelay(3000)
-                .setListener(new mAnimatorListener(splashScreen));
+                .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
     }
 
     /* onCreateOptionsMenu():
@@ -194,6 +197,8 @@ public class TinderActivity extends AppCompatActivity {
         }
     }
 
+    /* Class to listen to the state of splash screen animation. Only uses onAnimationEnd() to know
+     * when the animation is finished. */
     class mAnimatorListener implements Animator.AnimatorListener {
         FrameLayout splashScreen;
 
@@ -206,6 +211,7 @@ public class TinderActivity extends AppCompatActivity {
 
         }
 
+        /* Removes splash screen to save memory (set to GONE) */
         @Override
         public void onAnimationEnd(Animator animation) {
             splashScreen.setVisibility(View.GONE);
