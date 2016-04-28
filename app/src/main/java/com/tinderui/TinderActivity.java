@@ -27,7 +27,7 @@ import java.util.Queue;
 public class TinderActivity extends AppCompatActivity {
     private Toolbar toolbar;
     ArrayList<String> data = new ArrayList<>();
-    int cnt = 0;
+    int cnt = 1;
 
 
     /* onCreate():
@@ -76,11 +76,6 @@ public class TinderActivity extends AppCompatActivity {
          * collecting all results from url lookups
          */
         Queue <Bitmap> imageCache = new LinkedList<>();
-
-
-
-
-
 
 
     }
