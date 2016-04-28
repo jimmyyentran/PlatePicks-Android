@@ -136,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupToolbar(savedInstanceState);
 
         setupNavigationMenu(savedInstanceState);
+
+
     }
 
     @Override

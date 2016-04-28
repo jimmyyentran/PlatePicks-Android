@@ -39,6 +39,7 @@
   <string name="main_nav_menu_default_user_text">\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020</string>
   <string name="content_helper_error_title">No Content Viewer</string>
   <string name="content_helper_error_no_app">No Viewing App exists for content type \'%s\'.</string>
+  <string name="liked_list_label">Activity for the liked list</string>
   
   <!-- USED BY DEMO FEATURES ONLY - YOU CAN DISCARD THESE WITH THE DEMO FOLDER -->
 
@@ -127,4 +128,5 @@
   <string name="cloud_logic_invoke">INVOKE</string>
   <string name="cloud_logic_error_title">Error</string>
   <string name="cloud_logic_error_dismiss">Dismiss</string>
+  <string name="no">No</string>
 </resources>

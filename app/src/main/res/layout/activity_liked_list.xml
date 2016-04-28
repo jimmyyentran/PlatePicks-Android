@@ -6,13 +6,13 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#b12727"
+        android:background="@color/tomato_red"
         android:id="@+id/toolbar_likelist"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listview_liked"
-        android:backgroundTint="#5c5c5c"
-        android:background="#521919" />
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>

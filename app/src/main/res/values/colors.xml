@@ -14,4 +14,5 @@
     <color name="nav_drawer_no_user_background">#AAAAAA</color>
     <color name="dark_content_text">#333333</color>
     <color name="instructions_list_border_color">#FFDDDDDD</color>
+    <color name="main_red">#bf3b3b</color>
 </resources>
