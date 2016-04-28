@@ -46,8 +46,8 @@ class Crawler(object):
                             fake = fake[fake.find("States.") + 7:]
                             # removes majority of the bad comments
                             if " United States" not in fake:
-                                com.append(fake.rstrip())
-                                comPretty.append(parse.parse_name(fake.rstrip()))
+                                com.append(fake.rstrip()[1:])
+                                comPretty.append(parse.parse_name(fake.rstrip()[1:]))
                                 pics.append(link['src'])
                                 fake = link['src']
                                 fake = fake[fake.find("bphoto/") + 7:fake.rfind("/258s.jpg")]
@@ -57,16 +57,15 @@ class Crawler(object):
 # remove the first thing because it automatically catches it and is in a small size
         com.pop(0)
         comPretty.pop(0)
+        pics_id.pop(0)
         pics.pop(0)
-        information = []
-# prints the comments, pic_id and the url of the picture
-        for pic, coms, comsPretty, pic_id in zip(pics, com, comPretty, pics_id):
-# this is the python objecct contains pic_id the picture and the comment in that order
-            information.append([pic_id, pic, coms, comsPretty])
-            # print(coms)
-            # print(pic_id)
-            # print(pic)
-# prints the first 5 results from the restaurant
-        for i in range(5):
-            print(information[i])
 
+# prints the comments, pic_id and the url of the picture
+        #  for pic, coms, pic_id in zip(pics, com, pics_id):
+            #  print(coms)
+        for pic, coms, pic_id, comsPretty in zip(pics, com, pics_id, comPretty):
+            print(coms)
+            print(comsPretty)
+            print(pic_id)
+            print(pic)
+            print()

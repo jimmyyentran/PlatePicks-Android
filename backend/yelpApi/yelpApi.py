@@ -27,13 +27,14 @@ class Yelp_API(object):
 
 
 
+#Test Parameters
 params = {
         'term': 'asian', #general search
         'randomTest': 'd', #test if input random key
         'll': '33.7175, -117.8311', #long and latitude
-        'limit': 2, #number of businesses
+        'limit': 1, #number of businesses
         'radius_filter': 40000, #25 miles maximum
-        'category_filter': 'vietnamese', #pre-set categories
+        'category_filter': 'vietnamese,filipino', #pre-set categories
         'sort': 1 #distance
         }
 
