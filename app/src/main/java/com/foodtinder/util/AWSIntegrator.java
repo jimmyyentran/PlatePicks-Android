@@ -34,6 +34,7 @@ public class AWSIntegrator {
 
         final String functionName = fName;
         final String requestPayload = rPayload;
+        String output = "testHardCode";
 
         new AsyncTask<Void, Void, InvokeResult>() {
             @Override

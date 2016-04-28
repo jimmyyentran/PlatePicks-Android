@@ -38,3 +38,6 @@ captures/
 .DS_Store
 /build
 /captures
+
+# Python
+__pycache__/
