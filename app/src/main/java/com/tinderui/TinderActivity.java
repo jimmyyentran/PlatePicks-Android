@@ -1,5 +1,6 @@
 package com.tinderui;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,9 +14,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.foodtinder.R;
+import com.tinderui.support.CustomViewPager;
 
 import java.util.ArrayList;
 
@@ -23,7 +26,6 @@ import java.util.ArrayList;
  * Created by pokeforce on 4/12/16.
  */
 public class TinderActivity extends AppCompatActivity {
-    private Toolbar toolbar;
 
     /* onCreate():
      * First function called by Android when creating an activity
@@ -41,6 +43,18 @@ public class TinderActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Food Tinder");
 
+        /* ViewPager: A view that enables swiping images left and right
+         * Has 3 pages, 0-2 (reason is explained in class definition below). */
+        final CustomViewPager imagePager = (CustomViewPager) findViewById(R.id.viewPager_images);
+        imagePager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
+
+        /* Ensure that we start on page 1, the middle page with the image. */
+        imagePager.setCurrentItem(1, false);
+
+        /* Listen for change in swipe animation's current state */
+        final ImageChangeListener changeListener = new ImageChangeListener(imagePager);
+        imagePager.addOnPageChangeListener(changeListener);
+
         /* Yes and No Buttons:
          * Finding reference to buttons in xml layout to keep as objects in Java */
         Button noButton = (Button) findViewById(R.id.button_no);
@@ -51,26 +65,25 @@ public class TinderActivity extends AppCompatActivity {
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TinderActivity.this, "I clicked No!", Toast.LENGTH_SHORT).show();
+                if (imagePager.getCurrentItem() == 1
+                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
+                    imagePager.setCurrentItem(2);
             }
         });
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
+                if (imagePager.getCurrentItem() == 1
+                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
+                    imagePager.setCurrentItem(0);
             }
         });
 
-        /* ViewPager: A view that enables swiping images left and right
-         * Has 3 pages, 0-2 (reason is explained in class definition below). */
-        final ViewPager imagePager = (ViewPager) findViewById(R.id.viewPager_images);
-        imagePager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
-
-        /* Ensure that we start on page 1, the middle page with the image. */
-        imagePager.setCurrentItem(1, false);
-
-        /* Listen for change in swipe animation's current state */
-        imagePager.addOnPageChangeListener(new ImageChangeListener(imagePager));
+        FrameLayout splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
+        splashScreen.animate()
+                .alpha(0f)
+                .setStartDelay(3000)
+                .setListener(new mAnimatorListener(splashScreen));
     }
 
     /* onCreateOptionsMenu():
@@ -97,7 +110,7 @@ public class TinderActivity extends AppCompatActivity {
      * Fetches toolbar from loaded xml file and sets as the "action bar" (what Android calls the
      * top bar. Toolbar is a new class with extra features.) */
     void setupToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar_tinder);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_tinder);
         setSupportActionBar(toolbar);
     }
 
@@ -142,6 +155,7 @@ public class TinderActivity extends AppCompatActivity {
      * side. */
     class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         ViewPager imagePager;
+        public int state = ViewPager.SCROLL_STATE_IDLE;
 
         public ImageChangeListener(ViewPager imagePager) {
             this.imagePager = imagePager;
@@ -158,10 +172,11 @@ public class TinderActivity extends AppCompatActivity {
         }
 
         /* onPageScrollStateChanged()
-         * Tracks what state the swiping animation is in.
-         * 0 -> idle, 1 -> dragging, 2 -> settling */
+         * Tracks what state the swiping animation is in. */
         @Override
         public void onPageScrollStateChanged(int state) {
+            this.state = state;
+
             /* Only do this animation if swiping away from the image */
             if (imagePager.getCurrentItem() != 1) {
                 int otherPage;
@@ -171,11 +186,40 @@ public class TinderActivity extends AppCompatActivity {
                 else otherPage = 0;
 
                 /* The "new image" animation. Only do it if an animation is idle. */
-                if (state == 0) {
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
                     imagePager.setCurrentItem(otherPage, false);
                     imagePager.setCurrentItem(1, true);
                 }
             }
+        }
+    }
+
+    class mAnimatorListener implements Animator.AnimatorListener {
+        FrameLayout splashScreen;
+
+        mAnimatorListener(FrameLayout splashScreen) {
+            this.splashScreen = splashScreen;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            splashScreen.setVisibility(View.GONE);
+            splashScreen = null;
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
         }
     }
 }

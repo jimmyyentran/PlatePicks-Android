@@ -10,72 +10,91 @@
 <!--objects that have a set height/width (eg. the toolbar) will still be its stated  -->
 <!--height. So in this layout, FrameLayout and RelativeLayout are splitting the      -->
 <!--remainder of the screen.                                                         -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!--Top bar-->
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/tomato_red"
-        android:id="@+id/toolbar_tinder"/>
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:layout_gravity="center">
 
-    <!--Container for Tinder Images-->
-    <android.support.v4.view.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="5"
-        android:id="@+id/viewPager_images"/>
+        <!--Top bar-->
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/tomato_red"
+            android:id="@+id/toolbar_tinder"/>
 
-    <!--Container for Yes/No buttons-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:background="@color/tomato_red">
-
-        <!--A "nothing" view. Useful for layout tricks-->
-        <Space
-            android:layout_width="0dp"
+        <!--Container for Tinder Images-->
+        <com.tinderui.support.CustomViewPager
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/space_middle" />
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="5"
+            android:id="@+id/viewPager_images"/>
 
-        <!--No Button, left of space-->
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignRight="@id/space_middle"
-            android:layout_alignEnd="@id/space_middle"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:text="@string/no_button"
-            android:id="@+id/button_no"
-            android:textAllCaps="false"
-            android:textSize="@dimen/abc_text_size_display_1_material"
-            android:textColor="@color/tomato_red" />
+        <!--Container for Yes/No buttons-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:background="@color/tomato_red">
 
-        <!--Yes Button, right of space-->
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignLeft="@id/space_middle"
-            android:layout_alignStart="@id/space_middle"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:text="@string/yes_button"
-            android:id="@+id/button_yes"
-            android:textAllCaps="false"
-            android:textSize="@dimen/abc_text_size_display_1_material"
-            android:textColor="@color/tomato_red" />
-    </RelativeLayout>
-</LinearLayout>
+            <!--A "nothing" view. Useful for layout tricks-->
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/space_middle" />
+
+            <!--No Button, left of space-->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/space_middle"
+                android:layout_alignEnd="@id/space_middle"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/no_button"
+                android:id="@+id/button_no"
+                android:textAllCaps="false"
+                android:textSize="@dimen/abc_text_size_display_1_material"
+                android:textColor="@color/tomato_red" />
+
+            <!--Yes Button, right of space-->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignLeft="@id/space_middle"
+                android:layout_alignStart="@id/space_middle"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/yes_button"
+                android:id="@+id/button_yes"
+                android:textAllCaps="false"
+                android:textSize="@dimen/abc_text_size_display_1_material"
+                android:textColor="@color/tomato_red" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_red"
+        android:id="@+id/framelayout_splashScreen"
+        android:layout_gravity="center">
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/main_logo"
+            android:layout_gravity="center" />
+    </FrameLayout>
+</FrameLayout>
