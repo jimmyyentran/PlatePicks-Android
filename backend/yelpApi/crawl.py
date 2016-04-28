@@ -54,10 +54,15 @@ class Crawler:
 # remove the first thing because it automatically catches it and is in a small size
         com.pop(0)
         pics.pop(0)
-
+        information = []
 # prints the comments, pic_id and the url of the picture
         for pic, coms, pic_id in zip(pics, com, pics_id):
-            print(coms)
-            print(pic_id)
-            print(pic)
-            print()
+# this is the python objecct contains pic_id the picture and the comment in that order
+            information.append([pic_id, pic, coms])
+            # print(coms)
+            # print(pic_id)
+            # print(pic)
+# prints the first 5 results from the restaurant
+        for i in range(5):
+            print(information[i])
+
