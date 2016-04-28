@@ -1,6 +1,7 @@
 package com.tinderui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,38 +10,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.foodtinder.R;
 
-<<<<<<< HEAD
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-=======
-import java.util.ArrayList;
->>>>>>> origin
+
+
 
 /**
  * Created by pokeforce on 4/12/16.
  */
 public class TinderActivity extends AppCompatActivity {
     private Toolbar toolbar;
+    ArrayList<String> data = new ArrayList<>();
+    int cnt = 0;
 
-    /* makeQueue():
-     * A queue (using a LinkedList) storing images utilized by onCreate()
-     */
-    public static void makeQueue(String[] args) {
-        Queue queue = new LinkedList();
-
-        // add elements
-
-
-        // remove elements
-
-
-    }
 
     /* onCreate():
      * First function called by Android when creating an activity
@@ -71,12 +59,30 @@ public class TinderActivity extends AppCompatActivity {
                 Toast.makeText(TinderActivity.this, "I clicked No!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        /* when pressed, Item goes to LikedList */
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
+                String toAdd = "Food " + cnt;
+                data.add(toAdd);
+                cnt++;
             }
         });
+
+        /* Queue of bitmaps: storing images
+         * acting as a cache
+         * collecting all results from url lookups
+         */
+        Queue <Bitmap> imageCache = new LinkedList<>();
+
+
+
+
+
+
+
     }
 
     /* onCreateOptionsMenu():
@@ -94,6 +100,7 @@ public class TinderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.item_like_list) {
             Intent listbutton = new Intent(this, LikedListActivity.class);
+            listbutton.putExtra("whatever", data);
             startActivity(listbutton);
         }
 

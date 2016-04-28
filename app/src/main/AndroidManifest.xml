@@ -39,13 +39,11 @@
             </intent-filter>
         </activity>
 
-<<<<<<< HEAD
         <activity android:name="com.tinderui.LikedListActivity"
             android:label="@string/liked_list"/>
 
-=======
         <!--Amazon Activities-->
->>>>>>> origin
+
         <activity
             android:name="com.foodtinder.SplashActivity"
             android:label="@string/app_name"

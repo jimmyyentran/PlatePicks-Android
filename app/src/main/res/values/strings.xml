@@ -4,16 +4,8 @@
 
   <!--App name-->
   <string name="app_name">Chowder (like Tinder)</string>
-<<<<<<< HEAD
+
   <string name="liked_list">Liked List</string>
-  <!-- This can be anything, but it should be unique to the app. -->
-  <string name="content_file_provider_authority">com.mysampleapp.fileprovider</string>
-  <!-- Suffix after '-' must be the app package name as specified in the build.gradle file. This
-       is used by the com.amazonaws.mobile.downloader.query.DownloadQueueProvider class. -->
-  <string name="download_queue_provider_authority">com.amazonaws.mobile.downloader-com.amazon.mysampleapp</string>
-  <string name="facebook_app_id">477586705772225</string> 
-=======
->>>>>>> origin
 
   <!--Text for xml views-->
   <string name="yes_button">Yes</string>
