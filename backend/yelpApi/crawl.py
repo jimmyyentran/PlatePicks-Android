@@ -1,9 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 import urllib.parse
+from nameParser import NameParser
 
-class Crawler:
+class Crawler(object):
     def __init__(self, url):
+        parse = NameParser("unwantedWords.txt")
 
         #  new = input("Enter the url to crawl: ")
         #  url = new.rstrip()  removes any extra spaces
@@ -22,9 +24,9 @@ class Crawler:
         pics = []
         pics_id = []
         com = []
-        print(sz)
-        #  for i in range(sz):
-        for i in range(1):
+        comPretty = []
+        for i in range(sz):
+        #  for i in range(1):
             url.find("&start")
             url = url[:url.find("&start")] + "&start=" + str(30 * i)
             i += 1
@@ -45,6 +47,7 @@ class Crawler:
                             # removes majority of the bad comments
                             if " United States" not in fake:
                                 com.append(fake.rstrip())
+                                comPretty.append(parse.parse_name(fake.rstrip()))
                                 pics.append(link['src'])
                                 fake = link['src']
                                 fake = fake[fake.find("bphoto/") + 7:fake.rfind("/258s.jpg")]
@@ -53,11 +56,15 @@ class Crawler:
 # print(len(pics))
 # remove the first thing because it automatically catches it and is in a small size
         com.pop(0)
+        comPretty.pop(0)
         pics.pop(0)
 
 # prints the comments, pic_id and the url of the picture
-        for pic, coms, pic_id in zip(pics, com, pics_id):
+        #  for pic, coms, pic_id in zip(pics, com, pics_id):
+            #  print(coms)
+        for pic, coms, pic_id, comsPretty in zip(pics, com, pics_id, comPretty):
             print(coms)
+            print(comsPretty)
             print(pic_id)
             print(pic)
             print()

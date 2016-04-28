@@ -30,10 +30,10 @@ class Yelp_API(object):
 params = {
         'term': 'asian', #general search
         'randomTest': 'd', #test if input random key
-        'll': '33.95, -117.23', #long and latitude
-        'limit': 5, #number of businesses
+        'll': '33.7175, -117.8311', #long and latitude
+        'limit': 2, #number of businesses
         'radius_filter': 40000, #25 miles maximum
-        'category_filter': 'vietnamese,korean,filipino', #pre-set categories
+        'category_filter': 'vietnamese', #pre-set categories
         'sort': 1 #distance
         }
 
@@ -54,6 +54,7 @@ for bus in response.businesses:
 print("----------------------------------------------------")
 print("CRAWL")
 #  Crawler("https://www.yelp.com/biz/pho-vinam-riverside")
-Crawler("http://www.yelp.com/biz_photos/" + response.businesses[0].id +
+for bus in response.businesses:
+    Crawler("http://www.yelp.com/biz_photos/" + bus.id +
 "?tab=food&start=0")
 
