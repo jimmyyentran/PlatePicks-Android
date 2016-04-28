@@ -136,7 +136,7 @@ class Crawler(object):
 
 
 # nl = Crawler.no_limit("https://www.yelp.com/biz/arcade-coffee-roasters-riverside")
-l = Crawler.limit("https://www.yelp.com/biz/arcade-coffee-roasters-riverside",10)
+#l = Crawler.limit("https://www.yelp.com/biz/arcade-coffee-roasters-riverside",10)
 # print(len(nl))
-for ls in l:
-    print(ls)
+#for ls in l:
+#    print(ls)
