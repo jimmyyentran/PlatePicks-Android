@@ -1,6 +1,7 @@
 package com.tinderui;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.foodtinder.R;
 import com.tinderui.support.CustomViewPager;
+import com.tinderui.support.SquareImageView;
 
 import java.util.ArrayList;
 
@@ -60,8 +62,12 @@ public class TinderActivity extends AppCompatActivity {
         Button noButton = (Button) findViewById(R.id.button_no);
         Button yesButton = (Button) findViewById(R.id.button_yes);
 
+        /* Tinder-like image:
+         * Finding reference to SquareImageView in xml layout */
+        final SquareImageView foodPic = (SquareImageView) findViewById(R.id.imageview_tinder);
+
         /* On Click Listeners:
-         * Functions that are called whenever the user clicks on the buttons */
+         * Functions that are called whenever the user clicks on the buttons or image */
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +82,13 @@ public class TinderActivity extends AppCompatActivity {
                 if (imagePager.getCurrentItem() == 1
                         && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
                     imagePager.setCurrentItem(0);
+            }
+        });
+        foodPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent aboutPage = new Intent(TinderActivity.this, AboutFoodActivity.class);
+                startActivity(aboutPage);
             }
         });
 
@@ -99,14 +112,16 @@ public class TinderActivity extends AppCompatActivity {
     }
 
     /* OnOptionsItemSelected():
-     * The function that is called when a menu option is clicked */
+     * The function that is called when a menu option is clicked. If true is returned, we should
+     * handle the menu click here. If false, Android will try to handle it.*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.item_like_list) {
             Toast.makeText(this, "Like list", Toast.LENGTH_SHORT).show();
+            return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     /* setupToolbar():

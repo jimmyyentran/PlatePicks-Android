@@ -40,6 +40,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.tinderui.AboutFoodActivity"
+            android:label="@string/about_food" />
+
         <!--Amazon Activities-->
         <activity
             android:name="com.foodtinder.SplashActivity"
