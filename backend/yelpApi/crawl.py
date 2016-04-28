@@ -6,6 +6,8 @@ from nameParser import NameParser
 
 class Crawler(object):
     def no_limit(url):
+        parse = NameParser("unwantedWords.txt")
+
         # new = input("Enter the url to crawl: ")
         # url = new.rstrip()  # removes any extra spaces
         # edit url to get the pictures and only the foods
@@ -43,12 +45,12 @@ class Crawler(object):
                             fake = fake[fake.find("States.") + 7:]
                             # removes majority of the bad comments
                             if " United States" not in fake:
-                                com.append(fake.rstrip()[1:])
-                                pics.append(link['src'])
-                                fake = link['src']
-                                fake = fake[fake.find("bphoto/") + 7:fake.rfind("/258s.jpg")]
-                                pics_id.append(fake)
-
+                                if parse.parse_name(fake.rstrip()) and fake.rstrip():
+                                    com.append(fake.rstrip()[1:])
+                                    pics.append(link['src'])
+                                    fake = link['src']
+                                    fake = fake[fake.find("bphoto/") + 7:fake.rfind("/258s.jpg")]
+                                    pics_id.append(fake)
         # print(len(pics))
         # remove the first thing because it automatically catches it and is in a small size
         com.pop(0)
@@ -134,7 +136,7 @@ class Crawler(object):
 
 
 # nl = Crawler.no_limit("https://www.yelp.com/biz/arcade-coffee-roasters-riverside")
-#l = Crawler.limit("https://www.yelp.com/biz/arcade-coffee-roasters-riverside",10)
+l = Crawler.limit("https://www.yelp.com/biz/arcade-coffee-roasters-riverside",10)
 # print(len(nl))
-#for ls in l:
-#    print(ls)
+for ls in l:
+    print(ls)
