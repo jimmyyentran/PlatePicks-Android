@@ -6,9 +6,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-/**
- * Created by pokeforce on 4/12/16.
- */
+/* Created by pokeforce on 4/12/16. Specialized version of ImageView to always be sqaure. */
 public class SquareImageView extends ImageView {
     public SquareImageView(Context context) {
         super(context);
@@ -27,6 +25,9 @@ public class SquareImageView extends ImageView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    /* onMeasure():
+     * The custom part of this class. When the view is "measuring" how big its width and height are,
+     * it should set its height to its width. */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

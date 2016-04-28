@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--Menu options (Menu = the "action bar" at top of app)-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--Like list-->
     <item android:title="@string/action_like_list"
         android:id="@+id/item_like_list"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="ifRoom"/>
+
+    <!--Last liked button-->
     <item android:title="@string/action_last_liked"
         android:id="@+id/item_last_liked"
         android:icon="@android:drawable/ic_input_get"

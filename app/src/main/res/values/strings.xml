@@ -2,21 +2,30 @@
 
   <!-- CUSTOMIZE THESE FOR YOUR APP -->
 
+  <!--App name-->
   <string name="app_name">Chowder (like Tinder)</string>
+
+  <string name="liked_list">Liked List</string>
+
+  <!--Text for xml views-->
+  <string name="yes_button">Yes</string>
+  <string name="no_button">No</string>
+
+  <!--Content descriptions for images-->
+  <string name="contentDescription_tinder">Image of suggested food</string>
+
+  <!--Name of options in in res/menu/menu_*.xml-->
+  <string name="action_like_list">Like list</string>
+  <string name="action_last_liked">Last liked image of food</string>
+
+  <!--Amazon code-->
   <!-- This can be anything, but it should be unique to the app. -->
   <string name="content_file_provider_authority">com.mysampleapp.fileprovider</string>
   <!-- Suffix after '-' must be the app package name as specified in the build.gradle file. This
        is used by the com.amazonaws.mobile.downloader.query.DownloadQueueProvider class. -->
   <string name="download_queue_provider_authority">com.amazonaws.mobile.downloader-com.amazon.mysampleapp</string>
-  <string name="facebook_app_id">477586705772225</string> 
+  <string name="facebook_app_id">477586705772225</string>
 
-  <string name="yes_button">Yes</string>
-  <string name="no_button">No</string>
-
-  <string name="contentDescription_tinder">Image of suggested food</string>
-
-  <string name="action_like_list">Like list</string>
-  <string name="action_last_liked">Last liked image of food</string>
 
   <!-- REQUIRED FOR GENERAL APP FUNCTIONALITY - YOU MAY WANT TO KEEP THESE -->
 

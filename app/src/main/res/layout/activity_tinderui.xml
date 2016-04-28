@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Container for whole layout-->
+
+<!--Notice that some child containers have height=0dp. For LinearLayout, specifying a-->
+<!--layout weight and setting height/width to 0dp sets height/width to a fraction of -->
+<!--of the screen. Like setting weights for two containers, 5 and 5, would split     -->
+<!--height or width in half.                                                         -->
+
+<!--The proportion can be set however one wants (3 and 9, 2 & 8 & 14, etc.). However,-->
+<!--objects that have a set height/width (eg. the toolbar) will still be its stated  -->
+<!--height. So in this layout, FrameLayout and RelativeLayout are splitting the      -->
+<!--remainder of the screen.                                                         -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     //TOP BAR
-    //android.support.v7.widget.Toolbar
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="72dp"
@@ -54,6 +64,7 @@
     </RelativeLayout>
 
 
+    //BOTTOM BAR
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -100,6 +111,7 @@
         android:layout_weight="1"
         android:background="@color/main_red">
 
+        <!--A "nothing" view. Useful for layout tricks-->
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -108,6 +120,7 @@
             android:id="@+id/space_middle"
             android:layout_alignParentStart="false"
             android:layout_alignParentEnd="false" />
+
 
         //NO BUTTON
         <Button
