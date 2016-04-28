@@ -1,5 +1,7 @@
 package com.tinderui;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,7 +32,7 @@ public class TinderActivity extends AppCompatActivity {
 
         /* Toolbar: The red bar at the top of the app
          * Will contain our heart-shaped like button and last-recently-liked button */
-        setupToolbar();
+        //setupToolbar();
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Food Tinder");
 
@@ -38,6 +40,12 @@ public class TinderActivity extends AppCompatActivity {
          * Finding reference to buttons in xml layout to keep as objects in Java */
         Button noButton = (Button) findViewById(R.id.button_no);
         Button yesButton = (Button) findViewById(R.id.button_yes);
+
+        // LOAD YES/NO BUTTON TEXT
+
+        Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(),"fonts/Hamburger_Heaven.TTF");
+        noButton.setTypeface(Typeface_HamHeaven);
+        yesButton.setTypeface(Typeface_HamHeaven);
 
         /* On Click Listeners:
          * Functions that are called whenever the user clicks on the buttons */
@@ -65,14 +73,16 @@ public class TinderActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.item_like_list) {
-            Toast.makeText(this, "Like list", Toast.LENGTH_SHORT).show();
+            Intent my_list_button = new Intent(this, linked_list_activity.class);
+            startActivity(my_list_button);
         }
 
         return super.onOptionsItemSelected(item);
     }
-
+/*
     void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar_tinder);
         setSupportActionBar(toolbar);
     }
+*/
 }
