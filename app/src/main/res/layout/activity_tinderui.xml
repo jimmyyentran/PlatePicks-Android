@@ -14,15 +14,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    //TOP BAR
+    <!--Top Bar-->
     <RelativeLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:background="@color/main_red"
         android:layout_gravity="top">
 
-        //SETTINGS BUTTON
+        <!--Settings Icon-->
         <ImageButton
+            android:id="@+id/droor_icon"
             android:contentDescription="@string/contentDescription_tinder"
             android:layout_width="30dp"
             android:layout_height="match_parent"
@@ -36,8 +38,9 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="20dp" />
 
-        //FANCY BUTTON
+        <!--Fancy Button-->
         <ImageButton
+            android:id="@+id/fancy_button"
             android:layout_width="@android:dimen/app_icon_size"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
@@ -48,8 +51,9 @@
             android:layout_marginTop="3dp"
             android:nestedScrollingEnabled="false" />
 
-        //LIST BUTTON
+        <!--List Button-->
         <ImageButton
+            android:id="@+id/list_button"
             android:layout_width="30dp"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
@@ -64,16 +68,17 @@
             android:onClick="gotoList"/>
     </RelativeLayout>
 
-    //BOTTOM BAR
+    <!--Center Section-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="4"
-        android:background="#ffffffff">
+        android:background="#ffffff">
 
-        //TOP CHECKER BORDER
+        <!--Top Checker Border-->
         <ImageView
+            android:id="@+id/top_checkers"
             android:rotation="180"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -85,15 +90,28 @@
             android:layout_alignParentLeft="false"
             android:layout_alignParentBottom="false" />
 
-        //FADED LOGO
+        <!--Faded Logo-->
         <ImageView
+            android:id="@+id/faded_logo"
             android:src="@drawable/faded_logo"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
 
-        //BOTTOM CHECKER BORDER
+
+        <!--Container for Tinder Images-->
+        <com.tinderui.support.CustomViewPager
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignTop="@id/top_checkers"
+            android:layout_weight="5"
+            android:id="@+id/viewPager_images" />
+
+
+        <!--Bottom Checker Border-->
         <ImageView
+            android:id="@+id/bot_checkers"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/checker_border"
@@ -103,8 +121,9 @@
             android:background="@color/main_red" />
     </RelativeLayout>
 
-    //BOTTOM BAR
+    <!--Bottom Bar-->
     <RelativeLayout
+        android:id="@+id/bot_bar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
@@ -122,7 +141,7 @@
             android:layout_alignParentEnd="false" />
 
 
-        //NO BUTTON
+        <!--No Button-->
         <Button
             android:background="@drawable/white_button"
             android:layout_width="wrap_content"
@@ -144,7 +163,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="5dp" />
 
-        //YES BUTTON
+        <!--Yes Button-->
         <Button
             android:background="@drawable/white_button"
             android:layout_width="wrap_content"
@@ -163,4 +182,19 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp" />
     </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_red"
+        android:id="@+id/framelayout_splashScreen"
+        android:layout_gravity="center"
+        android:visibility="gone">
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/main_logo"
+        android:layout_gravity="center" />
+    </FrameLayout>
+
 </LinearLayout>

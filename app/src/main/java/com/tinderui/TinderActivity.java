@@ -1,21 +1,30 @@
 package com.tinderui;
 
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.animation.Animator;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.foodtinder.R;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.tinderui.support.CustomViewPager;
+import com.tinderui.support.SquareImageView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,6 +45,7 @@ public class TinderActivity extends AppCompatActivity {
     private GoogleApiClient client;
 
 
+
     /* onCreate():
      * First function called by Android when creating an activity
      * */
@@ -52,44 +62,60 @@ public class TinderActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Food Tinder");
 
+        /* ViewPager: A view that enables swiping images left and right
+         * Has 3 pages, 0-2 (reason is explained in class definition below). */
+        final CustomViewPager imagePager = (CustomViewPager) findViewById(R.id.viewPager_images);
+        imagePager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
 
-    /* Yes and No Buttons:
-     * Finding reference to buttons in xml layout to keep as objects in Java */
-    Button noButton = (Button) findViewById(R.id.button_no);
-    Button yesButton = (Button) findViewById(R.id.button_yes);
+        /* Ensure that we start on page 1, the middle page with the image. */
+        imagePager.setCurrentItem(1, false);
 
-    // Load custom YES/NO button text
-    Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
-    noButton.setTypeface(Typeface_HamHeaven);
-    yesButton.setTypeface(Typeface_HamHeaven);
+        /* Listen for change in swipe animation's current state */
+        final ImageChangeListener changeListener = new ImageChangeListener(imagePager);
+        imagePager.addOnPageChangeListener(changeListener);
+
+        /* Yes and No Buttons:
+         * Finding reference to buttons in xml layout to keep as objects in Java */
+        Button noButton = (Button) findViewById(R.id.button_no);
+        Button yesButton = (Button) findViewById(R.id.button_yes);
+
+        // Load custom YES/NO button text
+        Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
+        noButton.setTypeface(Typeface_HamHeaven);
+        yesButton.setTypeface(Typeface_HamHeaven);
 
         /* On Click Listeners:
-         * Functions that are called whenever the user clicks on the buttons */
-    noButton.setOnClickListener(new View.OnClickListener()
+         * Functions that are called whenever the user clicks on the buttons or image */
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (imagePager.getCurrentItem() == 1
+                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
+                    imagePager.setCurrentItem(2);
+            }
+        });
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toAdd = "Food " + cnt;
+                data.add(toAdd);
+                cnt++;
+                if (imagePager.getCurrentItem() == 1
+                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
+                    imagePager.setCurrentItem(0);
+            }
+        });
 
-    {
-        @Override
-        public void onClick (View v){
-        //Toast.makeText(TinderActivity.this, "I clicked No!", Toast.LENGTH_SHORT).show();
+        /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
+         * calling networks requests in this activity (vs. a splash screen activity) */
+        FrameLayout splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
+        splashScreen.setVisibility(View.VISIBLE);
+        splashScreen.animate()
+                .alpha(0f)
+                .setStartDelay(3000)
+                .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
     }
-    }
 
-    );
-
-        /* when pressed, Item goes to LikedList */
-    yesButton.setOnClickListener(new View.OnClickListener()
-
-    {
-        @Override
-        public void onClick (View v){
-        //Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
-        String toAdd = "Food " + cnt;
-        data.add(toAdd);
-        cnt++;
-    }
-    }
-
-    );
 
     /* Queue of bitmaps: storing images
      * acting as a cache
@@ -97,34 +123,116 @@ public class TinderActivity extends AppCompatActivity {
      */
     Queue<Bitmap> imageCache = new LinkedList<>();
 
-
-}
-
-    /* onCreateOptionsMenu():
-     * Creates the menu by loading the items in the xml into the toolbar */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_tinder, menu);
-        return true;
-    }
-
-    /* OnOptionsItemSelected():
-     * The function that is called when a menu option is clicked */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.item_like_list) {
-            Intent listbutton = new Intent(this, LikedListActivity.class);
-            listbutton.putExtra("whatever", data);
-            startActivity(listbutton);
+    /* ImagePagerAdapter:
+     * Feeds ViewPager the imageViews for its pages */
+    class ImagePagerAdapter extends FragmentStatePagerAdapter {
+        public ImagePagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        return super.onOptionsItemSelected(item);
+        /* getItem():
+         * Create SwipeImageFragment object, then give it the position as an argument to determine
+         * which picture to display for that fragment. Different arguments will be used for images
+         * from the internet. */
+        @Override
+        public Fragment getItem(int position) {
+            SwipeImageFragment imageFragment = new SwipeImageFragment();
+            Bundle arguments = new Bundle();
+
+            arguments.putInt(SwipeImageFragment.INDEX, position);
+            imageFragment.setArguments(arguments);
+
+            return imageFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+    /* Algorithm for Tinder Image Swiping Infinitely
+     *
+     * The goal is to display swiping and use a viewpager to imitate Tinder's image animation. The
+     * issue with this is that viewpager does not let us loop pages. It's like a list - reach the
+     * end, and don't loop back to the beginning = a limited number of times we can swipe left or
+     * right.
+     *
+     * To get around this, we need to show an empty page temporarily when the user swipes,
+     * change the second page to the correct image, then jump to the other empty page we have (0 or
+     * 2) and animate a page change back to 1. This fakes a new image coming in from the correct
+     * side. */
+    class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
+        ViewPager imagePager;
+        public int state = ViewPager.SCROLL_STATE_IDLE;
+
+        public ImageChangeListener(ViewPager imagePager) {
+            this.imagePager = imagePager;
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        /* onPageScrollStateChanged()
+         * Tracks what state the swiping animation is in. */
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            this.state = state;
+
+            /* Only do this animation if swiping away from the image */
+            if (imagePager.getCurrentItem() != 1) {
+                int otherPage;
+
+                /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
+                if (imagePager.getCurrentItem() == 0) otherPage = 2;
+                else otherPage = 0;
+
+                /* The "new image" animation. Only do it if an animation is idle. */
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    imagePager.setCurrentItem(otherPage, false);
+                    imagePager.setCurrentItem(1, true);
+                }
+            }
+        }
+    }
+
+    /* Class to listen to the state of splash screen animation. Only uses onAnimationEnd() to know
+     * when the animation is finished. */
+    class mAnimatorListener implements Animator.AnimatorListener {
+        FrameLayout splashScreen;
+
+        mAnimatorListener(FrameLayout splashScreen) {
+            this.splashScreen = splashScreen;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        /* Removes splash screen to save memory (set to GONE) */
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            splashScreen.setVisibility(View.GONE);
+            splashScreen = null;
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
     }
 
     /* Toolbar button functions:
