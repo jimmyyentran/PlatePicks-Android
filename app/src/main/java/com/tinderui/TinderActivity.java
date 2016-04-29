@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.foodtinder.R;
 import com.foodtinder.util.AWSIntegrator;
+import com.tinderui.util.AWSIntegratorAsyncTask;
 
 import java.util.ArrayList;
 
@@ -59,7 +60,6 @@ public class TinderActivity extends AppCompatActivity {
 
             }
         });
-        AWSIntegrator.call("hello-world", "{\n  \"key1\" : \"value1\",\n  \"key2\" : \"value2\",\n  \"key3\" : \"value3\"\n}");
     }
 
 

@@ -7,4 +7,5 @@ import java.util.Objects;
  */
 public interface AWSIntegratorInterface {
     public void doSomethingWithResults(String ob);
+//    public String returnResults(); //used for testing
 }
