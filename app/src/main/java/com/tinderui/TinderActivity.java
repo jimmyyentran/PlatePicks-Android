@@ -1,11 +1,8 @@
 package com.tinderui;
 
 import android.content.Intent;
-<<<<<<< HEAD
-import android.graphics.Typeface;
-=======
 import android.graphics.Bitmap;
->>>>>>> origin/listactivity
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,11 +15,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.foodtinder.R;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-
 
 
 /**
@@ -32,6 +29,11 @@ public class TinderActivity extends AppCompatActivity {
     private Toolbar toolbar;
     ArrayList<String> data = new ArrayList<>();
     int cnt = 0;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     /* onCreate():
@@ -50,50 +52,53 @@ public class TinderActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Food Tinder");
 
-        /* Yes and No Buttons:
-         * Finding reference to buttons in xml layout to keep as objects in Java */
-        Button noButton = (Button) findViewById(R.id.button_no);
-        Button yesButton = (Button) findViewById(R.id.button_yes);
 
-        // LOAD YES/NO BUTTON TEXT
+    /* Yes and No Buttons:
+     * Finding reference to buttons in xml layout to keep as objects in Java */
+    Button noButton = (Button) findViewById(R.id.button_no);
+    Button yesButton = (Button) findViewById(R.id.button_yes);
 
-        Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(),"fonts/Hamburger_Heaven.TTF");
-        noButton.setTypeface(Typeface_HamHeaven);
-        yesButton.setTypeface(Typeface_HamHeaven);
+    // Load custom YES/NO button text
+    Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
+    noButton.setTypeface(Typeface_HamHeaven);
+    yesButton.setTypeface(Typeface_HamHeaven);
 
         /* On Click Listeners:
          * Functions that are called whenever the user clicks on the buttons */
-        noButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(TinderActivity.this, "I clicked No!", Toast.LENGTH_SHORT).show();
-            }
-        });
+    noButton.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View v){
+        //Toast.makeText(TinderActivity.this, "I clicked No!", Toast.LENGTH_SHORT).show();
+    }
+    }
+
+    );
 
         /* when pressed, Item goes to LikedList */
-        yesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
-                String toAdd = "Food " + cnt;
-                data.add(toAdd);
-                cnt++;
-            }
-        });
+    yesButton.setOnClickListener(new View.OnClickListener()
 
-        /* Queue of bitmaps: storing images
-         * acting as a cache
-         * collecting all results from url lookups
-         */
-        Queue <Bitmap> imageCache = new LinkedList<>();
-
-
-
-
-
-
-
+    {
+        @Override
+        public void onClick (View v){
+        //Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
+        String toAdd = "Food " + cnt;
+        data.add(toAdd);
+        cnt++;
     }
+    }
+
+    );
+
+    /* Queue of bitmaps: storing images
+     * acting as a cache
+     * collecting all results from url lookups
+     */
+    Queue<Bitmap> imageCache = new LinkedList<>();
+
+
+}
 
     /* onCreateOptionsMenu():
      * Creates the menu by loading the items in the xml into the toolbar */
@@ -121,4 +126,17 @@ public class TinderActivity extends AppCompatActivity {
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
     }
+
+    /* Toolbar button functions:
+     * Settings,
+     * Last-Liked item,
+     * Liked-list
+     */
+
+    public void gotoList(View view) {
+        Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
+        intent.putExtra("whatever", data);
+        TinderActivity.this.startActivity(intent);
+    }
+
 }
