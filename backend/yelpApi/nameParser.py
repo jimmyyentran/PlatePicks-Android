@@ -8,7 +8,7 @@ class NameParser(object):
     def __init__(self, dictionaryFile):
         with open(dictionaryFile) as file:
             self.words = file.read().split(",")
-        print (self.words)
+        # print (self.words)
 
     #  @staticmethod
     def parse_name(self, name):
@@ -26,7 +26,7 @@ class NameParser(object):
         for prettyWord in pretty.split():
             if prettyWord.lower() in self.words:
                 #These are rejected and should not be used
-                pretty+=" *REJECTED*"
-                break
+                return False
 
-        return pretty
+
+        return True
