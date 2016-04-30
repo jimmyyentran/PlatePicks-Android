@@ -1,6 +1,7 @@
 package com.tinderui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.foodtinder.R;
 
@@ -27,11 +29,15 @@ public class SwipeImageFragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
         ImageView foodPicture = (ImageView) fragmentView.findViewById(R.id.imageview_tinder);
+        RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
         /* Set the image resource here */
         if (index == 1) {
             foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
-            foodPicture.setBackgroundColor(0xc8000000);
+            foodPicture.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }
+        else {
+            foodBorder.setVisibility(View.GONE);
         }
 
         /* Open the about food activity here */
