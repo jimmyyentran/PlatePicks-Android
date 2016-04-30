@@ -11,8 +11,8 @@ class Crawler(object):
         # new = input("Enter the url to crawl: ")
         # url = new.rstrip()  # removes any extra spaces
         # edit url to get the pictures and only the foods
-        url.replace("/biz", "/biz_photos")
-        url += "?tab=food&start=0"
+        #  url.replace("/biz", "/biz_photos")
+        #  url += "?tab=food&start=0"
         # parse the url for html code
         source_code = requests.get(url)  # variable = requests.get(url)
         html = source_code.text  # get source code of page
@@ -73,9 +73,9 @@ class Crawler(object):
         # new = input("Enter the url to crawl: ")
         # url = new.rstrip()  # removes any extra spaces
         # edit url to get the pictures and only the foods
-        url= url
-        url.replace("/biz", "/biz_photos")
-        url += "?tab=food&start=0"
+        #  url= url
+        #  url.replace("/biz", "/biz_photos")
+        #  url += "?tab=food&start=0"
         # parse the url for html code
         source_code = requests.get(url)  # variable = requests.get(url)
         html = source_code.text  # get source code of page
@@ -88,7 +88,9 @@ class Crawler(object):
         pics = []
         pics_id = []
         com = []
+        flag = True # if reached limit
         for i in range(sz):
+            if not flag: break # if reached limit then break this loop
             url.find("&start")
             url = url[:url.find("&start")] + "&start=" + str(30 * i)
             i += 1
@@ -100,6 +102,8 @@ class Crawler(object):
             #find all the links thats are img urls
             for link in soup.findAll('img', src=True, alt=True):
                 if len(pics_id) ==(limit+1):
+                    print("BREAK")
+                    flag = False
                     break
                 link['src'] = urllib.parse.urljoin(url, link['src'])
                 if '#' not in link['src']:
@@ -110,8 +114,11 @@ class Crawler(object):
                             fake = fake[fake.find("States.") + 7:]
                             # removes majority of the bad comments
                             if " United States" not in fake:
-                                if parse.parse_name(fake.rstrip()) and fake.rstrip():
-                                    com.append(fake.rstrip()[1:])
+                                #  if parse.parse_name(fake.rstrip()) and fake.rstrip():
+                                prettified = parse.parse_name(fake.rstrip().lstrip()) # strip
+                                #  print(prettified)
+                                if parse.parse_name(fake.rstrip()) is not None:
+                                    com.append(prettified)
                                     pics.append(link['src'])
                                     fake = link['src']
                                     fake = fake[fake.find("bphoto/") + 7:fake.rfind("/258s.jpg")]
@@ -130,7 +137,7 @@ class Crawler(object):
             # print(coms)
             # print(pic_id)
             # print(pic)
-
+        #  print(information)
         return information
 
 
