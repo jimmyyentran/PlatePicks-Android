@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-import urllib.parse
+#  import urllib.parse
+from urlparse import urljoin
 from nameParser import NameParser
 
 
@@ -36,7 +37,8 @@ class Crawler(object):
             soup = BeautifulSoup(html, 'html.parser')
             #find all the links thats are img urls
             for link in soup.findAll('img', src=True, alt=True):
-                link['src'] = urllib.parse.urljoin(url, link['src'])
+                #  link['src'] = urllib.parse.urljoin(url, link['src'])
+                link['src'] = urlparse.urljoin(url, link['src'])
                 if '#' not in link['src']:
                     if link['src'] not in visited:
                         visited.append(link['src'])
@@ -67,6 +69,7 @@ class Crawler(object):
 
         return information
 
+    @staticmethod
     def limit(url,limit):
         parse = NameParser("unwantedWords.txt")
 
@@ -102,10 +105,11 @@ class Crawler(object):
             #find all the links thats are img urls
             for link in soup.findAll('img', src=True, alt=True):
                 if len(pics_id) ==(limit+1):
-                    print("BREAK")
+                    #  print("BREAK")
                     flag = False
                     break
-                link['src'] = urllib.parse.urljoin(url, link['src'])
+                #  link['src'] = urllib.parse.urljoin(url, link['src'])
+                link['src'] = urljoin(url, link['src'])
                 if '#' not in link['src']:
                     if link['src'] not in visited:
                         visited.append(link['src'])

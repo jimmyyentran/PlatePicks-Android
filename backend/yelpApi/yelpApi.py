@@ -31,24 +31,10 @@ class Yelp_API(object):
 
         list_to_be_returned = []
         for bus in response.businesses:
-            list_to_be_returned += Crawler.limit("http://www.yelp.com/biz_photos/" + bus.id +
-                    "?tab=food&start=0", self.food_per_business)
+            list_to_be_returned += Crawler.limit("http://www.yelp.com/biz_photos/" + bus.id + "?tab=food&start=0", self.food_per_business)
 
         return list_to_be_returned
 
-            #Test Parameters
-params = {
-        'term': 'asian', #general search
-        'food_per_business': 3, #test if input random key
-        'll': '33.7175, -117.8311', #long and latitude
-        'limit': 4, #number of businesses
-        'radius_filter': 40000, #25 miles maximum
-        'category_filter': 'vietnamese,filipino', #pre-set categories
-        'sort': 1 #distance
-        }
-
-response = Yelp_API(params).call_API()
-print(response)
 
 #  print full object attribute of first object
 #  print("----------------------------------------------------")
