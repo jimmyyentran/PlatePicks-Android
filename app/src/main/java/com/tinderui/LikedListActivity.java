@@ -40,6 +40,7 @@ public class LikedListActivity extends AppCompatActivity {
         /* Get array from TinderActivity using Intent::getStringArrayListExtra */
         Intent intent = getIntent();
         ArrayList<String> data = intent.getStringArrayListExtra("whatever");
+        final int cnt = (int)getIntent().getExtras().getInt("cnt");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_liked, data);
 
@@ -53,5 +54,7 @@ public class LikedListActivity extends AppCompatActivity {
             }
         }; */
     }
+
+
 }
 

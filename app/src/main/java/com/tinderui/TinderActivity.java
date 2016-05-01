@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.foodtinder.R;
@@ -103,6 +104,32 @@ public class TinderActivity extends AppCompatActivity {
                 if (imagePager.getCurrentItem() == 1
                         && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
                     imagePager.setCurrentItem(0);
+
+                /* Code for List Notification Number */
+                final TextView notification_number = (TextView) findViewById(R.id.list_notification);
+                if(cnt <= 0){
+                    notification_number.setVisibility(View.GONE);
+                }
+                else if(cnt <= 99){
+                    notification_number.setVisibility(View.VISIBLE);
+                    notification_number.setText(String.valueOf(cnt));
+                    if(cnt <= 9){
+                        notification_number.setTextSize(17);
+                        notification_number.setPadding(0, 0, 0, 0);
+                    }
+                    else{
+                        notification_number.setTextSize(12);
+                        notification_number.setPadding(0, 0, 0, 3);
+                    }
+                }
+                else{
+                    notification_number.setVisibility(View.VISIBLE);
+                    notification_number.setText("+99");
+                    notification_number.setTextSize(10);
+                    notification_number.setPadding(0, 0, 0, 4);
+                }
+                /* End list notification code */
+
             }
         });
 
@@ -114,6 +141,8 @@ public class TinderActivity extends AppCompatActivity {
                 .alpha(0f)
                 .setStartDelay(3000)
                 .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
+
+
     }
 
 
@@ -244,6 +273,7 @@ public class TinderActivity extends AppCompatActivity {
     public void gotoList(View view) {
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putExtra("whatever", data);
+        intent.putExtra("cnt", cnt);
         TinderActivity.this.startActivity(intent);
     }
 
