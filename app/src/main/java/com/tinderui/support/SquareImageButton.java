@@ -4,24 +4,25 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 /* Created by pokeforce on 4/12/16. Specialized version of ImageView to always be sqaure. */
-public class SquareImageView extends ImageView {
-    public SquareImageView(Context context) {
+public class SquareImageButton extends ImageButton {
+    public SquareImageButton(Context context) {
         super(context);
     }
 
-    public SquareImageView(Context context, AttributeSet attrs) {
+    public SquareImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SquareImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SquareImageButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

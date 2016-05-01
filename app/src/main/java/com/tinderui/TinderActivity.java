@@ -1,6 +1,5 @@
 package com.tinderui;
 
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -11,20 +10,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.foodtinder.R;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.tinderui.support.CustomViewPager;
-import com.tinderui.support.SquareImageView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,16 +27,9 @@ import java.util.Queue;
  * Created by pokeforce on 4/12/16.
  */
 public class TinderActivity extends AppCompatActivity {
-    private Toolbar toolbar;
+    SwipeImageFragment mainPageFragment;
     ArrayList<String> data = new ArrayList<>();
     int cnt = 0;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
-
 
     /* onCreate():
      * First function called by Android when creating an activity
@@ -139,15 +124,29 @@ public class TinderActivity extends AppCompatActivity {
             SwipeImageFragment imageFragment = new SwipeImageFragment();
             Bundle arguments = new Bundle();
 
-            arguments.putInt(SwipeImageFragment.INDEX, position);
+            arguments.putInt(SwipeImageFragment.PAGE_POSITION, position);
             imageFragment.setArguments(arguments);
+
+            if (position == 1) mainPageFragment = imageFragment;
 
             return imageFragment;
         }
 
+        /* getCount():
+         * Number of pages in viewpager. 0 and 2 are empty pages. 1 is the image page */
         @Override
         public int getCount() {
             return 3;
+        }
+
+        /* getPageWidth():
+         * If not page 1, page should be shorter to reduce whitespace */
+        @Override
+        public float getPageWidth(int position) {
+            if (position != 1)
+                return .98f;
+
+            return 1f;
         }
     }
 
@@ -163,8 +162,9 @@ public class TinderActivity extends AppCompatActivity {
      * 2) and animate a page change back to 1. This fakes a new image coming in from the correct
      * side. */
     class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
-        ViewPager imagePager;
         public int state = ViewPager.SCROLL_STATE_IDLE;
+        ViewPager imagePager;
+        int counter = 1, MAX = 3;
 
         public ImageChangeListener(ViewPager imagePager) {
             this.imagePager = imagePager;
@@ -187,18 +187,20 @@ public class TinderActivity extends AppCompatActivity {
             this.state = state;
 
             /* Only do this animation if swiping away from the image */
-            if (imagePager.getCurrentItem() != 1) {
+            if (imagePager.getCurrentItem() != 1 && state == ViewPager.SCROLL_STATE_IDLE) {
                 int otherPage;
 
                 /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
                 if (imagePager.getCurrentItem() == 0) otherPage = 2;
                 else otherPage = 0;
 
+                /* Testing: changing the image while image page is out of sight */
+                mainPageFragment.changeImage(counter);
+                counter = (counter + 1) % MAX;
+
                 /* The "new image" animation. Only do it if an animation is idle. */
-                if (state == ViewPager.SCROLL_STATE_IDLE) {
-                    imagePager.setCurrentItem(otherPage, false);
-                    imagePager.setCurrentItem(1, true);
-                }
+                imagePager.setCurrentItem(otherPage, false);    /* false = no animation on change */
+                imagePager.setCurrentItem(1, true);             /* true = animate */
             }
         }
     }
