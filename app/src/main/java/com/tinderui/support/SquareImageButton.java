@@ -33,10 +33,11 @@ public class SquareImageButton extends ImageButton {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        // Set height to width (which is device width - margin)
+        // Set height and width to minimum of either (contained in checkers vertically or contained in sides horizontally)
         int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        int squareSide = Math.min(width, height);
 
-        //noinspection SuspiciousNameCombination
-        setMeasuredDimension(width, width);
+        setMeasuredDimension(squareSide, squareSide);
     }
 }
