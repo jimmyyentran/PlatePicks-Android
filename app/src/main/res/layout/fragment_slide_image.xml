@@ -12,16 +12,17 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/food_border">
 
-    <com.tinderui.support.SquareImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:background="#ffffff"
-        android:id="@+id/imageview_tinder"
-        android:contentDescription="@string/contentDescription_tinder"
-        android:scaleType="centerInside"
-        android:layout_alignParentEnd="false"
-        android:adjustViewBounds="true" />
+        <com.tinderui.support.SquareImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="#ffffff"
+            android:id="@+id/imagebutton_tinder"
+            android:contentDescription="@string/contentDescription_tinder"
+            android:scaleType="centerInside"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentRight="false"
+            android:adjustViewBounds="true" />
 
     </RelativeLayout>
 

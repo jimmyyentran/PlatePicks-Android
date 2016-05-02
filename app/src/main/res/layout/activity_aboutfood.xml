@@ -10,10 +10,10 @@
         android:background="@color/tomato_red"
         android:id="@+id/toolbar_tinder"/>
 
-    <com.tinderui.support.SquareImageView
+    <com.tinderui.support.SquareImageButton
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imageview_aboutFood"
+        android:id="@+id/imagebutton_aboutFood"
         android:layout_gravity="center"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
