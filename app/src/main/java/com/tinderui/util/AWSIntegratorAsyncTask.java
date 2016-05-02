@@ -19,6 +19,7 @@ import com.amazonaws.services.lambda.model.InvocationType;
 import com.amazonaws.services.lambda.model.InvokeRequest;
 import com.amazonaws.services.lambda.model.InvokeResult;
 import com.foodtinder.util.AWSIntegrator;
+import com.google.gson.Gson;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -57,9 +58,12 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
     @Override
     protected InvokeResult doInBackground(Object... params) {
         try {
+            String json = new Gson().toJson(params[1]); //added convert to json string
+         //   System.out.println(json);
             callerActivity = (AWSIntegratorInterface) params[2];
             final ByteBuffer payload =
-                    ENCODER.encode(CharBuffer.wrap((String) params[1]));
+            //        ENCODER.encode(CharBuffer.wrap((String) params[1]));
+                    ENCODER.encode(CharBuffer.wrap(json)); //added send json string
 
             final InvokeRequest invokeRequest =
                     new InvokeRequest()
@@ -114,4 +118,6 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
 //                    throw new Exception(e.getMessage());
         }
     }
+
 }
+
