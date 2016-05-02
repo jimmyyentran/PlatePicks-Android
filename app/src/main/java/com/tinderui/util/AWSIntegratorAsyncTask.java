@@ -62,7 +62,7 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
          //   System.out.println(json);
             callerActivity = (AWSIntegratorInterface) params[2];
             final ByteBuffer payload =
-            //        ENCODER.encode(CharBuffer.wrap((String) params[1]));
+//                    ENCODER.encode(CharBuffer.wrap((String) params[1]));
                     ENCODER.encode(CharBuffer.wrap(json)); //added send json string
 
             final InvokeRequest invokeRequest =

@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import java.lang.reflect.Type;
 import com.tinderui.util.AWSIntegratorAsyncTask;
 import com.tinderui.util.AWSIntegratorInterface;
 
@@ -31,20 +32,22 @@ public class AWSIntegratorTest {
     public void HelloWorldTest(){
         AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
         TestActivity activity  = new TestActivity();
-        //initialize a list of type DataObject
-        List<DataObject> objList = new ArrayList<DataObject>();
-        objList.add(new DataObject("key1", "value1"));
-        objList.add(new DataObject("key2", "value2"));
-        objList.add(new DataObject("key3", "value3"));
+//        initialize a list of type DataObject
+//        List<DataObject> objList = new ArrayList<DataObject>();
+        DataObject singleObject = new DataObject("value1", "value2", "value3");
 
         //Convert the object to a JSON string
-        String json = new Gson().toJson(objList);
+        String json = new Gson().toJson(singleObject).toString();
         System.out.println(json);
 
-        asyncTask.execute("hello-world", objList, activity);
-   //     asyncTask.execute("hello-world", "{\n  \"key1\" : \"value1\",\n  \"key2\" : \"value2\",\n  \"key3\" : \"value3\"\n}", activity);
+        asyncTask.execute("hello-world", singleObject, activity);
+//        asyncTask.execute("hello-world", "{\n  \"key1\" : \"value1\",\n  \"key2\" : \"value2\",\n  \"key3\" : \"value3\"\n}", activity);
+//        asyncTask.execute("hello-world", "{\"key1\":\"value1\",\"key2\":\"value2\",\"key3\":\"value3\"}", activity);
+//        System.out.println("{\"key1\":\"value1\",\"key2\":\"value2\",\"key3\":\"value3\"}");
         Robolectric.flushBackgroundThreadScheduler();
         assertEquals(activity.returnResults(), "\"value1\"");
+//        assertEquals("\"value1\"", "\"value1\"");
+
     }
 
 
