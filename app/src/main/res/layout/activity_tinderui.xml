@@ -14,39 +14,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--<<<<<<< HEAD-->
-    <!--Splash Screen-->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/main_red"
-        android:id="@+id/framelayout_splashScreen"
-        android:layout_gravity="center"
-        android:visibility="gone">
-        <ImageView
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/main_logo"
-            android:layout_gravity="center" />
-    </FrameLayout>
-
-    <!--Top Bar-->
-
-
-    <!--Center Section
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="4"
-        android:background="#ffffff">
-     -->
-<!--=======-->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<!-->>>>>>> origin/dbh_merge-->
 
         <!--Top Bar-->
         <RelativeLayout
