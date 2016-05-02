@@ -10,12 +10,13 @@
         android:layout_gravity="center"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:padding="8dp"
         android:background="@drawable/food_border">
 
         <com.tinderui.support.SquareImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
+
             android:background="#ffffff"
             android:id="@+id/imagebutton_tinder"
             android:contentDescription="@string/contentDescription_tinder"
