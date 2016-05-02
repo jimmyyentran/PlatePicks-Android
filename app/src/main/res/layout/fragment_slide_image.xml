@@ -19,7 +19,7 @@
             android:background="#ffffff"
             android:id="@+id/imagebutton_tinder"
             android:contentDescription="@string/contentDescription_tinder"
-            android:scaleType="centerInside"
+            android:scaleType="fitCenter"
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
             android:adjustViewBounds="true" />

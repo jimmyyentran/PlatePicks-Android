@@ -31,73 +31,7 @@
     </FrameLayout>
 
     <!--Top Bar-->
-    <RelativeLayout
-        android:id="@+id/top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:background="@color/main_red"
-        android:layout_gravity="top">
 
-        <!--Settings Icon-->
-        <ImageButton
-            android:id="@+id/droor_icon"
-            android:contentDescription="@string/contentDescription_tinder"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            android:src="@drawable/settings_icon_2"
-            android:background="@android:color/transparent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="20dp" />
-
-        <!--Fancy Button-->
-        <ImageButton
-            android:id="@+id/fancy_button"
-            android:layout_width="@android:dimen/app_icon_size"
-            android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            android:src="@drawable/fancy_button_2"
-            android:background="@android:color/transparent"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:nestedScrollingEnabled="false" />
-
-        <!--List Button-->
-        <FrameLayout
-            android:id="@+id/list_button_frame"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp">
-
-            <ImageButton
-                android:id="@+id/list_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/list_icon_3"
-                android:background="@android:color/transparent"
-                android:onClick="gotoList" />
-            <TextView
-                android:id="@+id/list_notification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/main_red"
-                android:typeface="sans"
-                android:layout_gravity="center" />
-
-        </FrameLayout>
-    </RelativeLayout>
 
     <!--Center Section
     <RelativeLayout
@@ -152,20 +86,35 @@
                 android:nestedScrollingEnabled="false" />
 
             <!--List Button-->
-            <ImageButton
-                android:id="@+id/list_button"
+            <FrameLayout
+                android:id="@+id/list_button_frame"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/list_icon_3"
-                android:background="@android:color/transparent"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
-                android:onClick="gotoList"/>
+                android:layout_marginRight="20dp">
+
+                <ImageButton
+                    android:id="@+id/list_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/list_icon_3"
+                    android:background="@android:color/transparent"
+                    android:onClick="gotoList" />
+                <TextView
+                    android:id="@+id/list_notification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/main_red"
+                    android:typeface="sans"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
         </RelativeLayout>
 
         <!--Center Section-->
@@ -288,6 +237,8 @@
                 android:layout_marginBottom="5dp" />
         </RelativeLayout>
     </LinearLayout>
+
+    <!--Splash Screen-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

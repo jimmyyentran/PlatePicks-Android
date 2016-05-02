@@ -32,6 +32,8 @@ public class TinderActivity extends AppCompatActivity {
     SwipeImageFragment mainPageFragment;
     ArrayList<String> data = new ArrayList<>();
     int cnt = 0;
+    /* Local TextView variable to handle list notification number*/
+    TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
 
     /* onCreate():
      * First function called by Android when creating an activity
@@ -84,38 +86,10 @@ public class TinderActivity extends AppCompatActivity {
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String toAdd = "Food " + cnt;
-                data.add(toAdd);
-                cnt++;
+
                 if (imagePager.getCurrentItem() == 1
                         && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
                     imagePager.setCurrentItem(0);
-
-                /* Code for List Notification Number */
-                final TextView notification_number = (TextView) findViewById(R.id.list_notification);
-                if(cnt <= 0){
-                    notification_number.setVisibility(View.GONE);
-                }
-                else if(cnt <= 99){
-                    notification_number.setVisibility(View.VISIBLE);
-                    notification_number.setText(String.valueOf(cnt));
-                    if(cnt <= 9){
-                        notification_number.setTextSize(17);
-                        notification_number.setPadding(0, 0, 0, 0);
-                    }
-                    else{
-                        notification_number.setTextSize(12);
-                        notification_number.setPadding(0, 0, 0, 3);
-                    }
-                }
-                else{
-                    notification_number.setVisibility(View.VISIBLE);
-                    notification_number.setText("+99");
-                    notification_number.setTextSize(10);
-                    notification_number.setPadding(0, 0, 0, 4);
-                }
-                /* End list notification code */
-
             }
         });
 
@@ -127,8 +101,6 @@ public class TinderActivity extends AppCompatActivity {
                 .alpha(0f)
                 .setStartDelay(3000)
                 .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
-
-
     }
 
 
@@ -221,8 +193,16 @@ public class TinderActivity extends AppCompatActivity {
                 int otherPage;
 
                 /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
-                if (imagePager.getCurrentItem() == 0) otherPage = 2;
-                else otherPage = 0;
+                if (imagePager.getCurrentItem() == 0){
+                    otherPage = 2;
+                    ++cnt;
+                    update_list_number(cnt);
+                    String toAdd = "Food " + cnt;
+                    data.add(toAdd);
+                }
+                else{
+                    otherPage = 0;
+                }
 
                 /* Testing: changing the image while image page is out of sight */
                 mainPageFragment.changeImage(counter);
@@ -280,4 +260,28 @@ public class TinderActivity extends AppCompatActivity {
         TinderActivity.this.startActivity(intent);
     }
 
+    void update_list_number (int cnt) {
+ /* Code for List Notification Number */
+        notification_number = (TextView) findViewById(R.id.list_notification);
+        if (cnt <= 0) {
+            notification_number.setVisibility(View.GONE);
+        } else if (cnt <= 99) {
+            notification_number.setVisibility(View.VISIBLE);
+            notification_number.setText(String.valueOf(cnt));
+            if (cnt <= 9) {
+                notification_number.setTextSize(17);
+                notification_number.setPadding(0, 0, 0, 0);
+            } else {
+                notification_number.setTextSize(12);
+                notification_number.setPadding(0, 0, 0, 3);
+            }
+        } else {
+            notification_number.setVisibility(View.VISIBLE);
+            notification_number.setText("+99");
+            notification_number.setTextSize(10);
+            notification_number.setPadding(0, 0, 0, 4);
+        }
+        return;
+    }
+                /* End list notification code */
 }
