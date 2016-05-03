@@ -218,7 +218,7 @@
         android:layout_gravity="center"
         android:visibility="gone">
         <ImageView
-            android:layout_width="56dp"
+            android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:src="@drawable/main_logo"
             android:layout_gravity="center" />

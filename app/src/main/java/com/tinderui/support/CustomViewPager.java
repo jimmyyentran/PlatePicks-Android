@@ -37,7 +37,7 @@ public class CustomViewPager extends ViewPager {
      * Called before onTouchEvent(). True = intercept & use our onTouchEvent(). False = default. */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (getCurrentItem() != 1)
+        if (getCurrentItem() != 1 || listener.state != ViewPager.SCROLL_STATE_IDLE)
             return true;
 
         /* Do not intercept event for the case of the touch gesture being complete (cancel or up),
@@ -46,7 +46,8 @@ public class CustomViewPager extends ViewPager {
     }
 
     /* onTouchEvent(): Handle a touch event. Ignore events during a swipe animation.
-     * If current page is the image and no animation is running, accept the event. */
+     * If current page is the image and no animation is running (User is dragging or screen is
+     * idle, accept the event. */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return getCurrentItem() == 1 && listener.state != ViewPager.SCROLL_STATE_SETTLING
