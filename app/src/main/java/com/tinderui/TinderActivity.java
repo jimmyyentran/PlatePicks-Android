@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,8 +13,11 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.foodtinder.ListItemClass;
+import com.foodtinder.MainActivity;
 import com.foodtinder.R;
 
 import java.util.ArrayList;
@@ -27,9 +31,17 @@ import java.util.Queue;
  */
 public class TinderActivity extends AppCompatActivity {
     private Toolbar toolbar;
-    ArrayList<String> data = new ArrayList<>();
+    ArrayList<ListItemClass> data = new ArrayList<>();
     int cnt = 1;
 
+    public ListItemClass createListItem(String foodName)
+    {
+        ListItemClass newItem = new ListItemClass();
+        newItem.setFoodName(foodName);
+        newItem.setRestaurantName("test_restaurant");
+        newItem.setRestaurantAddress("test_address");
+        return newItem;
+    }
 
     /* onCreate():
      * First function called by Android when creating an activity
@@ -72,23 +84,33 @@ public class TinderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TinderActivity.this, "I clicked Yes!", Toast.LENGTH_SHORT).show();
-                String toAdd = "Food " + cnt;
+                String name = "Food" + cnt;
+                ListItemClass toAdd = createListItem(name);
                 data.add(toAdd);
                 cnt++;
             }
         });
 
-        /* Queue of bitmaps: storing images
-         * acting as a cache
-         * collecting all results from url lookups
-         */
-        Queue<Bitmap> imageCache = new LinkedList<>();
+        // list button
+        ImageButton listButton = (ImageButton) findViewById(R.id.heart_button);
+        listButton.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View arg0) {
 
+                Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
+                intent.putParcelableArrayListExtra("key", data);
+                startActivity(intent);
+            }
+        });
     }
 
+
+
+}
+
     /* onCreateOptionsMenu():
-     * Creates the menu by loading the items in the xml into the toolbar */
+     * Creates the menu by loading the items in the xml into the toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -97,7 +119,7 @@ public class TinderActivity extends AppCompatActivity {
     }
 
     /* OnOptionsItemSelected():
-     * The function that is called when a menu option is clicked */
+     * The function that is called when a menu option is clicked
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.item_like_list) {
@@ -108,7 +130,7 @@ public class TinderActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-}
+}*/
 
 
 

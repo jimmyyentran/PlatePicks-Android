@@ -61,7 +61,8 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:id="@+id/heart_button"/>
     </RelativeLayout>
 
 
