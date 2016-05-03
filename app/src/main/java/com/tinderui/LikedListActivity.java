@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.foodtinder.ListItemClass;
 import com.foodtinder.R;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -22,7 +23,6 @@ import java.util.ArrayList;
  */
 public class LikedListActivity extends AppCompatActivity {
 
-    ListView likedList;
     /**
      * Creates a list of all liked foods.
      * Add to list when swiped right.
@@ -34,18 +34,16 @@ public class LikedListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liked_list);
 
-        likedList = (ListView) findViewById(R.id.listview_liked);
+        // Construct the data source
+        ArrayList<ListItemClass> data = getIntent().getParcelableArrayListExtra("key");
 
+        // Create the adapter to convert the array to views
+        ListAdapter adapter = new ListAdapter(this, data);
 
-        /* Get array from TinderActivity using Intent::getStringArrayListExtra */
-        Intent intent = getIntent();
-        ArrayList<String> data = intent.getStringArrayListExtra("whatever");
-        final int cnt = (int)getIntent().getExtras().getInt("cnt");
+        // Attach the adapter to a ListView
+        ListView listView = (ListView) findViewById(R.id.listview_liked);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_liked, data);
-
-        likedList.setAdapter(adapter);
-
+        listView.setAdapter(adapter);
 
       /*  likedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

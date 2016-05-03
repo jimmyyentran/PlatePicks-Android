@@ -1,5 +1,6 @@
 package com.tinderui;
 
+import android.app.LauncherActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -10,13 +11,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.foodtinder.ListItemClass;
+import com.foodtinder.MainActivity;
 import com.foodtinder.R;
 import com.tinderui.support.CustomViewPager;
 
@@ -29,11 +34,24 @@ import java.util.Queue;
  * Created by pokeforce on 4/12/16.
  */
 public class TinderActivity extends AppCompatActivity {
+
     SwipeImageFragment mainPageFragment;
-    ArrayList<String> data = new ArrayList<>();
-    int cnt = 0;
+
     /* Local TextView variable to handle list notification number*/
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
+
+    private Toolbar toolbar;
+    ArrayList<ListItemClass> data = new ArrayList<>();
+    int cnt = 1; // used for notification count
+
+    public ListItemClass createListItem(String foodName)
+    {
+        ListItemClass newItem = new ListItemClass();
+        newItem.setFoodName(foodName);
+        newItem.setRestaurantName("test_restaurant");
+        newItem.setRestaurantAddress("test_address");
+        return newItem;
+    }
 
     /* onCreate():
      * First function called by Android when creating an activity
@@ -68,7 +86,9 @@ public class TinderActivity extends AppCompatActivity {
         Button noButton = (Button) findViewById(R.id.button_no);
         Button yesButton = (Button) findViewById(R.id.button_yes);
 
+
         // Load custom YES/NO button text
+
         Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
         noButton.setTypeface(Typeface_HamHeaven);
         yesButton.setTypeface(Typeface_HamHeaven);
@@ -83,13 +103,18 @@ public class TinderActivity extends AppCompatActivity {
                     imagePager.setCurrentItem(2);
             }
         });
+
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (imagePager.getCurrentItem() == 1
-                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
+                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
                     imagePager.setCurrentItem(0);
+
+                }
+
+
             }
         });
 
@@ -103,12 +128,6 @@ public class TinderActivity extends AppCompatActivity {
                 .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
     }
 
-
-    /* Queue of bitmaps: storing images
-     * acting as a cache
-     * collecting all results from url lookups
-     */
-    Queue<Bitmap> imageCache = new LinkedList<>();
 
     /* ImagePagerAdapter:
      * Feeds ViewPager the imageViews for its pages */
@@ -195,10 +214,12 @@ public class TinderActivity extends AppCompatActivity {
                 /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
                 if (imagePager.getCurrentItem() == 0){
                     otherPage = 2;
-                    ++cnt;
+
                     update_list_number(cnt);
-                    String toAdd = "Food " + cnt;
+                    String name = "Food " + cnt;
+                    ListItemClass toAdd = createListItem(name);
                     data.add(toAdd);
+                    ++cnt;
                 }
                 else{
                     otherPage = 0;
@@ -226,7 +247,6 @@ public class TinderActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationStart(Animator animation) {
-
         }
 
         /* Removes splash screen to save memory (set to GONE) */
@@ -245,6 +265,7 @@ public class TinderActivity extends AppCompatActivity {
         public void onAnimationRepeat(Animator animation) {
 
         }
+
     }
 
     /* Toolbar button functions:
@@ -255,8 +276,7 @@ public class TinderActivity extends AppCompatActivity {
 
     public void gotoList(View view) {
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
-        intent.putExtra("whatever", data);
-        intent.putExtra("cnt", cnt);
+        intent.putParcelableArrayListExtra("key", data);
         TinderActivity.this.startActivity(intent);
     }
 
@@ -285,3 +305,4 @@ public class TinderActivity extends AppCompatActivity {
     }
                 /* End list notification code */
 }
+
