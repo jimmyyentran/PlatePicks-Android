@@ -14,6 +14,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--Main UI-->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -27,21 +28,22 @@
             android:background="@color/main_red"
             android:layout_gravity="top">
 
-            <!--Settings Icon-->
+            <!--Drawer Icon-->
             <ImageButton
                 android:id="@+id/droor_icon"
                 android:contentDescription="@string/contentDescription_tinder"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
-                android:src="@drawable/settings_icon_2"
+                android:src="@drawable/settings_icon"
                 android:background="@android:color/transparent"
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="20dp"
+                android:onClick="openDrawer"/>
 
             <!--Fancy Button-->
             <ImageButton
@@ -99,10 +101,10 @@
             <!--Top Checker Border-->
             <ImageView
                 android:id="@+id/top_checkers"
-                android:rotation="180"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/checker_border"
+                android:src="@drawable/checker_border_2"
+                android:rotation="180"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:layout_alignParentTop="true"
@@ -137,7 +139,7 @@
                 android:id="@+id/bot_checkers"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/checker_border"
+                android:src="@drawable/checker_border_2"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:layout_alignParentBottom="true"
@@ -209,6 +211,110 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <!--Drawer-->
+    <android.support.v4.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawer1"
+        android:visibility="gone">
+
+        <!--Drawer Frame-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/drawer_frame">
+
+            <!--Drawer Block-->
+            <RelativeLayout
+                android:orientation="vertical"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:id="@+id/drawer_block"
+                android:background="#ffffff"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true">
+
+                <!--Top Bar-->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/drawer_top_bar">
+
+                    <!--Exit Button-->
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:paddingRight="15dp"
+                        android:id="@+id/exit_icon"
+                        android:onClick="closeDrawer">
+
+                        <!--Exit Icon's BG-->
+                        <LinearLayout
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:id="@+id/exit_icon_bg"
+                            android:background="@color/main_red"/>
+
+                        <!--Exit Icon's Image-->
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:id="@+id/exit_icon_fg"
+                            android:background="@drawable/exit_button_2"/>
+                    </FrameLayout>
+
+                    <!--Menu text-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Menu"
+                        android:textColor="@color/main_red"
+                        android:id="@+id/drawer_header_text"
+                        android:textSize="27dp"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical|center_horizontal" />
+                </FrameLayout>
+
+                <!--Grey Line between top bar and list-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_grey"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@+id/drawer_top_bar">
+                </LinearLayout>
+
+                <!--Drawer Content-->
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/main_drawer"
+                    android:scrollIndicators="none"
+                    android:paddingTop="10dp"
+                    android:layout_below="@+id/drawer_top_bar">
+                </ListView>
+
+            </RelativeLayout>
+
+            <!--Space on block's right-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/drawer_right_space"
+                android:layout_alignParentRight="false"
+                android:layout_toRightOf="@+id/drawer_block"
+                android:background="#000000"
+                android:alpha="0.25">
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.DrawerLayout>
+
     <!--Splash Screen-->
     <FrameLayout
         android:layout_width="match_parent"
@@ -223,5 +329,6 @@
             android:src="@drawable/main_logo"
             android:layout_gravity="center" />
     </FrameLayout>
+
 </FrameLayout>
 

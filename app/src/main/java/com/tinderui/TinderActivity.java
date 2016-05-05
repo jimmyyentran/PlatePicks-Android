@@ -55,6 +55,9 @@ public class TinderActivity extends AppCompatActivity {
         return newItem;
     }
 
+    /* Drawer declaration */
+    public android.support.v4.widget.DrawerLayout my_drawer = null;
+
     /* onCreate():
      * First function called by Android when creating an activity
      * */
@@ -88,12 +91,14 @@ public class TinderActivity extends AppCompatActivity {
         Button noButton = (Button) findViewById(R.id.button_no);
         Button yesButton = (Button) findViewById(R.id.button_yes);
 
-
-        // Load custom YES/NO button text
-
+        /* Load custom YES/NO button text */
         Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
         noButton.setTypeface(Typeface_HamHeaven);
         yesButton.setTypeface(Typeface_HamHeaven);
+
+        /* Custom font for Drawer's Header */
+        TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
+        drawer_header.setTypeface(Typeface_HamHeaven);
 
         /* On Click Listeners:
          * Functions that are called whenever the user clicks on the buttons or image */
@@ -265,16 +270,23 @@ public class TinderActivity extends AppCompatActivity {
 
     }
 
-    /* Toolbar button functions:
-     * Settings,
-     * Last-Liked item,
-     * Liked-list
-     */
-
+    /* Moves to Like-List Activity */
     public void gotoList(View view) {
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", data);
         TinderActivity.this.startActivity(intent);
+    }
+
+    /* Opens main drawer */
+    public void openDrawer(View view) {
+        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
+        my_drawer.setVisibility(View.VISIBLE);
+    }
+
+    /* Closes main drawer */
+    public void closeDrawer(View view) {
+        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
+        my_drawer.setVisibility(View.GONE);
     }
 
     void update_list_number (int cnt) {
