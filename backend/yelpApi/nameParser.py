@@ -26,7 +26,7 @@ class NameParser(object):
         for prettyWord in pretty.split():
             if prettyWord.lower() in self.words:
                 #These are rejected and should not be used
-                prettyWord += "*REJECTED*"
+                #  prettyWord += "*REJECTED*"
                 return None
 
         return pretty
