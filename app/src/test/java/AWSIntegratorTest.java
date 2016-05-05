@@ -62,15 +62,15 @@ public class AWSIntegratorTest {
 
 
 
-   // @Test
- //   public void YelpAPITest(){
-     //   AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
-   //     TestActivity activity =  new TestActivity();
+//    @Test
+//    public void YelpAPITest(){
+//        AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
+//        TestActivity activity =  new TestActivity();
 //    //    System.out.println("{\n  \"coordinates\": { \n    \"longitude\": 23.123,\n    \"latitude\": 33.444\n  },\n  \"radius_filter\": 10000\n}");
-    //    asyncTask.execute("hello-world-python", "{\n  \"coordinates\": { \n    \"longitude\": 23.123,\n    \"latitude\": 33.444\n  },\n  \"radius_filter\": 10000\n}", activity);
-  //      Robolectric.flushBackgroundThreadScheduler();
+//        asyncTask.execute("hello-world-python", "{\n  \"coordinates\": { \n    \"longitude\": 23.123,\n    \"latitude\": 33.444\n  },\n  \"radius_filter\": 10000\n}", activity);
+//        Robolectric.flushBackgroundThreadScheduler();
 //        assertEquals(activity.returnResults(), "\"value1\"");
- //   }
+//    }
 
 
 //    @Test
