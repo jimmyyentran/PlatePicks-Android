@@ -12,7 +12,7 @@ class NameParser(object):
 
     #  @staticmethod
     def parse_name(self, name):
-        trim = re.search("[-!#./():]", name)
+        trim = re.search("[-!#./():$]", name)
         if trim:
             pretty = (name[0:trim.start()])
         else:
