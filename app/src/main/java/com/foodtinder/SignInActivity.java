@@ -60,7 +60,7 @@ public class SignInActivity extends Activity {
         }
 
         /**
-         * Recieves the sign-in result indicating the user canceled and shows a toast.
+         * Receives the sign-in result indicating the user canceled and shows a toast.
          * @param provider the identity provider with which the user attempted sign-in.
          */
         @Override
