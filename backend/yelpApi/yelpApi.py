@@ -30,10 +30,18 @@ class Yelp_API(object):
                 )
 
         list_to_be_returned = []
+        #  for bus in response.businesses:
+            #  list_to_be_returned += Crawler.limit("http://www.yelp.com/biz_photos/" + bus.id + "?tab=food&start=0", self.food_per_business)
+        list_of_urls = []
         for bus in response.businesses:
-            list_to_be_returned += Crawler.limit("http://www.yelp.com/biz_photos/" + bus.id + "?tab=food&start=0", self.food_per_business)
+            list_of_urls.append("http://www.yelp.com/biz_photos/" + bus.id +
+                    "?tab=food&start=0")
 
-        return list_to_be_returned
+        #  print (list_of_urls)
+        #  Crawler.limit(list_of_urls, 1)
+        return Crawler(list_of_urls).limit(self.food_per_business)
+
+        #  return list_to_be_returned
 
 
 #  print full object attribute of first object
