@@ -1,4 +1,4 @@
-package com.foodtinder;
+package com.tinderui;
 
 import android.os.Parcel;
 import android.os.Parcelable;
