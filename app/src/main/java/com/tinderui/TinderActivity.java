@@ -24,8 +24,10 @@ import com.foodtinder.ListItemClass;
 import com.foodtinder.MainActivity;
 import com.foodtinder.R;
 import com.foodtinder.util.AWSIntegrator;
+import com.tinderui.object.FoodRequest;
 import com.tinderui.util.AWSIntegratorAsyncTask;
 import com.tinderui.support.CustomViewPager;
+import com.tinderui.util.AWSIntegratorInterface;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,7 +37,7 @@ import java.util.Queue;
 /**
  * Created by pokeforce on 4/12/16.
  */
-public class TinderActivity extends AppCompatActivity {
+public class TinderActivity extends AppCompatActivity implements AWSIntegratorInterface {
 
     SwipeImageFragment mainPageFragment;
 
@@ -112,8 +114,9 @@ public class TinderActivity extends AppCompatActivity {
                 if (imagePager.getCurrentItem() == 1
                         && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
                     imagePager.setCurrentItem(0);
-
                 }
+                FoodRequest req = new FoodRequest("asian", 3, "33.7175, -117.8311", 4, 40000, "japanese", 1);
+                new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
             }
         });
 
@@ -125,6 +128,26 @@ public class TinderActivity extends AppCompatActivity {
                 .alpha(0f)
                 .setStartDelay(3000)
                 .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
+    }
+
+    @Override
+    public void doSomethingWithResults(String ob) {
+        Log.d("TinderActivity", ob);
+        ArrayList<String> urls = parseUrls(ob);
+        for (String url : urls) Log.d("TinderActivity", url);
+    }
+
+    ArrayList<String> parseUrls(String s) {
+        int index = 0;
+        ArrayList<String> urls = new ArrayList<>();
+
+        while ((index = s.indexOf("http", index)) != -1) {
+            int jpg = s.indexOf(".jpg", index) + 4;
+            urls.add(s.substring(index, jpg));
+            index = jpg;
+        }
+
+        return urls;
     }
 
     /* ImagePagerAdapter:
