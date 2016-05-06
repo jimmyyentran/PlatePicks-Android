@@ -8,7 +8,6 @@ class NameParser(object):
     def __init__(self, dictionaryFile):
         with open(dictionaryFile) as file:
             self.words = file.read().split(",")
-        # print (self.words)
 
     #  @staticmethod
     def parse_name(self, name):
@@ -21,12 +20,17 @@ class NameParser(object):
         #Capitalize first letter in word
         pretty = pretty.title()
 
+        pretty_split_words = pretty.split()
+
+        #if only 1 word reject
+        if(len(pretty_split_words)) == 1:
+            return None
+
         #Assume that comments are usually shorter and list of rejected words
         #This algorithm breaks comments into word then search the dictionary
-        for prettyWord in pretty.split():
+        for prettyWord in pretty_split_words:
             if prettyWord.lower() in self.words:
                 #These are rejected and should not be used
-                #  prettyWord += "*REJECTED*"
                 return None
 
         return pretty
