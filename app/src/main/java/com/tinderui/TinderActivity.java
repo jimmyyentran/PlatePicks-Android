@@ -230,6 +230,10 @@ public class TinderActivity extends AppCompatActivity {
                     otherPage = 2;
 
                     update_list_number(cnt);
+
+                    /* move liked image into fancy button */
+                    ImageView fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
+                    fancy_image.setBackgroundResource();
                     String name = "Food " + cnt;
                     ListItemClass toAdd = createListItem(name);
                     data.add(toAdd);

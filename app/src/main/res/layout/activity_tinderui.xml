@@ -46,17 +46,33 @@
                 android:onClick="openDrawer"/>
 
             <!--Fancy Button-->
-            <ImageButton
-                android:id="@+id/fancy_button"
-                android:layout_width="@android:dimen/app_icon_size"
+            <FrameLayout
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/fancy_button_2"
-                android:background="@android:color/transparent"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
-                android:nestedScrollingEnabled="false" />
+                android:id="@+id/fancy_button_frame"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/fancy_button_image"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp" />
+
+                <ImageButton
+                    android:id="@+id/fancy_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/fancy_button"
+                    android:background="@android:color/transparent"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:nestedScrollingEnabled="false" />
+            </FrameLayout>
 
             <!--List Button-->
             <FrameLayout
@@ -524,6 +540,7 @@
 
                 </LinearLayout>
 
+                <!--food types list container-->
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -547,6 +564,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
+                                <!--left checkboxes-->
                                 <LinearLayout
                                     android:orientation="vertical"
                                     android:layout_width="wrap_content"
@@ -636,6 +654,7 @@
                                         android:checked="true" />
                                 </LinearLayout>
 
+                                <!--right checkboxes-->
                                 <LinearLayout
                                     android:orientation="vertical"
                                     android:layout_width="match_parent"
