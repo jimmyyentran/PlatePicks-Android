@@ -216,7 +216,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer1"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!--Drawer Frame-->
         <RelativeLayout
@@ -528,7 +528,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="170dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:id="@+id/types_list"
                     android:background="#ffffff">
 
