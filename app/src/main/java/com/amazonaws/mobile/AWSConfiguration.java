@@ -30,5 +30,5 @@ public class AWSConfiguration {
     // Amazon Mobile Analytics region
     public static final Regions AMAZON_MOBILE_ANALYTICS_REGION = Regions.US_EAST_1;
     public static final String AMAZON_CONTENT_DELIVERY_S3_BUCKET =
-        "foodtinder-contentdelivery-mobilehub-761050320";
+        "platepicks-contentdelivery-mobilehub-761050320";
 }

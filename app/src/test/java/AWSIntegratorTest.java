@@ -1,12 +1,8 @@
 import com.google.gson.Gson;
-import java.lang.reflect.Type;
-import com.tinderui.util.AWSIntegratorAsyncTask;
-import com.tinderui.util.AWSIntegratorInterface;
-import com.tinderui.object.FoodRequest;
+import com.platepicks.util.AWSIntegratorAsyncTask;
+import com.platepicks.util.AWSIntegratorInterface;
+import com.platepicks.objects.FoodRequest;
 
-import java.util.List; //added
-import java.util.ArrayList; //added
-import java.lang.Object; //added
 //import context.arch.comm.DataObject; //added
 import org.junit.Before;
 import org.junit.Test;
