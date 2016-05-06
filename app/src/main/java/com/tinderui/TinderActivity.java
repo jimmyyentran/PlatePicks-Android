@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -40,7 +42,10 @@ public class TinderActivity extends AppCompatActivity {
     SwipeImageFragment mainPageFragment;
 
     /* Local TextView variable to handle list notification number*/
-    TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
+    TextView notification_number = null;
+
+    /* local seekBar variable */
+    SeekBar rad_seekBar = null;
 
     private Toolbar toolbar;
     ArrayList<ListItemClass> data = new ArrayList<>();
@@ -85,6 +90,13 @@ public class TinderActivity extends AppCompatActivity {
         /* Listen for change in swipe animation's current state */
         final ImageChangeListener changeListener = new ImageChangeListener(imagePager);
         imagePager.addOnPageChangeListener(changeListener);
+
+        /* initialize radius seekBar and link it to a listener*/
+        rad_seekBar = (SeekBar) findViewById(R.id.radius_seekBar);
+        rad_seekBar.setProgress(15);
+        TextView radius_value = (TextView) findViewById(R.id.radius_number);
+        radius_value.setText(String.valueOf(rad_seekBar.getProgress()));
+        rad_seekBar.setOnSeekBarChangeListener(new rad_seekBar_listener());
 
         /* Yes and No Buttons:
          * Finding reference to buttons in xml layout to keep as objects in Java */
@@ -289,6 +301,19 @@ public class TinderActivity extends AppCompatActivity {
         my_drawer.setVisibility(View.GONE);
     }
 
+    public void viewFoodTypeList(View view) {
+        FrameLayout tmp = (FrameLayout) findViewById(R.id.types_list);
+        ImageView icon = (ImageView) findViewById(R.id.types_dropdown);
+        if(tmp.getVisibility() == View.GONE){
+            tmp.setVisibility(View.VISIBLE);
+            icon.setRotation(180);
+        }
+        else{
+            tmp.setVisibility(View.GONE);
+            icon.setRotation(0);
+        }
+    }
+
     void update_list_number (int cnt) {
  /* Code for List Notification Number */
         notification_number = (TextView) findViewById(R.id.list_notification);
@@ -312,6 +337,27 @@ public class TinderActivity extends AppCompatActivity {
         }
         return;
     }
-                /* End list notification code */
+    /* end list notification code */
+
+    /* seekbar listener */
+    private class rad_seekBar_listener implements SeekBar.OnSeekBarChangeListener {
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            TextView tmp = (TextView) findViewById(R.id.radius_number);
+            if(progress <= 9) {
+                if(progress < 5) {
+                    progress = 5;
+                }
+                tmp.setText("  " + progress);
+            }
+            else {
+                tmp.setText("" + progress);
+            }
+        }
+
+        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        public void onStopTrackingTouch(SeekBar seekBar) {}
+
+    }
 }
 
