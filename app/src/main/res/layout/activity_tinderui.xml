@@ -127,15 +127,17 @@
                 android:background="@color/main_red"
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentStart="false"
-                android:layout_alignParentBottom="false" />
+                android:layout_alignParentBottom="false"
+                android:alpha="0.3" />
 
             <!--Faded Logo-->
             <ImageView
                 android:id="@+id/faded_logo"
-                android:src="@drawable/faded_logo"
+                android:src="@drawable/alternate_logo"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:alpha="0.2" />
 
 
             <!--Container for Tinder Images-->
@@ -159,7 +161,8 @@
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:layout_alignParentBottom="true"
-                android:background="@color/main_red" />
+                android:background="@color/main_red"
+                android:alpha="0.3" />
         </RelativeLayout>
 
         <!--Bottom Bar-->
