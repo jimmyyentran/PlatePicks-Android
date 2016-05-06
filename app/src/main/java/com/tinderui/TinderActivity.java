@@ -1,6 +1,5 @@
 package com.tinderui;
 
-import android.app.LauncherActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -12,26 +11,23 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.foodtinder.ListItemClass;
-import com.foodtinder.MainActivity;
 import com.foodtinder.R;
-import com.foodtinder.util.AWSIntegrator;
 import com.tinderui.object.FoodRequest;
 import com.tinderui.util.AWSIntegratorAsyncTask;
 import com.tinderui.support.CustomViewPager;
 import com.tinderui.util.AWSIntegratorInterface;
+import com.tinderui.util.GetImagesAsyncTask;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 /**
@@ -44,9 +40,10 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     /* Local TextView variable to handle list notification number*/
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
 
-    private Toolbar toolbar;
     ArrayList<ListItemClass> data = new ArrayList<>();
     int cnt = 1; // used for notification count
+
+    ArrayList<String> imageUrls;    // Contains downloaded data from backend. Currently just image urls.
 
     public ListItemClass createListItem(String foodName)
     {
@@ -115,26 +112,34 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                         && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
                     imagePager.setCurrentItem(0);
                 }
-                FoodRequest req = new FoodRequest("asian", 3, "33.7175, -117.8311", 4, 40000, "japanese", 1);
-                new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
             }
         });
+
+        // FIXME: Set up request to put array of image urls into field member imageUrls
+        FoodRequest req = new FoodRequest("asian", 3, "33.7175, -117.8311", 4, 40000, "japanese", 1);
+        new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
         FrameLayout splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
-        splashScreen.animate()
-                .alpha(0f)
-                .setStartDelay(3000)
-                .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
+//        splashScreen.animate()
+//                .alpha(0f)
+//                .setStartDelay(3000)
+//                .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
     }
 
     @Override
     public void doSomethingWithResults(String ob) {
         Log.d("TinderActivity", ob);
-        ArrayList<String> urls = parseUrls(ob);
-        for (String url : urls) Log.d("TinderActivity", url);
+        imageUrls = parseUrls(ob);
+        for (String url : imageUrls) Log.d("TinderActivity", url);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        ImageView image = (ImageView) findViewById(R.id.imageView_splash);
+        new GetImagesAsyncTask(image, metrics.heightPixels, metrics.widthPixels).execute(imageUrls.toArray());
     }
 
     ArrayList<String> parseUrls(String s) {

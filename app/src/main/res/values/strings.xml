@@ -14,6 +14,7 @@
 
   <!--Content descriptions for images-->
   <string name="contentDescription_tinder">Image of suggested food</string>
+  <string name="contentDescription_logo">Plate Picks Logo</string>
 
   <!--Name of options in in res/menu/menu_*.xml-->
   <string name="action_like_list">Like list</string>
