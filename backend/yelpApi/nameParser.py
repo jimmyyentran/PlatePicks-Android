@@ -9,7 +9,6 @@ class NameParser(object):
         with open(dictionaryFile) as file:
             self.words = file.read().split(",")
 
-    #  @staticmethod
     def parse_name(self, name):
         trim = re.search("[-!#./():$]", name)
         if trim:
@@ -22,8 +21,8 @@ class NameParser(object):
 
         pretty_split_words = pretty.split()
 
-        #if only 1 word reject
-        if(len(pretty_split_words)) == 1:
+        #if only 1 or less word reject
+        if(len(pretty_split_words)) <= 1:
             return None
 
         #Assume that comments are usually shorter and list of rejected words
