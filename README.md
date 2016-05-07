@@ -1,7 +1,62 @@
-# FoodTinder
-## Compile & Running
-The backend-API backbone of this project is generated using Amazon Web Service (AWS) Mobile Hub https://aws.amazon.com/mobile/. AWS Mobile Hub is a fairly new service (Late 2015) that allows developers to develop apps using mobile backend as a service (MBaaS). What this means is that as developers we do not need to waste time setting up and dealing with the nuances of running a server and configuring backend logic. AWS Mobile Hub does all of this for us, allowing for us to concentrate on making the actual app. However its services does not come free. For the first 12 months of usage, AWS has a "grace period" where it does not charge for limited use of services unless we exceed our memory, API call, analytics, etc usage. Because we don't plan to exceed 1,000 daily users after launching (who knows?), we should be fine using AWS for the entirity of this project. 
+<p align="center"><img src="/app/src/main/res/drawable/main_logo.png" width="300"></p>
 
-In the READ_ME directory of this repository is an `index.html` that will guide you through the steps of compiling the project on your local machine. You can skip the Facebook Sign-in (steps 5 & 6).
+[![Build Status](https://travis-ci.com/jtran064/PlatePicks.svg?token=knkpqxx7mmwUCSBzx5mB&branch=master)](https://travis-ci.com/jtran064/PlatePicks)  
+# Plate Picks
 
-We will be using the sample app as a starter App (step 28). The name have already been changed but we'd need to remove demo features.
+Tinder but for food
+
+## Progress
+
+### General
+&#x2705; App name  
+&#x2705; App logo  
+&#x274C; User can make app-specific account  
+&#x274C; User can save liked foods onto online database  
+&#x274C; User can leave food reviews  
+&#x274C; User can login from Facebook  
+
+### Front End
+
+&#x274C; Splash screens does preliminary loading of screens and database requests  
+&#x274C; Fully working list of liked food  
+&#x2705; Users can swipe left to view next item  
+&#x2705; Working sliding animations  
+&#x2705; Notification within app that item is added to list  
+&#x2705; Distinctive visual separation between viewed and unviewed items in list  
+&#x2705; Simple splash screen
+
+### Back End
+&#x2705; Ethnic food searches  
+&#x2705; Load (50) food images onto AWS S3 with name and restaurants  
+&#x274C; Working schemas for users, food, and restaurants and their relationships  
+&#x2705; Working Yelp API integrated into app  
+&#x274C; RESTful API  
+&nbsp;&nbsp;&nbsp;&nbsp;&#x274C; GET - pull image from AWS S3  
+&nbsp;&nbsp;&nbsp;&nbsp;&#x274C; INSERT - append liked foods into DynamoDB  
+&nbsp;&nbsp;&nbsp;&nbsp;&#x274C; DELETE - remove liked food from list  
+&#x2705;Range specific searches
+
+## Tools
+
+* Amazon Web Service
+  * Cognito
+  * DynamoDB
+  * Lambda
+  * Mobile Hub
+  * S3
+* Android Studios
+* Gson
+* Robolectric
+
+## Squad
+
+Eliza Alcaraz  
+Divyansh Choudhary  
+Daniel Handojo  
+Alyza Malunao   
+Jordan Kincer   
+Jimmy Tran
+
+## License
+
+MIT
