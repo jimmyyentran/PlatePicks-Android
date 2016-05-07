@@ -21,38 +21,105 @@
         android:layout_height="match_parent">
 
         <!--Top Bar-->
-        <RelativeLayout
-            android:id="@+id/top_bar"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:background="@color/main_red"
-            android:layout_gravity="top">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <!--Drawer Icon-->
-            <ImageButton
-                android:id="@+id/droor_icon"
-                android:contentDescription="@string/contentDescription_tinder"
-                android:layout_width="30dp"
-                android:layout_height="25dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/settings_icon_3"
-                android:background="@android:color/transparent"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="20dp"
-                android:onClick="openDrawer"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <!--Fancy Button-->
+                <RelativeLayout
+                    android:id="@+id/top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:background="@color/main_red"
+                    android:layout_gravity="top"
+                    android:paddingRight="20dp"
+                    android:paddingLeft="20dp">
+
+                    <!--Drawer Icon-->
+                    <ImageButton
+                        android:id="@+id/droor_icon"
+                        android:contentDescription="@string/contentDescription_tinder"
+                        android:layout_width="30dp"
+                        android:layout_height="25dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/settings_icon_3"
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:onClick="openDrawer"/>
+
+                    <!--Fancy Button-->
+
+                    <!--List Button-->
+                    <FrameLayout
+                        android:id="@+id/list_button_frame"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="false"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp">
+
+                        <ImageButton
+                            android:id="@+id/list_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/list_icon_3"
+                            android:background="@android:color/transparent"
+                            android:onClick="gotoList" />
+                        <TextView
+                            android:id="@+id/list_notification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textColor="@color/main_red"
+                            android:typeface="sans"
+                            android:layout_gravity="center" />
+
+                    </FrameLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/top_checkers"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/checker_border_3"
+                    android:rotation="180"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/main_red"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentBottom="false"
+                    android:alpha="0.3" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView"
+                android:background="@drawable/red_circle"
+                android:layout_gravity="center_horizontal" />
+
             <FrameLayout
                 android:layout_width="60dp"
-                android:layout_height="match_parent"
+                android:layout_height="100dp"
                 android:layout_centerInParent="true"
                 android:id="@+id/fancy_button_frame"
                 android:paddingTop="3dp"
-                android:paddingBottom="3dp">
+                android:paddingBottom="3dp"
+                android:layout_gravity="center_horizontal">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -73,38 +140,7 @@
                     android:layout_marginTop="3dp"
                     android:nestedScrollingEnabled="false" />
             </FrameLayout>
-
-            <!--List Button-->
-            <FrameLayout
-                android:id="@+id/list_button_frame"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp">
-
-                <ImageButton
-                    android:id="@+id/list_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/list_icon_3"
-                    android:background="@android:color/transparent"
-                    android:onClick="gotoList" />
-                <TextView
-                    android:id="@+id/list_notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textColor="@color/main_red"
-                    android:typeface="sans"
-                    android:layout_gravity="center" />
-
-            </FrameLayout>
-        </RelativeLayout>
+        </FrameLayout>
 
         <!--Center Section-->
         <RelativeLayout
@@ -115,20 +151,6 @@
             android:background="#ffffff">
 
             <!--Top Checker Border-->
-            <ImageView
-                android:id="@+id/top_checkers"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/checker_border_3"
-                android:rotation="180"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/main_red"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentStart="false"
-                android:layout_alignParentBottom="false"
-                android:alpha="0.3" />
 
             <!--Faded Logo-->
             <ImageView
