@@ -28,7 +28,8 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="#ffffff">
 
                 <RelativeLayout
                     android:id="@+id/top_bar"
@@ -66,8 +67,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="false"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="20dp">
+                        android:layout_centerVertical="true">
 
                         <ImageButton
                             android:id="@+id/list_button"
@@ -106,39 +106,43 @@
             </LinearLayout>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:id="@+id/imageView"
                 android:background="@drawable/red_circle"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal|top"
+                android:onClick="removeCheckers" />
 
             <FrameLayout
-                android:layout_width="60dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:id="@+id/fancy_button_frame"
-                android:paddingTop="3dp"
                 android:paddingBottom="3dp"
-                android:layout_gravity="center_horizontal">
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6dp"
+                android:onClick="removeCheckers">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
                     android:id="@+id/fancy_button_image"
                     android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp" />
+                    android:layout_marginBottom="3dp"
+                    android:layout_gravity="left" />
 
                 <ImageButton
                     android:id="@+id/fancy_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/fancy_button"
                     android:background="@android:color/transparent"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:nestedScrollingEnabled="false" />
+                    android:nestedScrollingEnabled="false"
+                    android:onClick="removeCheckers" />
             </FrameLayout>
         </FrameLayout>
 
@@ -159,7 +163,9 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:alpha="0.2" />
+                android:alpha="0.2"
+                android:layout_alignTop="@+id/viewPager_images"
+                android:layout_above="@+id/bot_checkers" />
 
 
             <!--Container for Tinder Images-->

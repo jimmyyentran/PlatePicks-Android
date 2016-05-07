@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -315,6 +316,19 @@ public class TinderActivity extends AppCompatActivity {
         else{
             tmp.setVisibility(View.GONE);
             icon.setRotation(0);
+        }
+    }
+
+    public void removeCheckers (View view) {
+        ImageView tmp = (ImageView) findViewById(R.id.top_checkers);
+        ImageView tmp2 = (ImageView)findViewById(R.id.bot_checkers);
+        if(tmp.getVisibility() == (View.INVISIBLE)) {
+            tmp.setVisibility(View.VISIBLE);
+            tmp2.setVisibility(View.VISIBLE);
+        }
+        else{
+            tmp.setVisibility(View.INVISIBLE);
+            tmp2.setVisibility(View.INVISIBLE);
         }
     }
 
