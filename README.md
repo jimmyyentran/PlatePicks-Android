@@ -1,5 +1,6 @@
-<p align="center"><img src="/app/src/main/res/drawable/main_logo.png"></p>
+<p align="center"><img src="/app/src/main/res/drawable/main_logo.png" width="300"></p>
 
+[![Build Status](https://travis-ci.com/jtran064/PlatePicks.svg?token=knkpqxx7mmwUCSBzx5mB&branch=master)](https://travis-ci.com/jtran064/PlatePicks)  
 # Plate Picks
 
 Tinder but for food
@@ -34,6 +35,18 @@ Tinder but for food
 &nbsp;&nbsp;&nbsp;&nbsp;&#x274C; INSERT - append liked foods into DynamoDB  
 &nbsp;&nbsp;&nbsp;&nbsp;&#x274C; DELETE - remove liked food from list  
 &#x2705;Range specific searches
+
+## Tools
+
+* Amazon Web Service
+  * Cognito
+  * DynamoDB
+  * Lambda
+  * Mobile Hub
+  * S3
+* Android Studios
+* Gson
+* Robolectric
 
 ## Squad
 
