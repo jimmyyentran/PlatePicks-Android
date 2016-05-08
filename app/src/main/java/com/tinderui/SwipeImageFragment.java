@@ -22,6 +22,7 @@ public class SwipeImageFragment extends Fragment {
 
     SquareImageButton foodPicture;
     Bitmap bitmap;
+    ImageView to_pipe;
 
     static public SwipeImageFragment newInstance(Bitmap bitmap) {
         SwipeImageFragment fragment = new SwipeImageFragment();

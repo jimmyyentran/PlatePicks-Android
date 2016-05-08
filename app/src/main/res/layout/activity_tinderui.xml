@@ -23,7 +23,17 @@
         <!--Top Bar-->
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#ffffff">
+
+            <ImageView
+                android:layout_width="108dp"
+                android:layout_height="108dp"
+                android:id="@+id/circle_checkers"
+                android:layout_gravity="center_horizontal|top"
+                android:background="@color/main_red"
+                android:alpha="0.3"
+                android:src="@drawable/checker_circle_2" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -61,7 +71,7 @@
                     <!--List Button-->
                     <FrameLayout
                         android:id="@+id/list_button_frame"
-                        android:layout_width="30dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
@@ -71,12 +81,13 @@
 
                         <ImageButton
                             android:id="@+id/list_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="30dp"
+                            android:layout_height="wrap_content"
                             android:scaleType="centerInside"
                             android:src="@drawable/list_icon_3"
                             android:background="@android:color/transparent"
-                            android:onClick="gotoList" />
+                            android:onClick="gotoList"
+                            android:layout_gravity="center" />
                         <TextView
                             android:id="@+id/list_notification"
                             android:layout_width="wrap_content"
@@ -93,7 +104,7 @@
                     android:id="@+id/top_checkers"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/checker_border_3"
+                    android:src="@drawable/checker_border_4"
                     android:rotation="180"
                     android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
@@ -108,32 +119,30 @@
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:id="@+id/imageView"
+                android:id="@+id/red_circle"
                 android:background="@drawable/red_circle"
-                android:layout_gravity="center_horizontal|top"
-                android:onClick="removeCheckers" />
+                android:layout_gravity="center_horizontal|top" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:id="@+id/fancy_button_frame"
-                android:paddingBottom="3dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"
-                android:onClick="removeCheckers">
+                android:layout_marginTop="6dp">
 
                 <ImageView
-                    android:layout_width="75dp"
+                    android:layout_width="68dp"
                     android:layout_height="75dp"
                     android:id="@+id/fancy_button_image"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
-                    android:layout_gravity="left" />
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center_horizontal" />
 
                 <ImageButton
                     android:id="@+id/fancy_button"
-                    android:layout_width="75dp"
+                    android:layout_width="70dp"
                     android:layout_height="75dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/fancy_button"
@@ -142,7 +151,7 @@
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
                     android:nestedScrollingEnabled="false"
-                    android:onClick="removeCheckers" />
+                    android:layout_gravity="center_horizontal" />
             </FrameLayout>
         </FrameLayout>
 
@@ -185,7 +194,7 @@
                 android:id="@+id/bot_checkers"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/checker_border_3"
+                android:src="@drawable/checker_border_4"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:layout_alignParentBottom="true"
@@ -405,7 +414,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Radius"
+                                android:text="Radius (mi.)"
                                 android:id="@+id/radius_text" />
 
                             <SeekBar
@@ -415,7 +424,7 @@
                                 android:layout_toRightOf="@+id/radius_text"
                                 android:layout_toLeftOf="@+id/radius_number"
                                 android:layout_centerVertical="true"
-                                android:max="50" />
+                                android:max="25" />
                             <TextView
                                 android:layout_width="20dp"
                                 android:layout_height="wrap_content"
@@ -536,7 +545,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Clear Like-List"
+                                android:text="Clear Favorites"
                                 android:id="@+id/reset_text"
                                 android:layout_centerHorizontal="true"
                                 android:textColor="#ffffff"

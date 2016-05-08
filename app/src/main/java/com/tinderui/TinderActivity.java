@@ -27,6 +27,7 @@ import com.foodtinder.ListItemClass;
 import com.foodtinder.MainActivity;
 import com.foodtinder.R;
 import com.foodtinder.util.AWSIntegrator;
+import com.tinderui.support.SquareImageButton;
 import com.tinderui.util.AWSIntegratorAsyncTask;
 import com.tinderui.support.CustomViewPager;
 
@@ -234,6 +235,7 @@ public class TinderActivity extends AppCompatActivity {
 
                     /* move liked image into fancy button */
                     ImageView fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
+                    fancy_image.setImageDrawable(mainPageFragment.foodPicture.getDrawable());
                     //fancy_image.setBackgroundResource();
                     String name = "Food " + cnt;
                     ListItemClass toAdd = createListItem(name);
