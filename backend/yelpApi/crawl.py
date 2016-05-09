@@ -8,6 +8,7 @@ import grequests
 
 
 class Crawler(object):
+    # data is passed in as url as key and respective info: {url, location info}
     def __init__(self, data):
         self.urls = data;
         self.parse = NameParser("unwantedWords.txt")
@@ -16,12 +17,13 @@ class Crawler(object):
     # Take in a list of url
     def limit(self,limit):
         self.limit = limit
-        print(self.urls)
         async_list = []
-        for u in self.urls:
-            action_item = grequests.get(u, hooks = {'response' :
+        #  for u in self.urls:
+        for key in self.urls:
+            action_item = grequests.get(key, hooks = {'response' :
                 self.extract_food_names
                 })
+            #  action_item = grequests.get(u, hooks=dict(data=self.extract_food_names));
             async_list.append(action_item)
         grequests.map(async_list, exception_handler=self.exception_handler)
         return self.information
@@ -32,6 +34,8 @@ class Crawler(object):
 
 
     def extract_food_names(self, response, **kwargs):
+    #  def extract_food_names(self, args):
+    #  def extract_food_names(args):
         # new = input("Enter the url to crawl: ")
         # url = new.rstrip()  # removes any extra spaces
         # edit url to get the pictures and only the foods
@@ -42,7 +46,10 @@ class Crawler(object):
         #  source_code = requests.get(url)  # variable = requests.get(url)
         #  html = source_code.text  # get source code of page
         url = response.url
+        firstUrl = url
         html = response.text
+        #  url = args['url']
+        #  html = args['response']
         soup = BeautifulSoup(html, 'html.parser')
         # parse for the number of pages
         for sz in soup.find("div", "page-of-pages arrange_unit arrange_unit--fill"):
@@ -53,6 +60,8 @@ class Crawler(object):
         pics_id = []
         com = []
         flag = True # if reached limit
+
+        sz = 1 #just query on the first page
         for i in range(sz):
             if not flag: break # if reached limit then break this loop
             url.find("&start")
@@ -60,8 +69,8 @@ class Crawler(object):
             i += 1
 
             # parse the url for html code
-            source_code = requests.get(url)  # variable = requests.get(url)
-            html = source_code.text  # get source code of page
+            #  source_code = requests.get(url)  # variable = requests.get(url)
+            #  html = source_code.text  # get source code of page
             soup = BeautifulSoup(html, 'html.parser')
             #find all the links thats are img urls
             for link in soup.findAll('img', src=True, alt=True):
@@ -99,7 +108,13 @@ class Crawler(object):
         #  information = []
         # prints the comments, pic_id and the url of the picture
         for pic, coms, pic_id in zip(pics, com, pics_id):
-            self.information.append([pic_id, pic, coms])
+            #  self.information.append([pic_id, pic, coms])
+            to_be_returned = dict(url=pic, food_id=pic_id, name=coms)
+            to_be_returned['location']=self.urls[firstUrl]
+            #  to_be_returned.update(self.urls[firstUrl])
+            self.information.append(to_be_returned)
+            #  self.information.append(dict(url=pic, food_id=pic_id,
+                #  name=coms).update(original_info))
             # print(coms)
             # print(pic_id)
             # print(pic)
