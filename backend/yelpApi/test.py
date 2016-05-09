@@ -3,13 +3,14 @@ import pprint
 
 #Test Parameters
 params = {
-        'term': 'asian', #general search
-        'food_per_business': 2, #test if input random key
-        'll': '33.7175, -117.8311', #long and latitude
-        'limit': 2, #number of businesses
-        'radius_filter': 40000, #25 miles maximum
-        'category_filter': 'vietnamese,filipino', #pre-set categories
-        'sort': 1 #distance
+        "term": "asian",
+       "food_per_business": 1,
+       "ll": "40.7128, -74.0059",
+       "limit": 5,
+       "radius_filter": 40000,
+       "category_filter": "vietnamese,filipino",
+       "sort": 1,
+       "latitude" : "40.987"
         }
 
 response = Yelp_API(params).call_API()

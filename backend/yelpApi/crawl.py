@@ -1,10 +1,10 @@
-import requests
+#  import requests
 from bs4 import BeautifulSoup
-#  import urllib.parse
 from urlparse import urljoin
 from nameParser import NameParser
-#  from grequests import async
 import grequests
+#  import unirest
+#  from requests_futures.sessions import FuturesSession
 
 
 class Crawler(object):
@@ -13,20 +13,45 @@ class Crawler(object):
         self.urls = data;
         self.parse = NameParser("unwantedWords.txt")
         self.information = []
+        #  self.session = FuturesSession()
+        #  tornado.httpclient.AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
 
-    # Take in a list of url
+    #Take in a list of url
     def limit(self,limit):
         self.limit = limit
         async_list = []
-        #  for u in self.urls:
         for key in self.urls:
             action_item = grequests.get(key, hooks = {'response' :
                 self.extract_food_names
                 })
-            #  action_item = grequests.get(u, hooks=dict(data=self.extract_food_names));
             async_list.append(action_item)
         grequests.map(async_list, exception_handler=self.exception_handler)
         return self.information
+
+    #  @tornado.web.asynchronous
+    #  def limit(self,limit):
+        #  self.limit = limit
+        #  client = tornado.httpclient.AsyncHTTPClient()
+        #  for key in self.urls:
+            #  client.fetch(HTTPRequest(url, 'GET',
+                #  callback=self.extract_food_names))
+            #  client.fetch(key, self.extract_food_names)
+        #  tornado.ioloop.IOLoop.instance().start()
+        #  client.close()
+        #  return self.information
+
+    #  def limit(self,limit):
+        #  self.limit = limit
+        #  future = []
+        #  for key in self.urls:
+            #  future.append(self.session.get(key,
+                #  background_callback=self.extract_food_names))
+            #  #  print(key)
+        #  for f in future:
+            #  response = f.result()
+
+        #  #  print(self.information)
+        #  return self.information
 
     def exception_handler(self, request, exception):
         print "Failed %s" % (request)
@@ -34,20 +59,12 @@ class Crawler(object):
 
 
     def extract_food_names(self, response, **kwargs):
-    #  def extract_food_names(self, args):
-    #  def extract_food_names(args):
-        # new = input("Enter the url to crawl: ")
-        # url = new.rstrip()  # removes any extra spaces
-        # edit url to get the pictures and only the foods
-        #  url= url
-        #  url.replace("/biz", "/biz_photos")
-        #  url += "?tab=food&start=0"
-        # parse the url for html code
-        #  source_code = requests.get(url)  # variable = requests.get(url)
-        #  html = source_code.text  # get source code of page
+        #  print(vars(response))
         url = response.url
+        #  print(url)
         firstUrl = url
-        html = response.text
+        html = response.content
+        #  print(html)
         #  url = args['url']
         #  html = args['response']
         soup = BeautifulSoup(html, 'html.parser')
@@ -61,7 +78,7 @@ class Crawler(object):
         com = []
         flag = True # if reached limit
 
-        sz = 1 #just query on the first page
+        #  sz = 1 #just query on the first page
         for i in range(sz):
             if not flag: break # if reached limit then break this loop
             url.find("&start")
