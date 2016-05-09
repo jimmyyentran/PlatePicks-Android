@@ -9,6 +9,12 @@ public class DataObject {
 //        this.key3 = value3;
     }
 
+    public void printDataObject(){
+        System.out.println("key1: " + key1);
+        System.out.println("key2: " + key2);
+
+    }
+
 //    public String toString(){
 //        return "key = " +key+ ", value= " +value;
 //    }

@@ -45,7 +45,7 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
     protected InvokeResult doInBackground(Object... params) {
         try {
             String json = new Gson().toJson(params[1]); //added convert to json string
-         //   System.out.println(json);
+            System.out.println(json);
             callerActivity = (AWSIntegratorInterface) params[2];
             final ByteBuffer payload =
 //                    ENCODER.encode(CharBuffer.wrap((String) params[1]));
@@ -66,6 +66,7 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
             return invokeResult;
         } catch (final Exception e) {
             Log.e(LOG_TAG, "AWS Lambda invocation failed : " + e.getMessage(), e);
+            System.out.println("AWS Lambda invocation failed : " + e.getMessage());
             final InvokeResult result = new InvokeResult();
             result.setStatusCode(500);
             result.setFunctionError(e.getMessage());
@@ -86,7 +87,7 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
             } else {
                 final ByteBuffer resultPayloadBuffer = invokeResult.getPayload();
                 final String resultPayload = DECODER.decode(resultPayloadBuffer).toString();
-                System.out.println(resultPayload);
+                System.out.println("test:" + resultPayload);
                 callerActivity.doSomethingWithResults(resultPayload);
             }
 
