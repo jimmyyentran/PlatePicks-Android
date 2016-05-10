@@ -10,13 +10,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.foodtinder.ListItemClass;
@@ -26,16 +24,24 @@ import com.tinderui.util.AWSIntegratorAsyncTask;
 import com.tinderui.support.CustomViewPager;
 import com.tinderui.util.AWSIntegratorInterface;
 import com.tinderui.util.GetImagesAsyncTask;
+import com.tinderui.util.ImageLoaderInterface;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
  * Created by pokeforce on 4/12/16.
  */
-public class TinderActivity extends AppCompatActivity implements AWSIntegratorInterface {
-
+public class TinderActivity extends AppCompatActivity
+        implements AWSIntegratorInterface, ImageLoaderInterface {
+    // Picture of food fragment
     SwipeImageFragment mainPageFragment;
+
+    // Splash screen
+    FrameLayout splashScreen;
 
     /* Local TextView variable to handle list notification number*/
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
@@ -43,7 +49,12 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     ArrayList<ListItemClass> data = new ArrayList<>();
     int cnt = 1; // used for notification count
 
-    ArrayList<String> imageUrls;    // Contains downloaded data from backend. Currently just image urls.
+    // Contains downloaded data from backend. Currently just image urls.
+    ArrayList<String> imageUrls;
+
+    // List of images
+    List<Bitmap> imageList = new LinkedList<>();
+    AtomicBoolean imageListHasData = new AtomicBoolean(false);
 
     public ListItemClass createListItem(String foodName)
     {
@@ -87,7 +98,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         Button noButton = (Button) findViewById(R.id.button_no);
         Button yesButton = (Button) findViewById(R.id.button_yes);
 
-
         // Load custom YES/NO button text
 
         Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
@@ -115,18 +125,23 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             }
         });
 
-        // FIXME: Set up request to put array of image urls into field member imageUrls
-        FoodRequest req = new FoodRequest("asian", 3, "33.7175, -117.8311", 4, 40000, "japanese", 1);
-        new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
+        requestImages();
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
-        FrameLayout splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
+        splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
 //        splashScreen.animate()
 //                .alpha(0f)
 //                .setStartDelay(3000)
 //                .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
+    }
+
+    void requestImages() {
+        // FIXME: Set up request to put array of image urls into field member imageUrls
+        imageListHasData.set(false);
+        FoodRequest req = new FoodRequest("asian", 3, "33.7175, -117.8311", 4, 40000, "japanese", 1);
+        new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
     }
 
     @Override
@@ -137,9 +152,20 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        new GetImagesAsyncTask(this, metrics.heightPixels, metrics.widthPixels).execute(imageUrls.toArray());
+    }
 
-        ImageView image = (ImageView) findViewById(R.id.imageView_splash);
-        new GetImagesAsyncTask(image, metrics.heightPixels, metrics.widthPixels).execute(imageUrls.toArray());
+    @Override
+    public void loadImages(List<Bitmap> images) {
+        // Store image list here in activity
+        imageList.addAll(images);
+        mainPageFragment.changeImage(images.get(0));
+        imageListHasData.set(true);
+
+        // Remove splash screen
+        splashScreen.animate()
+                .alpha(0f)
+                .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
     }
 
     ArrayList<String> parseUrls(String s) {
@@ -211,7 +237,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         public int state = ViewPager.SCROLL_STATE_IDLE;
         ViewPager imagePager;
-        int counter = 1, MAX = 3;
 
         public ImageChangeListener(ViewPager imagePager) {
             this.imagePager = imagePager;
@@ -251,9 +276,19 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     otherPage = 0;
                 }
 
-                /* Testing: changing the image while image page is out of sight */
-                mainPageFragment.changeImage(counter);
-                counter = (counter + 1) % MAX;
+                /* Changing the image while image page is out of sight */
+                /* If no request is active */
+                if (imageListHasData.get()) {
+                    /* If more images are still around */
+                    if (imageList.size() > 1) {
+                        mainPageFragment.changeImage(imageList.get(1)); // Next image
+                        imageList.remove(0);                            // Remove old image from list
+                    } else {
+                        requestImages();
+                    }
+                } else {
+                    mainPageFragment.changeImage(null);
+                }
 
                 /* The "new image" animation. Only do it if an animation is idle. */
                 imagePager.setCurrentItem(otherPage, false);    /* false = no animation on change */

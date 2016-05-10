@@ -36,15 +36,11 @@ public class SwipeImageFragment extends Fragment {
     // FIXME: param will be bitmap once we have them
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
      * when image page is out of sight. */
-    public void changeImage(int index) {
-        foodPicture.setImageResource(android.R.color.white); /* In case processing takes a while */
+    public void changeImage(Bitmap image) {
+        if (image == null)
+            foodPicture.setImageResource(android.R.color.holo_blue_bright);
 
-        if (index == 0)
-            foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
-        else if (index == 1)
-            foodPicture.setImageResource(R.drawable.mango_demo);
-        else if (index == 2)
-            foodPicture.setImageResource(R.drawable.raisins);
+        foodPicture.setImageBitmap(image);
     }
 
     @Nullable

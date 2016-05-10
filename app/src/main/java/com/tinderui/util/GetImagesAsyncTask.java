@@ -3,9 +3,12 @@ package com.tinderui.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -24,10 +27,10 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
     int maxHeight, maxWidth;
     BitmapFactory.Options options;
 
-    ImageView test;
+    ImageLoaderInterface caller;
 
-    public GetImagesAsyncTask(ImageView view, int screenHeight, int screenWidth) {
-        test = view;
+    public GetImagesAsyncTask(ImageLoaderInterface caller, int screenHeight, int screenWidth) {
+        this.caller = caller;
         maxHeight = screenHeight;
         maxWidth = screenWidth;
     }
@@ -35,21 +38,35 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
     @Override
     protected LinkedList<Bitmap> doInBackground(Object... params) {
         options = new BitmapFactory.Options();
-        Bitmap b = downloadImage((String) params[0]);
-
         LinkedList<Bitmap> images = new LinkedList<>();
-        images.add(b);
+
+        for (Object url : params) {
+            Bitmap b = downloadImage((String) url);
+            images.add(b);
+
+            // Size in terms of memory
+            int bytes;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                bytes = b.getAllocationByteCount();
+            else
+                bytes = b.getByteCount();
+            Log.d("GetImagesAsyncTask", "Bytes: " + bytes);
+        }
 
         return images;
     }
 
     @Override
     protected void onPostExecute(LinkedList<Bitmap> images) {
-        test.setImageBitmap(images.get(0));
+//        test.setImageBitmap(images.get(0));
+        caller.loadImages(images);
+
     }
 
     // Takes in url and downloads webpage, decoding it into a bitmap
     Bitmap downloadImage(String url) {
+        Log.d("GetImagesAsyncTask", url);
+
         InputStream is = null;
         Bitmap image = null;
 
@@ -62,23 +79,31 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
             connection.setRequestMethod("GET");
             connection.connect();
 
-            // Decoding image from data, getting size in terms of memory and width/height
+            // Copying the inputStream to decode the image twice (once for size, twice for the actual image)
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] data = new byte[1024];
+            int len;
+
             is = connection.getInputStream();
 
+            while ((len = is.read(data)) != -1)
+                baos.write(data, 0, len);
+            baos.flush();
+
+            InputStream boundsIn = new ByteArrayInputStream(baos.toByteArray());
+            InputStream imageIn = new ByteArrayInputStream(baos.toByteArray());
+
+            // Size in terms of width/height
             options.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(is, null, options);
+            BitmapFactory.decodeStream(boundsIn, null, options);
+            boundsIn.close();
 
             Log.d("GetImagesAsyncTask", "width: " + options.outWidth + ", height: " + options.outHeight);
 
+            // Decoding image from data to return
             options.inJustDecodeBounds = false;
-            image = BitmapFactory.decodeStream(is, null, options);
-
-//            int bytes;
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT)
-//                bytes = image.getAllocationByteCount();
-//            else
-//                bytes = image.getByteCount();
-//            Log.d("GetImagesAsyncTask", "Bytes: " + bytes);
+            image = BitmapFactory.decodeStream(imageIn, null, options);
+            imageIn.close();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -92,4 +117,6 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
         // Return decoded bitmap. Is null if error occurred.
         return image;
     }
+
+
 }
