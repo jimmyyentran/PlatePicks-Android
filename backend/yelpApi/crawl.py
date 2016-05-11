@@ -111,9 +111,13 @@ class Crawler(object):
                                 #  if parse.parse_name(fake.rstrip()) is not None:
                                 if prettified is not None:
                                     com.append(prettified)
-                                    pics.append(link['src'])
                                     fake = link['src']
                                     fake = fake[fake.find("bphoto/") + 7:fake.rfind("/258s.jpg")]
+                                    #  print(fake)
+                                    #  fake = fake[fake.find("bphoto/") +
+                                            #  7:fake.rfind("/o.jpg")]
+                                    #  print(fake)
+                                    pics.append(link['src'].replace("/258s", "/o"))
                                     pics_id.append(fake)
 
         # print(len(pics))

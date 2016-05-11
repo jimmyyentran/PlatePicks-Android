@@ -14,7 +14,8 @@
      -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.platepicks" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.platepicks">
 
     <!--What the app asks for permission to use-->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -112,11 +113,12 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <!--<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />&lt;!&ndash; ATTENTION: This was auto-generated to add Google Play services to your project for-->
+     <!--App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. &ndash;&gt;-->
+        <!--<meta-data-->
+            <!--android:name="com.google.android.gms.version"-->
+            <!--tools:replace="android:value"-->
+            <!--android:value="@integer/google_play_services_version" />-->
 
         <!-- END - FACEBOOK SIGN-IN -->
 

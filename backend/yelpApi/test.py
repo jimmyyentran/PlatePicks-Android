@@ -5,12 +5,11 @@ import pprint
 params = {
         "term": "asian",
        "food_per_business": 1,
-       "ll": "40.7128, -74.0059",
-       "limit": 5,
+       "ll": "33.9533, -117.3962",
+       "limit": 10,
        "radius_filter": 40000,
        "category_filter": "vietnamese,filipino",
        "sort": 1,
-       "latitude" : "40.987"
         }
 
 response = Yelp_API(params).call_API()

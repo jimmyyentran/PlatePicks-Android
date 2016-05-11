@@ -1,4 +1,11 @@
 import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
+import java.util.List; //added
+
+
+import com.platepicks.objects.FoodReturn;
 import com.platepicks.util.AWSIntegratorAsyncTask;
 import com.platepicks.util.AWSIntegratorInterface;
 import com.platepicks.objects.FoodRequest;
@@ -51,11 +58,15 @@ public class AWSIntegratorTest {
     public void FoodRequestTest(){
         AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
         TestActivity activity  = new TestActivity();
+        Gson gson = new Gson();
 
         FoodRequest req = new FoodRequest("asian", 3, "33.7175, -117.8311", 1, 40000, "japanese", 1);
         asyncTask.execute("yelpApi", req, activity);
         Robolectric.flushBackgroundThreadScheduler();
+//        FoodReturn foodReturn = gson.fromJson(activity.returnResults(), FoodReturn.class);
+//        System.out.println(foodReturn.getFood_id());
         System.out.print("foodRequest:" + activity.returnResults());
+
 
 //        System.out.println("term: " + req.term);
 //        System.out.println("business: " + req.food_per_business);
