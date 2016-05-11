@@ -1,8 +1,6 @@
 package com.tinderui;
 
-import android.app.LauncherActivity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
 import android.os.Bundle;
@@ -12,22 +10,15 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.foodtinder.ListItemClass;
-import com.foodtinder.MainActivity;
 import com.foodtinder.R;
 import com.tinderui.support.CustomViewPager;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 /**

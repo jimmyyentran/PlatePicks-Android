@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    <TextView
-    android:id="@+id/fname"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Food"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+        <TextView
+        android:id="@+id/fname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Food"
         android:textSize="25dp"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+            android:textStyle="bold"
+            android:typeface="sans"
+            android:textColor="#080101"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/food_circle"
+            android:layout_toEndOf="@+id/food_circle"
+            android:paddingTop="27dp" />
     <TextView
         android:id="@+id/rname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Restaurant"
-        android:textSize="25dp"
+        android:text="Restaurant line 1"
+        android:textSize="15dp"
+        android:typeface="sans"
+        android:textColor="#944141"
         android:layout_below="@+id/fname"
-        android:layout_alignLeft="@+id/fname"
-        android:layout_alignStart="@+id/fname" />
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address"
-        android:textSize="25dp"
-        android:layout_below="@+id/rname"
-        android:layout_alignLeft="@+id/rname"
-        android:layout_alignStart="@+id/rname" />
+        android:layout_toRightOf="@+id/food_circle"
+        android:layout_toEndOf="@+id/food_circle" />
+
+    <ImageView
+        android:id="@+id/food_circle"
+        android:rotation="180"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/drawn_circle"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <!--Top Checker Border-->
 </RelativeLayout>
