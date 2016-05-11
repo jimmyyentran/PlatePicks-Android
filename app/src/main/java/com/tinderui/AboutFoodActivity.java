@@ -17,7 +17,6 @@ public class AboutFoodActivity extends AppCompatActivity {
          * so Android puts menu options in it) */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aboutfood);
-        setupToolbar();
 
         /* Give the toolbar a "back" (aka "up") button. Goes back "up" to previous activity because
          * of specification in onOptionsItemSelected() */
@@ -37,13 +36,5 @@ public class AboutFoodActivity extends AppCompatActivity {
             default:
                 return false;
         }
-    }
-
-    /* setupToolbar():
-     * Fetches toolbar from loaded xml file and sets as the "action bar" (what Android calls the
-     * top bar. Toolbar is a new class with extra features.) */
-    void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_tinder);
-        setSupportActionBar(toolbar);
     }
 }

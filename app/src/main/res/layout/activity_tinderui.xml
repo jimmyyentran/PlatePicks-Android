@@ -272,7 +272,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer1"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <!--Drawer Frame-->
         <RelativeLayout
@@ -528,6 +528,41 @@
                             android:textSize="16dp" />
 
                     </RelativeLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_container"
+                        android:layout_marginTop="6dp">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/log_in"
+                            android:layout_marginLeft="45dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="6dp">
+
+                            <com.facebook.login.widget.LoginButton
+                                android:id="@+id/login_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal" />
+                            <!--
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/imageView"
+                                android:src="@drawable/selector_button_facebook"
+                                android:layout_marginLeft="20dp"
+                                android:layout_gravity="center_vertical" />
+                                -->
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"

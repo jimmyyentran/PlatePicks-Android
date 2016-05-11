@@ -4,23 +4,40 @@
     android:layout_height="match_parent">
 
     <!--Top bar-->
-    <android.support.v7.widget.Toolbar
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/tomato_red"
-        android:id="@+id/toolbar_tinder"/>
+        android:layout_height="50dp"
+        android:background="@color/main_red"
+        android:id="@+id/toolbar_tinder" >
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/back_button"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingRight="8dp"
+            android:id="@+id/back_button" />
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/background_gray"
+            android:alpha="0.5"/>
+    </LinearLayout>
 
     <com.tinderui.support.SquareImageButton
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/imagebutton_aboutFood"
         android:layout_gravity="center"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:contentDescription="@string/contentDescription_tinder"
         android:src="@drawable/main_screen_no_checkers"
-        android:scaleType="centerInside"
-        android:background="#c8000000" />
+        android:scaleType="fitStart"/>
 
     <TextView
         android:layout_width="wrap_content"

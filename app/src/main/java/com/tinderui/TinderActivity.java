@@ -23,6 +23,11 @@ import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;                    /* facebook sdk */
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.foodtinder.ListItemClass;
 import com.foodtinder.MainActivity;
 import com.foodtinder.R;
@@ -53,6 +58,8 @@ public class TinderActivity extends AppCompatActivity {
     ArrayList<ListItemClass> data = new ArrayList<>();
     int cnt = 1; // used for notification count
 
+    com.facebook.login.widget.LoginButton loginButton;
+
     public ListItemClass createListItem(String foodName)
     {
         ListItemClass newItem = new ListItemClass();
@@ -71,6 +78,9 @@ public class TinderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* initialize facebook SDK first */
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.activity_tinderui);
@@ -143,7 +153,9 @@ public class TinderActivity extends AppCompatActivity {
                 .alpha(0f)
                 .setStartDelay(3000)
                 .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
+
     }
+    /* end onCreate() */
 
     /* ImagePagerAdapter:
      * Feeds ViewPager the imageViews for its pages */
