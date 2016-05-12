@@ -8,22 +8,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:padding="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="5dp"
         android:background="@drawable/food_border">
 
-        <com.tinderui.support.SquareImageButton
+        <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:background="#ffffff"
             android:id="@+id/imagebutton_tinder"
             android:contentDescription="@string/contentDescription_tinder"
             android:scaleType="fitCenter"
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
-            android:adjustViewBounds="true" />
+            android:adjustViewBounds="true"
+            android:background="#ffffff" />
 
     </RelativeLayout>
 
