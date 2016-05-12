@@ -11,17 +11,18 @@ public class FoodRequest {
     public Integer radius_filter;
     public String category_filter;
     public Integer sort;
-//    public Double longitude;
-//    public Double lattitude;
+    private Integer offset;
 
-    public FoodRequest(String v1, Integer v2, String v3, Integer v4, Integer v5, String v6, Integer v7){
+    public FoodRequest(String v1, Integer v2, String v3, Integer v4, Integer v5, String v6, Integer v7, Integer v8){
         this.term = v1;
         this.food_per_business = v2;
         this.ll = v3;
         this.limit = v4;
+
         this.radius_filter = v5;
         this.category_filter = v6;
         this.sort = v7;
+        this.offset = v8;
         String delims = "[,]";
         String[] tokens = v3.split(delims);
     }
@@ -52,6 +53,14 @@ public class FoodRequest {
         String lat = String.valueOf(l);
         String lon = String.valueOf(longitude);
         ll = lon + ", " + lat;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
     }
 
 //    public static void main(){
