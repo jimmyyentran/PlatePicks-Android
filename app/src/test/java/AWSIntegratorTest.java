@@ -56,7 +56,7 @@ public class AWSIntegratorTest {
         AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
         TestActivity activity  = new TestActivity();
 
-        FoodRequest req = new FoodRequest("asian", 3, "33.7175, -117.8311", 4, 40000, "japanese", 1);
+        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", 4, 40000, "", 1);
         asyncTask.execute("yelpApi", req, activity);
         Robolectric.flushBackgroundThreadScheduler();
         System.out.print("foodRequest:" + activity.returnResults());
