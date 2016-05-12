@@ -133,4 +133,51 @@
   <string name="cloud_logic_error_title">Error</string>
   <string name="cloud_logic_error_dismiss">Dismiss</string>
   <string name="no">No</string>
+
+  <!-- NoSQL Demo Operations Headers -->
+  <string name="nosql_operation_header_get">Get</string>
+  <string name="nosql_operation_header_primary_queries">Primary Index Queries</string>
+  <string name="nosql_operation_header_secondary_queries">Secondary Index Queries (%s)</string>string>
+  <string name="nosql_operation_header_scan">Scan</string>string>
+
+  <!-- NoSQL Demo Get Operations -->
+  <string name="nosql_operation_get_by_partition_text">Get Item</string>
+  <string name="nosql_operation_example_get_by_partition_text">Find Item with %1$s = \'%2$s\'.</string>
+
+  <string name="nosql_operation_get_by_partition_and_sort_text">Get Item</string>
+  <string name="nosql_operation_example_get_by_partition_and_sort_text">Find Item with %1$s = \'%2$s\' and %3$s = \'%4$s\'.</string>
+
+
+  <!-- NoSQL Demo Query Operations -->
+  <string name="nosql_operation_title_query_by_partition_and_sort_condition_text">Query by Partition Key and Sort Condition</string>
+  <string name="nosql_operation_example_query_by_partition_and_sort_condition_text">Find all items with %1$s = \'%2$s\' and %3$s &lt; \'%4$s\'.</string>
+
+  <string name="nosql_operation_title_query_by_partition_text">Query by Partition Key</string>
+  <string name="nosql_operation_example_query_by_partition_text">Find all items with %1$s = \'%2$s\'.</string>
+
+  <string name="nosql_operation_title_query_by_partition_and_filter_text">Query by Partition Key and Filter</string>
+  <string name="nosql_operation_example_query_by_partition_and_filter_text">Find all items with %1$s = \'%2$s\' and %3$s &gt; \'%4$s\'.</string>
+
+  <string name="nosql_operation_title_query_by_partition_sort_condition_and_filter_text">Query by Partition Key, Sort Condition, and Filter</string>
+  <string name="nosql_operation_example_query_by_partition_sort_condition_and_filter_text">Find all items with %1$s = \'%2$s\', %3$s &lt; \'%4$s\', and %5$s &gt; \'%6$s\'.</string>
+
+  <string name="nosql_operation_title_index_query_by_partition_and_sort_condition_text">Query by Partition Key and Sort Condition</string>
+  <string name="nosql_operation_example_index_query_by_partition_and_sort_condition_text">Find all items with %1$s = \'%2$s\' and %3$s &gt; \'%4$s\'.</string>
+
+  <string name="nosql_operation_title_index_query_by_partition_text">Query by Partition Key</string>
+  <string name="nosql_operation_example_index_query_by_partition_text">Find all items with %1$s = \'%2$s\'.</string>
+
+  <string name="nosql_operation_title_index_query_by_partition_and_filter_text">Query by Partition Key and Filter</string>
+  <string name="nosql_operation_example_index_query_by_partition_and_filter_text">Find all items with %1$s = \'%2$s\' and %3$s &gt; \'%4$s\'.</string>
+
+  <string name="nosql_operation_title_index_query_by_partition_sort_condition_and_filter_text">Query by Partition Key, Sort Condition, and Filter</string>
+  <string name="nosql_operation_example_index_query_by_partition_sort_condition_and_filter_text">Find all items with %1$s = \'%2$s\', %3$s &lt; \'%4$s\', and %5$s &gt; \'%6$s\'.</string>
+
+  <string name="nosql_operation_title_scan_with_filter">Scan with Filter</string>
+  <string name="nosql_operation_example_scan_with_filter">Find all items with \'%1$s\' &gt; \'%2$s\'.</string>
+  <string name="nosql_operation_example_scan_with_filter_on_partition_and_sort">Find all items with \'%1$s\' beginning with \'%2$s\' and \'%3$s\' beginning with \'%4$s\'.</string>
+  <string name="nosql_operation_example_scan_with_filter_on_partition">Find all items with \'%1$s\' beginning with \'%2$s\'</string>
+
+  <string name="nosql_operation_title_scan_without_filter">Scan</string>
+  <string name="nosql_operation_example_scan_without_filter">Show all items in the table.</string>
 </resources>
