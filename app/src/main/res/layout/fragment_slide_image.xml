@@ -13,7 +13,7 @@
         android:padding="5dp"
         android:background="@drawable/food_border">
 
-        <com.tinderui.support.SquareImageButton
+        <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
