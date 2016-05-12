@@ -17,6 +17,7 @@ class Crawler(object):
         #  tornado.httpclient.AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
 
     #Take in a list of url
+    #  @profile
     def limit(self,limit):
         self.limit = limit
         async_list = []
@@ -28,31 +29,7 @@ class Crawler(object):
         grequests.map(async_list, exception_handler=self.exception_handler)
         return self.information
 
-    #  @tornado.web.asynchronous
-    #  def limit(self,limit):
-        #  self.limit = limit
-        #  client = tornado.httpclient.AsyncHTTPClient()
-        #  for key in self.urls:
-            #  client.fetch(HTTPRequest(url, 'GET',
-                #  callback=self.extract_food_names))
-            #  client.fetch(key, self.extract_food_names)
-        #  tornado.ioloop.IOLoop.instance().start()
-        #  client.close()
-        #  return self.information
-
-    #  def limit(self,limit):
-        #  self.limit = limit
-        #  future = []
-        #  for key in self.urls:
-            #  future.append(self.session.get(key,
-                #  background_callback=self.extract_food_names))
-            #  #  print(key)
-        #  for f in future:
-            #  response = f.result()
-
-        #  #  print(self.information)
-        #  return self.information
-
+    # allow grequests to output errors
     def exception_handler(self, request, exception):
         print "Failed %s" % (request)
         print(exception)
@@ -91,8 +68,7 @@ class Crawler(object):
             #find all the links thats are img urls
             for link in soup.findAll('img', attrs={'height' : '226'}):
                 #  print(link)
-                if len(pics_id) ==(self.limit+1):
-                    #  print("BREAK")
+                if len(pics_id) ==(self.limit):
                     flag = False
                     break
                 #  link['src'] = urllib.parse.urljoin(url, link['src'])
@@ -105,10 +81,7 @@ class Crawler(object):
                             fake = fake[fake.find("States.") + 7:]
                             # removes majority of the bad comments
                             if " United States" not in fake:
-                                #  if parse.parse_name(fake.rstrip()) and fake.rstrip():
                                 prettified = self.parse.parse_name(fake.rstrip().lstrip()) # strip
-                                #  print(prettified)
-                                #  if parse.parse_name(fake.rstrip()) is not None:
                                 if prettified is not None:
                                     com.append(prettified)
                                     fake = link['src']
@@ -120,7 +93,6 @@ class Crawler(object):
                                     pics.append(link['src'].replace("/258s", "/o"))
                                     pics_id.append(fake)
 
-        # print(len(pics))
         # remove the first thing because it automatically catches it and is in a small size
         #  print(com[0])
         #  print(pics[0])
@@ -129,7 +101,6 @@ class Crawler(object):
         #  pics.pop(0)
         #  pics_id.pop(0)
 
-        #  information = []
         # prints the comments, pic_id and the url of the picture
         for pic, coms, pic_id in zip(pics, com, pics_id):
             #  self.information.append([pic_id, pic, coms])
@@ -139,16 +110,4 @@ class Crawler(object):
             self.information.append(to_be_returned)
             #  self.information.append(dict(url=pic, food_id=pic_id,
                 #  name=coms).update(original_info))
-            # print(coms)
-            # print(pic_id)
-            # print(pic)
-        #  print(information)
         #  return information
-
-
-
-# nl = Crawler.no_limit("https://www.yelp.com/biz/arcade-coffee-roasters-riverside")
-#l = Crawler.limit("https://www.yelp.com/biz/arcade-coffee-roasters-riverside",10)
-# print(len(nl))
-#for ls in l:
-#    print(ls)
