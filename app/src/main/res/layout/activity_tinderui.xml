@@ -272,7 +272,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer1"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!--Drawer Frame-->
         <RelativeLayout
@@ -534,7 +534,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/profile_container"
-                        android:layout_marginTop="6dp">
+                        android:layout_marginTop="8dp">
 
                         <LinearLayout
                             android:orientation="horizontal"

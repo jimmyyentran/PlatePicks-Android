@@ -4,58 +4,181 @@
     android:layout_height="match_parent">
 
     <!--Top bar-->
-    <LinearLayout
-        android:orientation="horizontal"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/main_red"
-        android:id="@+id/toolbar_tinder" >
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/back_button"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="8dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:paddingRight="8dp"
-            android:id="@+id/back_button" />
-        <ImageView
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:background="@color/background_gray"
-            android:alpha="0.5"/>
-    </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/main_red"
+            android:id="@+id/toolbar_tinder" >
 
-    <com.tinderui.support.SquareImageButton
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/back_button"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingRight="10dp"
+                android:id="@+id/back_button"
+                android:onClick="backArrow"
+                android:nestedScrollingEnabled="false" />
+
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/background_gray"
+                android:alpha="0.4"
+                android:layout_gravity="bottom" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Information"
+            android:id="@+id/bar_title"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="28dp" />
+    </FrameLayout>
+
+    <!--page content-->
+
+    <!--food image-->
+
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imagebutton_aboutFood"
-        android:layout_gravity="center"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:contentDescription="@string/contentDescription_tinder"
-        android:src="@drawable/main_screen_no_checkers"
-        android:scaleType="fitStart"/>
+        android:id="@+id/scrollView2" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="The &quot;World 3-8&quot; Pizza"
-        android:id="@+id/textView_restaurant"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Mario's Adventurous Pi Pi"
-        android:id="@+id/textView_food_name"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/food_border"
+                android:padding="5dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:id="@+id/about_image"
+                        android:src="@drawable/main_screen_no_checkers"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="The &quot;World 3-8&quot; Pizza"
+                        android:id="@+id/food_name"
+                        android:maxLines="1"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:gravity="center_horizontal"
+                        android:background="#ffffff"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:textColor="#000000"
+                        android:allowUndo="false"
+                        android:alpha="0.7"
+                        android:textSize="15sp" />
+                </FrameLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mario's Adventurous Pi Pi"
+                android:id="@+id/restaurant_name"
+                android:textIsSelectable="false"
+                android:textSize="26dp"
+                android:layout_margin="0dp"
+                android:textColor="#000000"
+                android:gravity="center_horizontal" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/imageView"
+                android:background="@color/light_grey"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/location_container">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/address"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="334 Maple Ave."
+                        android:id="@+id/street"
+                        android:textSize="15sp"
+                        android:textColor="@color/material_grey_800" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Riverside, CA"
+                        android:id="@+id/city_state"
+                        android:textSize="15sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/material_grey_800" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="92760"
+                        android:id="@+id/zip_code"
+                        android:textSize="15sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/material_grey_800" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/map_button" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/imageView2"
+                android:layout_marginTop="8dp"
+                android:background="@color/light_grey"
+                android:layout_marginBottom="8dp" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>
