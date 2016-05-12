@@ -20,7 +20,7 @@ public class FoodRequest {
     public FoodRequest(String query, Integer food_per_business,
                        String location, Integer number_of_businesses,
                        Integer radius_filter, String category_filter,
-                       Integer sort_option){
+                       Integer sort_option, Integer offset){
         this.term = query;
         this.food_per_business = food_per_business;
         this.ll = location;
@@ -28,6 +28,7 @@ public class FoodRequest {
         this.radius_filter = radius_filter;
         this.category_filter = category_filter;
         this.sort = sort_option;
+        this.offset = offset;
         String delims = "[,]";
         String[] tokens = location.split(delims);
     }

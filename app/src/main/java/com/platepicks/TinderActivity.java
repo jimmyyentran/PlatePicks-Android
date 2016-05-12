@@ -174,7 +174,7 @@ public class TinderActivity extends AppCompatActivity
     // Requests for urls from backend AWS database
     void requestFromDatabase() {
         // FIXME: Set up request to put array of image urls into field member imageUrls
-        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", 4, 40000, "", 1);
+        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", 4, 40000, "", 1, 0);
         new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
     }
 

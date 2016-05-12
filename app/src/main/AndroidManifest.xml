@@ -118,7 +118,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             tools:replace="android:value"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/gms_version" />
 
         <!-- END - FACEBOOK SIGN-IN -->
 
