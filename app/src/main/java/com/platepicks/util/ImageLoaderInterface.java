@@ -1,4 +1,4 @@
-package com.tinderui.util;
+package com.platepicks.util;
 
 import android.graphics.Bitmap;
 

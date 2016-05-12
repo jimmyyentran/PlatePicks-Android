@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +23,8 @@ import com.platepicks.objects.FoodRequest;
 import com.platepicks.support.CustomViewPager;
 import com.platepicks.util.AWSIntegratorAsyncTask;
 import com.platepicks.util.AWSIntegratorInterface;
-import com.tinderui.util.GetImagesAsyncTask;
-import com.tinderui.util.ImageLoaderInterface;
+import com.platepicks.util.GetImagesAsyncTask;
+import com.platepicks.util.ImageLoaderInterface;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -178,9 +176,13 @@ public class TinderActivity extends AppCompatActivity
 
     // Called after requestFromDatabase in doSomethingWithResults()
     void requestImages() {
+        int maxHeight = 0;
+        int maxWidth = 0;
         // Network request to download images
-        int maxHeight = imagePager.getHeight(),
+        if(imagePager != null) {
+            maxHeight = imagePager.getHeight();
             maxWidth = imagePager.getWidth();
+        }
 
         if (maxHeight == 0) maxHeight = DFLT_IMG_MAX_HEIGHT;
         if (maxWidth == 0) maxWidth = DFLT_IMG_MAX_WIDTH;

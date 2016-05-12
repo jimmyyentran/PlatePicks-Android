@@ -1,4 +1,4 @@
-package com.tinderui;
+package com.platepicks.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
