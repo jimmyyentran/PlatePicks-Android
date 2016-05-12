@@ -13,18 +13,23 @@ public class FoodRequest {
     public Integer sort;
     private Integer offset;
 
-    public FoodRequest(String v1, Integer v2, String v3, Integer v4, Integer v5, String v6, Integer v7, Integer v8){
-        this.term = v1;
-        this.food_per_business = v2;
-        this.ll = v3;
-        this.limit = v4;
-
-        this.radius_filter = v5;
-        this.category_filter = v6;
-        this.sort = v7;
-        this.offset = v8;
+    // https://www.yelp.com/developers/documentation/v2/search_api
+    // Daniel's notes:
+    // 1. Leave query blank to search "everything" (given other constraints like radius)
+    // 2. Sort: 0 = best matched, 1 = distance, 2 = highest rated
+    public FoodRequest(String query, Integer food_per_business,
+                       String location, Integer number_of_businesses,
+                       Integer radius_filter, String category_filter,
+                       Integer sort_option){
+        this.term = query;
+        this.food_per_business = food_per_business;
+        this.ll = location;
+        this.limit = number_of_businesses;
+        this.radius_filter = radius_filter;
+        this.category_filter = category_filter;
+        this.sort = sort_option;
         String delims = "[,]";
-        String[] tokens = v3.split(delims);
+        String[] tokens = location.split(delims);
     }
 
     public void addCategory(String category){
@@ -40,9 +45,9 @@ public class FoodRequest {
     public void setlongitude(Double l){
         String delims = "[,]";
         String[] tokens = ll.split(delims);
-        Double lattitude = Double.parseDouble(tokens[1]);
+        Double latitude = Double.parseDouble(tokens[1]);
         String lon = String.valueOf(l);
-        String lat = String.valueOf(lattitude);
+        String lat = String.valueOf(latitude);
         ll = lon + ", " + lat;
     }
 

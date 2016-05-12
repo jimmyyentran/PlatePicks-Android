@@ -6,6 +6,10 @@ import com.platepicks.util.AWSIntegratorAsyncTask;
 import com.platepicks.util.AWSIntegratorInterface;
 import com.platepicks.util.ConvertToObject;
 
+import java.util.List; //added
+import java.util.ArrayList; //added
+import java.lang.Object; //added
+//import context.arch.comm.DataObject; //added
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

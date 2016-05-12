@@ -878,8 +878,10 @@
         <ImageView
             android:layout_width="125dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/imageView_splash"
             android:src="@drawable/main_logo"
-            android:layout_gravity="center" />
+            android:contentDescription="@string/contentDescription_logo"/>
     </FrameLayout>
 
 </FrameLayout>
