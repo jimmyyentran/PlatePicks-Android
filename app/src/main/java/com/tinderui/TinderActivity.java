@@ -1,5 +1,6 @@
 package com.tinderui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -26,6 +27,8 @@ import com.tinderui.util.AWSIntegratorInterface;
 import com.tinderui.util.GetImagesAsyncTask;
 import com.tinderui.util.ImageLoaderInterface;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,8 +62,7 @@ public class TinderActivity extends AppCompatActivity
     AtomicBoolean imageListHasData = new AtomicBoolean(false);
 
     // Function: creates list item
-    public ListItemClass createListItem(String foodName)
-    {
+    public ListItemClass createListItem(String foodName) {
         ListItemClass newItem = new ListItemClass();
         newItem.setFoodName(foodName);
         newItem.setRestaurantName("test_restaurant");
@@ -266,16 +268,24 @@ public class TinderActivity extends AppCompatActivity
                 int otherPage;
 
                 /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
-                if (imagePager.getCurrentItem() == 0){
+                if (imagePager.getCurrentItem() == 0) {
                     otherPage = 2;
 
                     update_list_number(cnt);
                     String name = "Food " + cnt;
+
+                    // store "yes" bitmap in internal storage
+                    Bitmap toSend = imageList.get(0);
+                    new ImageSaver(this).
+                            setFileName("myImage.png").
+                            setDirectoryName("images").
+                            save(toSend);
+
                     ListItemClass toAdd = createListItem(name);
+
                     data.add(toAdd);
                     ++cnt;
-                }
-                else{
+                } else {
                     otherPage = 0;
                 }
 
@@ -344,7 +354,7 @@ public class TinderActivity extends AppCompatActivity
         TinderActivity.this.startActivity(intent);
     }
 
-    void update_list_number (int cnt) {
+    void update_list_number(int cnt) {
  /* Code for List Notification Number */
         notification_number = (TextView) findViewById(R.id.list_notification);
         if (cnt <= 0) {
@@ -368,5 +378,8 @@ public class TinderActivity extends AppCompatActivity
         return;
     }
                 /* End list notification code */
-}
 
+
+
+    /* end Tinder Activity */
+}

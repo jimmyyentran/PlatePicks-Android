@@ -1,11 +1,14 @@
 package com.tinderui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.foodtinder.R;
@@ -44,11 +47,21 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         // Lookup view for data population
         TextView fname = (TextView) convertView.findViewById(R.id.fname);
         TextView rname = (TextView) convertView.findViewById(R.id.rname);
-
+        ImageView img = (ImageView) convertView.findViewById(R.id.food_circle);
 
         // Populate the data into the template view using the data object
         fname.setText(item.getFoodName());
         rname.setText(item.getRestaurantName());
+        // for bitmap
+
+        // /here context can be anything like getActivity() for fragment, this or MainActivity.this
+        img.setImageBitmap(bitmap);
+
+
+
+       // byte[] byteArray = item.getFoodImage();
+      //  Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+       // img.setImageBitmap(bmp);
 
         // set font
         fname.setTypeface(tf);
