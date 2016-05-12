@@ -12,10 +12,10 @@
             android:textStyle="bold"
             android:typeface="sans"
             android:textColor="#080101"
+            android:paddingTop="27dp"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/food_circle"
-            android:layout_toEndOf="@+id/food_circle"
-            android:paddingTop="27dp" />
+            android:layout_alignLeft="@+id/rname"
+            android:layout_alignStart="@+id/rname" />
     <TextView
         android:id="@+id/rname"
         android:layout_width="wrap_content"
@@ -25,8 +25,7 @@
         android:typeface="sans"
         android:textColor="#944141"
         android:layout_below="@+id/fname"
-        android:layout_toRightOf="@+id/food_circle"
-        android:layout_toEndOf="@+id/food_circle" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/food_circle"

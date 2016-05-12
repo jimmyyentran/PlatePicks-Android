@@ -55,6 +55,10 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         // for bitmap
 
         // /here context can be anything like getActivity() for fragment, this or MainActivity.this
+        Bitmap bitmap = new ImageSaver(getContext()).
+                setFileName(item.getFoodName()).
+                setDirectoryName("images").
+                load();
         img.setImageBitmap(bitmap);
 
 
