@@ -58,19 +58,18 @@ class Crawler(object):
         print(exception)
 
 
+    #  @profile
     def extract_food_names(self, response, **kwargs):
         #  print(vars(response))
         url = response.url
-        #  print(url)
         firstUrl = url
         html = response.content
-        #  print(html)
         #  url = args['url']
         #  html = args['response']
-        soup = BeautifulSoup(html, 'html.parser')
+        #  soup = BeautifulSoup(html, 'html.parser')
         # parse for the number of pages
-        for sz in soup.find("div", "page-of-pages arrange_unit arrange_unit--fill"):
-            sz = int(sz[sz.find("of") + 2:])
+        #  for sz in soup.find("div", "page-of-pages arrange_unit arrange_unit--fill"):
+            #  sz = int(sz[sz.find("of") + 2:])
 
         visited = [url]  # keeps track of visited urls
         pics = []
@@ -78,7 +77,7 @@ class Crawler(object):
         com = []
         flag = True # if reached limit
 
-        #  sz = 1 #just query on the first page
+        sz = 1 #just query on the first page
         for i in range(sz):
             if not flag: break # if reached limit then break this loop
             url.find("&start")
@@ -88,9 +87,10 @@ class Crawler(object):
             # parse the url for html code
             #  source_code = requests.get(url)  # variable = requests.get(url)
             #  html = source_code.text  # get source code of page
-            soup = BeautifulSoup(html, 'html.parser')
+            soup = BeautifulSoup(html, 'lxml')
             #find all the links thats are img urls
-            for link in soup.findAll('img', src=True, alt=True):
+            for link in soup.findAll('img', attrs={'height' : '226'}):
+                #  print(link)
                 if len(pics_id) ==(self.limit+1):
                     #  print("BREAK")
                     flag = False
@@ -122,9 +122,12 @@ class Crawler(object):
 
         # print(len(pics))
         # remove the first thing because it automatically catches it and is in a small size
-        com.pop(0)
-        pics.pop(0)
-        pics_id.pop(0)
+        #  print(com[0])
+        #  print(pics[0])
+        #  print(pics_id[0])
+        #  com.pop(0)
+        #  pics.pop(0)
+        #  pics_id.pop(0)
 
         #  information = []
         # prints the comments, pic_id and the url of the picture

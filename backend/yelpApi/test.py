@@ -6,7 +6,7 @@ params = {
         "term": "asian",
        "food_per_business": 1,
        "ll": "33.9533, -117.3962",
-       "limit": 10,
+       "limit": 20,
        "radius_filter": 40000,
        "category_filter": "vietnamese,filipino",
        "sort": 1,

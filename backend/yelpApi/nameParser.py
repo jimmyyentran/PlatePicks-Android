@@ -9,6 +9,7 @@ class NameParser(object):
         with open(dictionaryFile) as file:
             self.words = file.read().split(",")
 
+    #  @profile
     def parse_name(self, name):
         trim = re.search("[-!#./():$]", name)
         if trim:
