@@ -20,27 +20,19 @@ public class FoodReceive {
 
     }
 
-    public String getFood_id() {
-        return food_id;
-    }
+//    public static void main(){
+//        FoodRequest req = new FoodRequest("asian", 3, "33.7175, -117.8311", 4, 40000, "Japanese", 1);
+//        System.out.println("term: " + req.term);
+//        System.out.println("business: " + req.food_per_business);
+//        System.out.println("11: " + req.ll);
+//        System.out.println("limit: " + req.limit);
+//        System.out.println("radius_filter: " + req.radius_filter);
+//        System.out.println("category_filter: " + req.category_filter);
+//        System.out.println("sort: " + req.sort);
+//
+//    }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public URL getUrl() {
-        return url;
-    }
-
-    public void print() {
-        System.out.println(food_id);
-        System.out.println(name);
-        System.out.println(url.toString());
-        System.out.println(location.getName());
-        System.out.println(location.getCity());
-    }
+//    public String toString(){
+//        return "key = " +key+ ", value= " +value;
+//    }
 }
