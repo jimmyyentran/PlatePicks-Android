@@ -30,9 +30,8 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 //            "http://s3-media1.fl.yelpcdn.com/bphoto/zcda10Pklt4LLGyjkw2r3Q/o.jpg",
 //            "http://s3-media3.fl.yelpcdn.com/bphoto/KlbsVMic2T5bkXqZtfbZGQ/o.jpg"};
 
-    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);  // In bytes
-    final int limitMemory = maxMemory / 8;                                  // Use 1/8 of max memory
-    int currentMemUsed = 0;
+    final int maxMemory = (int) (Runtime.getRuntime().maxMemory());  // In bytes
+    final int limitMemory = maxMemory / 8;                           // Use 1/8 of max memory
     int maxHeight, maxWidth;
     BitmapFactory.Options options;
 
@@ -40,13 +39,16 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
     public GetImagesAsyncTask(ImageLoaderInterface caller, int screenHeight, int screenWidth) {
         this.caller = caller;
-        maxHeight = screenHeight;
-        maxWidth = screenWidth;
+
+        // Note: To save memory, scale to half the size of the imageview
+        maxHeight = screenHeight / 2;
+        maxWidth = screenWidth / 2;
     }
 
     @Override
     protected LinkedList<Bitmap> doInBackground(Object... params) {
         options = new BitmapFactory.Options();
+        int currentMemUsed = 0;
         LinkedList<Bitmap> images = new LinkedList<>();
 
         for (Object url : params) {
@@ -64,7 +66,13 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
             // Add to total amount
             currentMemUsed += bytes;
             Log.d("GetImagesAsyncTask", "Bytes: " + bytes);
+
+            // Stop if out of memory
+            if (currentMemUsed >= limitMemory) break;
         }
+
+        Log.d("GetImagesAsyncTask", "Bytes used: " + String.valueOf(currentMemUsed));
+        Log.d("GetImagesAsyncTask", "Total allowed: " + String.valueOf(maxMemory));
 
         return images;
     }

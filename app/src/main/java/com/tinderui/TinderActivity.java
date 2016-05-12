@@ -150,9 +150,14 @@ public class TinderActivity extends AppCompatActivity
 
     // Called after requestFromDatabase in doSomethingWithResults()
     void requestImages() {
-        // Network request to download images
-        int maxHeight = imagePager.getHeight(),
+        int maxHeight = 0;
+        int maxWidth = 0;
+
+        if (imagePager != null) {
+            // Network request to download images
+            maxHeight = imagePager.getHeight();
             maxWidth = imagePager.getWidth();
+        }
 
         if (maxHeight == 0) maxHeight = DFLT_IMG_MAX_HEIGHT;
         if (maxWidth == 0) maxWidth = DFLT_IMG_MAX_WIDTH;
@@ -176,7 +181,7 @@ public class TinderActivity extends AppCompatActivity
         // Critical Section: Add images to list here in activity
         accessList.lock();
         imageList.addAll(images);
-        mainPageFragment.changeImage(images.get(0));
+        //mainPageFragment.changeImage(images.get(0));
         requestMade = false;
         accessList.unlock();
 
@@ -297,18 +302,15 @@ public class TinderActivity extends AppCompatActivity
                     otherPage = 0;
                 }
 
-                /* FIXME----------------------------------------------------------------- */
+                // Critical section
                 /* Changing the image while image page is out of sight */
                 /* If no request is active */
-                // Critical section (if request is active)
-                boolean needLock = accessList.isLocked() || requestMade;
-                if (needLock) {
-                    accessList.lock();
-                }
+                accessList.lock();
 
                 /* If more images are still around */
                 if (imageList.size() > 1) {
                     mainPageFragment.changeImage(imageList.get(1)); // Next image
+                    imageList.get(0).recycle();                     // Recycle it from memory
                     imageList.remove(0);                            // Remove old image from list
                 }
                 /* Out of images */
@@ -322,11 +324,8 @@ public class TinderActivity extends AppCompatActivity
                     requestMade = true;
                 }
 
+                accessList.unlock();
                 // End critical section
-                if (needLock) {
-                    accessList.unlock();
-                }
-                /* FIXME----------------------------------------------------------------- */
 
                 /* The "new image" animation. Only do it if an animation is idle. */
                 imagePager.setCurrentItem(otherPage, false);    /* false = no animation on change */
