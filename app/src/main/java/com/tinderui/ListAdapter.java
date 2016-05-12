@@ -3,6 +3,7 @@ package com.tinderui;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,8 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
                 setFileName(item.getFoodName()).
                 setDirectoryName("images").
                 load();
-        img.setImageBitmap(bitmap);
+
+        img.setImageBitmap(RotateBitmap(bitmap, 180));
 
 
 
@@ -73,4 +75,13 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         // Return the completed view to render on screen
         return convertView;
     }
+
+    public static Bitmap RotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    /* end ListAdapter */
 }
