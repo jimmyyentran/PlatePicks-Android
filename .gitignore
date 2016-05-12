@@ -42,3 +42,5 @@ captures/
 # Python
 __pycache__/
 *.pyc
+
+*.orig

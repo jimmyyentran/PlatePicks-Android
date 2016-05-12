@@ -5,7 +5,6 @@
   <!--App name-->
   <string name="app_name">Plate Picks</string>
   <string name="about_food">Activity for information about food</string>
-
   <string name="liked_list">Liked List</string>
 
   <!--Text for xml views-->
@@ -20,13 +19,16 @@
   <string name="action_like_list">Like list</string>
   <string name="action_last_liked">Last liked image of food</string>
 
+  <!--necessary facebook strings-->
+  <string name="facebook_app_id">615719665253279</string>
+  <!--<string name="facebook_app_id">477586705772225</string>-->
+
   <!--Amazon code-->
   <!-- This can be anything, but it should be unique to the app. -->
   <string name="content_file_provider_authority">com.mysampleapp.fileprovider</string>
   <!-- Suffix after '-' must be the app package name as specified in the build.gradle file. This
        is used by the com.amazonaws.mobile.downloader.query.DownloadQueueProvider class. -->
   <string name="download_queue_provider_authority">com.amazonaws.mobile.downloader-com.amazon.mysampleapp</string>
-  <string name="facebook_app_id">477586705772225</string>
 
 
   <!-- REQUIRED FOR GENERAL APP FUNCTIONALITY - YOU MAY WANT TO KEEP THESE -->

@@ -14,78 +14,146 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--Main UI-->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <!--Top Bar-->
-        <RelativeLayout
-            android:id="@+id/top_bar"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:background="@color/main_red">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ffffff">
 
-            <!--Settings Icon-->
-            <ImageButton
-                android:id="@+id/droor_icon"
-                android:contentDescription="@string/contentDescription_tinder"
-                android:layout_width="30dp"
+            <ImageView
+                android:layout_width="108dp"
+                android:layout_height="108dp"
+                android:id="@+id/circle_checkers"
+                android:layout_gravity="center_horizontal|top"
+                android:background="@color/main_red"
+                android:alpha="0.3"
+                android:src="@drawable/checker_circle_2" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/settings_icon_2"
-                android:background="@android:color/transparent"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="20dp" />
+                android:background="#ffffff">
 
-            <!--Fancy Button-->
-            <ImageButton
-                android:id="@+id/fancy_button"
-                android:layout_width="@android:dimen/app_icon_size"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/fancy_button_2"
-                android:background="@android:color/transparent"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
-                android:nestedScrollingEnabled="false" />
+                <RelativeLayout
+                    android:id="@+id/top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:background="@color/main_red"
+                    android:layout_gravity="top"
+                    android:paddingRight="20dp"
+                    android:paddingLeft="20dp">
 
-            <!--List Button-->
+                    <!--Drawer Icon-->
+                    <ImageButton
+                        android:id="@+id/droor_icon"
+                        android:contentDescription="@string/contentDescription_tinder"
+                        android:layout_width="30dp"
+                        android:layout_height="25dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/settings_icon_3"
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:onClick="openDrawer"/>
+
+                    <!--Fancy Button-->
+
+                    <!--List Button-->
+                    <FrameLayout
+                        android:id="@+id/list_button_frame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="false"
+                        android:layout_centerVertical="true">
+
+                        <ImageButton
+                            android:id="@+id/list_button"
+                            android:layout_width="30dp"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/list_icon_3"
+                            android:background="@android:color/transparent"
+                            android:onClick="gotoList"
+                            android:layout_gravity="center" />
+                        <TextView
+                            android:id="@+id/list_notification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textColor="@color/main_red"
+                            android:typeface="sans"
+                            android:layout_gravity="center" />
+
+                    </FrameLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/top_checkers"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/checker_border_4"
+                    android:rotation="180"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/main_red"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentBottom="false"
+                    android:alpha="0.3" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/red_circle"
+                android:background="@drawable/red_circle"
+                android:layout_gravity="center_horizontal|top" />
+
             <FrameLayout
-                android:id="@+id/list_button_frame"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:id="@+id/fancy_button_frame"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6dp">
+
+                <ImageView
+                    android:layout_width="68dp"
+                    android:layout_height="75dp"
+                    android:id="@+id/fancy_button_image"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center_horizontal" />
 
                 <ImageButton
-                    android:id="@+id/list_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/fancy_button"
+                    android:layout_width="70dp"
+                    android:layout_height="75dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/list_icon_3"
+                    android:src="@drawable/fancy_button"
                     android:background="@android:color/transparent"
-                    android:onClick="gotoList" />
-                <TextView
-                    android:id="@+id/list_notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textColor="@color/main_red"
-                    android:typeface="sans"
-                    android:layout_gravity="center" />
-
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_gravity="center_horizontal" />
             </FrameLayout>
-        </RelativeLayout>
+        </FrameLayout>
 
         <!--Center Section-->
         <RelativeLayout
@@ -96,31 +164,21 @@
             android:background="#ffffff">
 
             <!--Top Checker Border-->
-            <ImageView
-                android:id="@+id/top_checkers"
-                android:rotation="180"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/checker_border"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/main_red"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentStart="false"
-                android:layout_alignParentBottom="false" />
 
             <!--Faded Logo-->
             <ImageView
                 android:id="@+id/faded_logo"
-                android:src="@drawable/faded_logo"
-                android:layout_width="150dp"
+                android:src="@drawable/alternate_logo"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:alpha="0.2"
+                android:layout_alignTop="@+id/viewPager_images"
+                android:layout_above="@+id/bot_checkers" />
 
 
             <!--Container for Tinder Images-->
-            <com.tinderui.support.CustomViewPager
+            <com.platepicks.support.CustomViewPager
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
@@ -136,11 +194,12 @@
                 android:id="@+id/bot_checkers"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/checker_border"
+                android:src="@drawable/checker_border_4"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:layout_alignParentBottom="true"
-                android:background="@color/main_red" />
+                android:background="@color/main_red"
+                android:alpha="0.3" />
         </RelativeLayout>
 
         <!--Bottom Bar-->
@@ -208,6 +267,606 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <!--Drawer-->
+    <android.support.v4.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawer1"
+        android:visibility="gone">
+
+        <!--Drawer Frame-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/drawer_frame">
+
+            <!--Drawer Block-->
+            <RelativeLayout
+                android:orientation="vertical"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:id="@+id/drawer_block"
+                android:background="#ffffff"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true">
+
+                <!--drawer's top Bar-->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/drawer_top_bar">
+
+                    <!--Exit Button-->
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:paddingRight="15dp"
+                        android:id="@+id/exit_icon"
+                        android:onClick="closeDrawer">
+
+                        <!--Exit Icon's BG-->
+                        <LinearLayout
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:id="@+id/exit_icon_bg"
+                            android:background="@color/main_red"/>
+
+                        <!--Exit Icon's Image-->
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:id="@+id/exit_icon_fg"
+                            android:background="@drawable/exit_button_2"/>
+                    </FrameLayout>
+
+                    <!--Menu text-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Menu"
+                        android:textColor="@color/main_red"
+                        android:id="@+id/drawer_header_text"
+                        android:textSize="27dp"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical|center_horizontal" />
+                </FrameLayout>
+
+                <!--grey Line between top bar and list-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_grey"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@+id/drawer_top_bar">
+                </LinearLayout>
+
+                <!--drawer content-->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/drawer_content"
+                    android:scrollIndicators="none"
+                    android:paddingTop="10dp"
+                    android:layout_below="@+id/drawer_top_bar">
+
+                    <!--put profile icon container here-->
+
+                    <!--search icon/text container-->
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/search_header"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp">
+
+                        <!--Search Icon-->
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/search_icon">
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@color/main_red"/>
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/search_icon"/>
+
+                        </FrameLayout>
+
+                        <!--Search Icon text-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Search Parameters"
+                            android:layout_toRightOf="@+id/search_icon"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="16dp"
+                            android:layout_centerVertical="true" />
+                    </RelativeLayout>
+                    <!--end search icon/text container-->
+
+                    <!--search parameters container-->
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/search_container"
+                        android:layout_marginTop="6dp">
+
+                        <!--radius parameter container-->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="45dp"
+                            android:id="@+id/radius_container"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="30dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Radius (mi.)"
+                                android:id="@+id/radius_text" />
+
+                            <SeekBar
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/radius_seekBar"
+                                android:layout_toRightOf="@+id/radius_text"
+                                android:layout_toLeftOf="@+id/radius_number"
+                                android:layout_centerVertical="true"
+                                android:max="25" />
+                            <TextView
+                                android:layout_width="20dp"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/radius_number"
+                                android:layout_alignParentEnd="true"
+                                android:textAlignment="viewEnd"
+                                android:text="15" />
+                        </RelativeLayout>
+                        <!--end radius parameter container-->
+
+                        <!--food types parameter container-->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="45dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="25dp"
+                            android:id="@+id/type_container">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Food Types"
+                                android:id="@+id/type_text"
+                                android:layout_centerVertical="true" />
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="2dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="12dp"
+                                android:layout_marginRight="10dp"
+                                android:visibility="gone"></LinearLayout>
+
+                            <FrameLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:onClick="viewFoodTypeList">
+
+                                <ImageView
+                                    android:layout_width="12dp"
+                                    android:layout_height="8dp"
+                                    android:id="@+id/types_dropdown"
+                                    android:layout_alignParentEnd="true"
+                                    android:background="@drawable/dropdown_icon"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center"
+                                    android:layout_marginRight="2dp" />
+                            </FrameLayout>
+
+                        </RelativeLayout>
+                        <!--end food types parameter container-->
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/light_grey"
+                        android:layout_marginTop="10dp"></LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_header"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp">
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/profile_icon">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:id="@+id/profile_bg"
+                                android:background="@color/main_red"></LinearLayout>
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:id="@+id/profile_fg"
+                                android:background="@drawable/profile_icon" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Profile Options"
+                            android:layout_toRightOf="@+id/profile_icon"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="16dp" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/profile_container"
+                        android:layout_marginTop="8dp">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/log_in"
+                            android:layout_marginLeft="45dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="6dp">
+
+                            <com.facebook.login.widget.LoginButton
+                                android:id="@+id/login_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal" />
+                            <!--
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/imageView"
+                                android:src="@drawable/selector_button_facebook"
+                                android:layout_marginLeft="20dp"
+                                android:layout_gravity="center_vertical" />
+                                -->
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/reset_frame"
+                        android:gravity="bottom">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|bottom"
+                            android:paddingBottom="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Clear Favorites"
+                                android:id="@+id/reset_text"
+                                android:layout_centerHorizontal="true"
+                                android:textColor="#ffffff"
+                                android:background="@color/main_red"
+                                android:paddingLeft="12dp"
+                                android:paddingRight="12dp"
+                                android:textSize="20dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+                                android:textStyle="bold"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="30dp"
+                                android:gravity="center_horizontal"
+                                android:layout_marginBottom="3dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(tap twice)"
+                                android:id="@+id/textView"
+                                android:layout_centerHorizontal="true"
+                                android:textSize="10dp" />
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="false">
+
+                        </RelativeLayout>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!--food types list container-->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="170dp"
+                    android:visibility="gone"
+                    android:id="@+id/types_list"
+                    android:background="#ffffff">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/scrollView" >
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <!--left checkboxes-->
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingTop="15dp"
+                                    android:paddingLeft="12dp"
+                                    android:paddingRight="15dp">
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="American"
+                                        android:id="@+id/checkBox"
+                                        android:checked="true"
+                                        android:layout_gravity="center_horizontal|left" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Chinese"
+                                        android:id="@+id/checkBox2"
+                                        android:layout_gravity="center_horizontal|left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Mexican"
+                                        android:id="@+id/checkBox3"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Japanese"
+                                        android:id="@+id/checkBox4"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Italian"
+                                        android:id="@+id/checkBox5"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Vietnamese"
+                                        android:id="@+id/checkBox6"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Thai"
+                                        android:id="@+id/checkBox7"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Indian"
+                                        android:id="@+id/checkBox8"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Mediterranean"
+                                        android:id="@+id/checkBox9"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Korean"
+                                        android:id="@+id/checkBox10"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+                                </LinearLayout>
+
+                                <!--right checkboxes-->
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingTop="15dp"
+                                    android:paddingRight="12dp">
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="French"
+                                        android:id="@+id/checkBox11"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Pizza"
+                                        android:id="@+id/checkBox12"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Seafood"
+                                        android:id="@+id/checkBox13"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Dim Sum"
+                                        android:id="@+id/checkBox14"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Asian Fusion"
+                                        android:id="@+id/checkBox15"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Sandwiches"
+                                        android:id="@+id/checkBox16"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Burgers"
+                                        android:id="@+id/checkBox17"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Fast Food"
+                                        android:id="@+id/checkBox18"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Coffee &amp; Tea"
+                                        android:id="@+id/checkBox19"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+
+                                    <CheckBox
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Breakfast"
+                                        android:id="@+id/checkBox20"
+                                        android:layout_gravity="left"
+                                        android:checked="true" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </ScrollView>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="30dp"
+                            android:paddingRight="30dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="OK"
+                                android:id="@+id/types_ok_button"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textColor="#ffffff"
+                                android:background="@color/main_red"
+                                android:textStyle="bold"
+                                android:textSize="20dp"
+                                android:paddingLeft="60dp"
+                                android:paddingRight="60dp"
+                                android:onClick="viewFoodTypeList"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </FrameLayout>
+                <!--end Drawer Content-->
+
+            </RelativeLayout>
+
+            <!--space on block's right-->
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/drawer_right_space"
+                android:layout_alignParentRight="false"
+                android:layout_toRightOf="@+id/drawer_block"
+                android:background="#000000"
+                android:alpha="0.25">
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.DrawerLayout>
+
     <!--Splash Screen-->
     <FrameLayout
         android:layout_width="match_parent"
@@ -224,5 +883,6 @@
             android:src="@drawable/main_logo"
             android:contentDescription="@string/contentDescription_logo"/>
     </FrameLayout>
+
 </FrameLayout>
 

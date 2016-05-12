@@ -1,8 +1,10 @@
 import com.google.gson.Gson;
-import java.lang.reflect.Type;
-import com.tinderui.util.AWSIntegratorAsyncTask;
-import com.tinderui.util.AWSIntegratorInterface;
-import com.tinderui.object.FoodRequest;
+import com.google.gson.reflect.TypeToken;
+import com.platepicks.objects.FoodReceive;
+import com.platepicks.objects.FoodRequest;
+import com.platepicks.util.AWSIntegratorAsyncTask;
+import com.platepicks.util.AWSIntegratorInterface;
+import com.platepicks.util.ConvertToObject;
 
 import java.util.List; //added
 import java.util.ArrayList; //added
@@ -15,7 +17,14 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.assertEquals;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest="src/main/AndroidManifest.xml", sdk = 18) //sdk level may change
@@ -33,50 +42,35 @@ public class AWSIntegratorTest {
     public void HelloWorldTest(){
         AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
         TestActivity activity  = new TestActivity();
-//        initialize a list of type DataObject
-//        List<DataObject> objList = new ArrayList<DataObject>();
         DataObject singleObject = new DataObject("value1", "value2", "value3");
 
         //Convert the object to a JSON string
-        String json = new Gson().toJson(singleObject).toString();
-        System.out.println(json);
+//        String json = new Gson().toJson(singleObject).toString();
+//        System.out.println(json);
 
         asyncTask.execute("hello-world", singleObject, activity);
-//        asyncTask.execute("hello-world", "{\n  \"key1\" : \"value1\",\n  \"key2\" : \"value2\",\n  \"key3\" : \"value3\"\n}", activity);
-//        asyncTask.execute("hello-world", "{\"key1\":\"value1\",\"key2\":\"value2\",\"key3\":\"value3\"}", activity);
-//        System.out.println("{\"key1\":\"value1\",\"key2\":\"value2\",\"key3\":\"value3\"}");
         Robolectric.flushBackgroundThreadScheduler();
-        assertEquals(activity.returnResults(), "\"value1\"");
-//        assertEquals("\"value1\"", "\"value1\"");
+        String HelloWorldResult = activity.returnResults();
+//        System.out.println("helloOutput: " + HelloWorldResult);
 
+        Type type = new TypeToken<List<DataObject>>(){}.getType();
+        List<DataObject> inpList = new Gson().fromJson(HelloWorldResult, type);
+        for(int i = 0; i < inpList.size(); i++){
+            DataObject x = inpList.get(i);
+            x.printDataObject();
+        }
     }
 
     @Test
     public void FoodRequestTest(){
         AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
         TestActivity activity  = new TestActivity();
-
-        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", 4, 40000, "", 1);
+        FoodRequest req = new FoodRequest("asian", 1, "33.7175, -117.8311", 2, 40000, "japanese", 1, 0);
         asyncTask.execute("yelpApi", req, activity);
         Robolectric.flushBackgroundThreadScheduler();
-        System.out.print("foodRequest:" + activity.returnResults());
-
-//        System.out.println("term: " + req.term);
-//        System.out.println("business: " + req.food_per_business);
-//        System.out.println("11: " + req.ll);
-//        System.out.println("limit: " + req.limit);
-//        System.out.println("radius_filter: " + req.radius_filter);
-//        System.out.println("category_filter: " + req.category_filter);
-//        System.out.println("sort: " + req.sort);
-//        req.setlattitude(33.333);
-//        System.out.println("setlattitude-11: " + req.ll);
-//        req.setlongitude(44.444);
-//        System.out.println("setlongitude-11: " + req.ll);
-//        req.addCategory("Chinese");
-//        System.out.println("category_filter: " + req.category_filter);
-
+        List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(activity.returnResults());
+        assertThat(foodReceives.isEmpty(), is(false));
     }
-
 
 //    @Test
 //    public void HelloWorldTest(){
