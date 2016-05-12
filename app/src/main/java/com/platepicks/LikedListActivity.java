@@ -1,11 +1,15 @@
 package com.platepicks;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -20,10 +24,22 @@ public class LikedListActivity extends AppCompatActivity {
      */
     private GoogleApiClient client;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liked_list);
+
+        String fontPath = "fonts/Hamburger_Heaven.TTF";
+
+        // text view label
+        TextView likes_title = (TextView) findViewById(R.id.likes_title);
+
+        // Loading Font Face
+        Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+
+        // Applying font
+        likes_title.setTypeface(tf);
 
         // Construct the data source
         ArrayList<ListItemClass> data = getIntent().getParcelableArrayListExtra("key");

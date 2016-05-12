@@ -190,4 +190,10 @@ public class SplashActivity extends Activity {
         // pause/resume Mobile Analytics collection
         AWSMobileClient.defaultMobileClient().handleOnPause();
     }
+
+    /**
+     * Created by elizamae on 5/2/16.
+     */
+    public static class test {
+    }
 }
