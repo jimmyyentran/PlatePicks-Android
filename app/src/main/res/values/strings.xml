@@ -20,8 +20,8 @@
   <string name="action_last_liked">Last liked image of food</string>
 
   <!--necessary facebook strings-->
-  <string name="facebook_app_id">615719665253279</string>
-  <!--<string name="facebook_app_id">477586705772225</string>-->
+  <!--<string name="facebook_app_id">615719665253279</string>-->
+  <string name="facebook_app_id">477586705772225</string>
 
   <!--Amazon code-->
   <!-- This can be anything, but it should be unique to the app. -->
