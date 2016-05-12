@@ -27,6 +27,8 @@ public class SwipeImageFragment extends Fragment {
         this.bitmap = bitmap;
     }
 
+    public SquareImageButton getFoodPicture() { return foodPicture; }
+
     // FIXME: param will be bitmap once we have them
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
      * when image page is out of sight. */

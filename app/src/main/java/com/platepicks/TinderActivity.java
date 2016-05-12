@@ -1,6 +1,7 @@
 package com.platepicks;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
 import android.media.Image;
@@ -19,12 +20,11 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.foodtinder.ListItemClass;
-import com.foodtinder.R;
-import com.tinderui.object.FoodRequest;
-import com.tinderui.util.AWSIntegratorAsyncTask;
-import com.tinderui.support.CustomViewPager;
-import com.tinderui.util.AWSIntegratorInterface;
+import com.facebook.FacebookSdk;
+import com.platepicks.objects.FoodRequest;
+import com.platepicks.support.CustomViewPager;
+import com.platepicks.util.AWSIntegratorAsyncTask;
+import com.platepicks.util.AWSIntegratorInterface;
 import com.tinderui.util.GetImagesAsyncTask;
 import com.tinderui.util.ImageLoaderInterface;
 
@@ -46,6 +46,9 @@ public class TinderActivity extends AppCompatActivity
 
     // Splash screen
     FrameLayout splashScreen;
+
+    /* local seekBar variable */
+    SeekBar rad_seekBar = null;
 
     /* Local TextView variable to handle list notification number*/
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
@@ -316,7 +319,7 @@ public class TinderActivity extends AppCompatActivity
 
                     /* move liked image into fancy button */
                     ImageView fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
-                    fancy_image.setImageDrawable(mainPageFragment.foodPicture.getDrawable());
+                    fancy_image.setImageDrawable(mainPageFragment.getFoodPicture().getDrawable());
                     //fancy_image.setBackgroundResource();
                     String name = "Food " + cnt;
                     ListItemClass toAdd = createListItem(name);
