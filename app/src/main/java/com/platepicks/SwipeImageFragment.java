@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.platepicks.support.SquareImageButton;
@@ -20,6 +21,7 @@ public class SwipeImageFragment extends Fragment {
 
     SquareImageButton foodPicture;
     Bitmap bitmap;
+    ImageView to_pipe;
 
     static public SwipeImageFragment newInstance(Bitmap bitmap) {
         SwipeImageFragment fragment = new SwipeImageFragment();

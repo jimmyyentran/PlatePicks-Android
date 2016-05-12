@@ -3,6 +3,7 @@ package com.platepicks;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.animation.Animator;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,8 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
 import com.platepicks.support.CustomViewPager;
 
 import java.util.ArrayList;
@@ -28,11 +32,16 @@ public class TinderActivity extends AppCompatActivity {
     SwipeImageFragment mainPageFragment;
 
     /* Local TextView variable to handle list notification number*/
-    TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
+    TextView notification_number = null;
+
+    /* local seekBar variable */
+    SeekBar rad_seekBar = null;
 
     private Toolbar toolbar;
     ArrayList<ListItemClass> data = new ArrayList<>();
     int cnt = 1; // used for notification count
+
+    com.facebook.login.widget.LoginButton loginButton;
 
     public ListItemClass createListItem(String foodName)
     {
@@ -43,12 +52,18 @@ public class TinderActivity extends AppCompatActivity {
         return newItem;
     }
 
+    /* Drawer declaration */
+    public android.support.v4.widget.DrawerLayout my_drawer = null;
+
     /* onCreate():
      * First function called by Android when creating an activity
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* initialize facebook SDK first */
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.activity_tinderui);
@@ -71,17 +86,26 @@ public class TinderActivity extends AppCompatActivity {
         final ImageChangeListener changeListener = new ImageChangeListener(imagePager);
         imagePager.addOnPageChangeListener(changeListener);
 
+        /* initialize radius seekBar and link it to a listener*/
+        rad_seekBar = (SeekBar) findViewById(R.id.radius_seekBar);
+        rad_seekBar.setProgress(15);
+        TextView radius_value = (TextView) findViewById(R.id.radius_number);
+        radius_value.setText(String.valueOf(rad_seekBar.getProgress()));
+        rad_seekBar.setOnSeekBarChangeListener(new rad_seekBar_listener());
+
         /* Yes and No Buttons:
          * Finding reference to buttons in xml layout to keep as objects in Java */
         Button noButton = (Button) findViewById(R.id.button_no);
         Button yesButton = (Button) findViewById(R.id.button_yes);
 
-
-        // Load custom YES/NO button text
-
+        /* Load custom YES/NO button text */
         Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
         noButton.setTypeface(Typeface_HamHeaven);
         yesButton.setTypeface(Typeface_HamHeaven);
+
+        /* Custom font for Drawer's Header */
+        TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
+        drawer_header.setTypeface(Typeface_HamHeaven);
 
         /* On Click Listeners:
          * Functions that are called whenever the user clicks on the buttons or image */
@@ -100,7 +124,6 @@ public class TinderActivity extends AppCompatActivity {
                 if (imagePager.getCurrentItem() == 1
                         && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
                     imagePager.setCurrentItem(0);
-
                 }
             }
         });
@@ -113,7 +136,9 @@ public class TinderActivity extends AppCompatActivity {
                 .alpha(0f)
                 .setStartDelay(3000)
                 .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
+
     }
+    /* end onCreate() */
 
     /* ImagePagerAdapter:
      * Feeds ViewPager the imageViews for its pages */
@@ -202,6 +227,11 @@ public class TinderActivity extends AppCompatActivity {
                     otherPage = 2;
 
                     update_list_number(cnt);
+
+                    /* move liked image into fancy button */
+                    ImageView fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
+                    fancy_image.setImageDrawable(mainPageFragment.foodPicture.getDrawable());
+                    //fancy_image.setBackgroundResource();
                     String name = "Food " + cnt;
                     ListItemClass toAdd = createListItem(name);
                     data.add(toAdd);
@@ -254,16 +284,49 @@ public class TinderActivity extends AppCompatActivity {
 
     }
 
-    /* Toolbar button functions:
-     * Settings,
-     * Last-Liked item,
-     * Liked-list
-     */
-
+    /* Moves to Like-List Activity */
     public void gotoList(View view) {
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", data);
         TinderActivity.this.startActivity(intent);
+    }
+
+    /* Opens main drawer */
+    public void openDrawer(View view) {
+        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
+        my_drawer.setVisibility(View.VISIBLE);
+    }
+
+    /* Closes main drawer */
+    public void closeDrawer(View view) {
+        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
+        my_drawer.setVisibility(View.GONE);
+    }
+
+    public void viewFoodTypeList(View view) {
+        FrameLayout tmp = (FrameLayout) findViewById(R.id.types_list);
+        ImageView icon = (ImageView) findViewById(R.id.types_dropdown);
+        if(tmp.getVisibility() == View.GONE){
+            tmp.setVisibility(View.VISIBLE);
+            icon.setRotation(180);
+        }
+        else{
+            tmp.setVisibility(View.GONE);
+            icon.setRotation(0);
+        }
+    }
+
+    public void removeCheckers (View view) {
+        ImageView tmp = (ImageView) findViewById(R.id.top_checkers);
+        ImageView tmp2 = (ImageView)findViewById(R.id.bot_checkers);
+        if(tmp.getVisibility() == (View.INVISIBLE)) {
+            tmp.setVisibility(View.VISIBLE);
+            tmp2.setVisibility(View.VISIBLE);
+        }
+        else{
+            tmp.setVisibility(View.INVISIBLE);
+            tmp2.setVisibility(View.INVISIBLE);
+        }
     }
 
     void update_list_number (int cnt) {
@@ -289,6 +352,27 @@ public class TinderActivity extends AppCompatActivity {
         }
         return;
     }
-                /* End list notification code */
+    /* end list notification code */
+
+    /* seekbar listener */
+    private class rad_seekBar_listener implements SeekBar.OnSeekBarChangeListener {
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            TextView tmp = (TextView) findViewById(R.id.radius_number);
+            if(progress <= 9) {
+                if(progress < 5) {
+                    progress = 5;
+                }
+                tmp.setText("  " + progress);
+            }
+            else {
+                tmp.setText("" + progress);
+            }
+        }
+
+        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        public void onStopTrackingTouch(SeekBar seekBar) {}
+
+    }
 }
 

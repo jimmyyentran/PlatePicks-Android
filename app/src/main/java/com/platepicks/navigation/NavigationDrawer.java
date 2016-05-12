@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,6 +32,7 @@ import com.platepicks.demo.HomeDemoFragment;
 import static com.platepicks.R.string.app_name;
 
 public class NavigationDrawer {
+    private static final String LOG_TAG = NavigationDrawer.class.getSimpleName();
     private AppCompatActivity containingActivity;
 
     /** The helper class used to toggle the left navigation drawer open and closed. */
@@ -59,6 +61,7 @@ public class NavigationDrawer {
                             final ListView drawerItemsContainer,
                             final int fragmentContainerId) {
         // Keep a reference to the activity containing this navigation drawer.
+        Log.d(LOG_TAG, "Create Drawer");
         this.containingActivity = activity;
         this.drawerItems = drawerItemsContainer;
         adapter = new ArrayAdapter<DemoConfiguration.DemoFeature>(activity, R.layout.nav_drawer_item) {
@@ -219,6 +222,7 @@ public class NavigationDrawer {
      * Closes the navigation drawer.
      */
     public void closeDrawer() {
+        Log.d(LOG_TAG, "Close Drawer");
         drawerLayout.closeDrawers();
     }
 
