@@ -1,5 +1,6 @@
 package com.platepicks;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,17 +8,16 @@ import android.os.Parcelable;
  * Created by elizamae on 4/29/16.
  */
 public class ListItemClass implements Parcelable {
+
+    // members
     private String foodName;
     private String restaurantName;
     private String restaurantAddress;
     private int clicked = 0;
 
-    public String getFoodName() {
-        return foodName;
-    }
-    public void setFoodName(String foodName) {
-        this.foodName = foodName;
-    }
+    // member functions
+    public String getFoodName() {return foodName;}
+    public void setFoodName(String foodName) {this.foodName = foodName;}
     public String getRestaurantName() {
         return restaurantName;
     }
@@ -28,9 +28,7 @@ public class ListItemClass implements Parcelable {
     {
         return restaurantAddress;
     }
-    public void setRestaurantAddress(String restaurantAddress) {
-        this.restaurantAddress = restaurantAddress;
-    }
+    public void setRestaurantAddress(String restaurantAddress) {this.restaurantAddress = restaurantAddress;}
     public boolean isClicked() {
         if (clicked == 1)
             return true;
@@ -43,10 +41,10 @@ public class ListItemClass implements Parcelable {
     public static final Parcelable.Creator<ListItemClass> CREATOR = new Parcelable.Creator<ListItemClass>() {
         public ListItemClass createFromParcel(Parcel source) {
             ListItemClass mItem = new ListItemClass();
-            mItem.foodName = source.readString();
-            mItem.restaurantName = source.readString();
-            mItem.restaurantAddress = source.readString();
-            mItem.clicked = source.readInt();
+            mItem.setFoodName(source.readString());
+            mItem.setRestaurantName(source.readString());
+            mItem.setRestaurantAddress(source.readString());
+            mItem.setClicked(source.readInt());
             return mItem;
         }
         public ListItemClass[] newArray(int size) {
@@ -57,10 +55,12 @@ public class ListItemClass implements Parcelable {
     public int describeContents() {
         return 0;
     }
+
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(foodName);
-        parcel.writeString(restaurantName);
-        parcel.writeString(restaurantAddress);
+        parcel.writeString(this.getFoodName());
+        parcel.writeString(this.getRestaurantAddress());
+        parcel.writeString(this.getRestaurantAddress());
         parcel.writeInt(clicked);
+
     }
 }

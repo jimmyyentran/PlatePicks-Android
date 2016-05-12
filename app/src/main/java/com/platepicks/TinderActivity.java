@@ -1,5 +1,6 @@
 package com.platepicks;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -26,6 +27,8 @@ import com.platepicks.util.AWSIntegratorInterface;
 import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +54,7 @@ public class TinderActivity extends AppCompatActivity
     /* Local TextView variable to handle list notification number*/
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
 
+
     // View Pager for swiping
     CustomViewPager imagePager;
 
@@ -66,8 +70,8 @@ public class TinderActivity extends AppCompatActivity
     ReentrantLock accessList = new ReentrantLock();
     boolean requestMade = false;
 
-    public ListItemClass createListItem(String foodName)
-    {
+    // Function: creates list item
+    public ListItemClass createListItem(String foodName) {
         ListItemClass newItem = new ListItemClass();
         newItem.setFoodName(foodName);
         newItem.setRestaurantName("test_restaurant");
@@ -314,7 +318,7 @@ public class TinderActivity extends AppCompatActivity
                 int otherPage;
 
                 /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
-                if (imagePager.getCurrentItem() == 0){
+                if (imagePager.getCurrentItem() == 0) {
                     otherPage = 2;
 
                     update_list_number(cnt);
@@ -324,11 +328,19 @@ public class TinderActivity extends AppCompatActivity
                     fancy_image.setImageDrawable(mainPageFragment.getFoodPicture().getDrawable());
                     //fancy_image.setBackgroundResource();
                     String name = "Food " + cnt;
+
+                    // store "yes" bitmap in internal storage
+                    Bitmap toSend = imageList.get(0);
+                    new ImageSaver(TinderActivity.this).
+                            setFileName(name).
+                            setDirectoryName("images").
+                            save(toSend);
+
                     ListItemClass toAdd = createListItem(name);
+
                     data.add(toAdd);
                     ++cnt;
-                }
-                else{
+                } else {
                     otherPage = 0;
                 }
 
@@ -494,3 +506,6 @@ public class TinderActivity extends AppCompatActivity
     }
 }
 
+
+
+    /* end Tinder Activity */

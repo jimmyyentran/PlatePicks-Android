@@ -1,11 +1,15 @@
 package com.platepicks;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -42,11 +46,26 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         // Lookup view for data population
         TextView fname = (TextView) convertView.findViewById(R.id.fname);
         TextView rname = (TextView) convertView.findViewById(R.id.rname);
-
+        ImageView img = (ImageView) convertView.findViewById(R.id.food_circle);
 
         // Populate the data into the template view using the data object
         fname.setText(item.getFoodName());
         rname.setText(item.getRestaurantName());
+        // for bitmap
+
+        // /here context can be anything like getActivity() for fragment, this or MainActivity.this
+        Bitmap bitmap = new ImageSaver(getContext()).
+                setFileName(item.getFoodName()).
+                setDirectoryName("images").
+                load();
+
+        img.setImageBitmap(RotateBitmap(bitmap, 180));
+
+
+
+       // byte[] byteArray = item.getFoodImage();
+      //  Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+       // img.setImageBitmap(bmp);
 
         // set font
         fname.setTypeface(tf);
@@ -54,4 +73,13 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         // Return the completed view to render on screen
         return convertView;
     }
+
+    public static Bitmap RotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    /* end ListAdapter */
 }

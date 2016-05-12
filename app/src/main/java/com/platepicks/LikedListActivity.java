@@ -30,9 +30,11 @@ public class LikedListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liked_list);
 
-        String fontPath = "fonts/Hamburger_Heaven.TTF";
+        // Construct the data source
+        ArrayList<ListItemClass> data = getIntent().getParcelableArrayListExtra("key");
 
-        // text view label
+        // font stuff
+        String fontPath = "fonts/Hamburger_Heaven.TTF";
         TextView likes_title = (TextView) findViewById(R.id.likes_title);
 
         // Loading Font Face
@@ -42,7 +44,7 @@ public class LikedListActivity extends AppCompatActivity {
         likes_title.setTypeface(tf);
 
         // Construct the data source
-        ArrayList<ListItemClass> data = getIntent().getParcelableArrayListExtra("key");
+        data = getIntent().getParcelableArrayListExtra("key");
 
         // Create the adapter to convert the array to views
         ListAdapter adapter = new ListAdapter(this, data);
