@@ -41,13 +41,13 @@ public class AWSIntegratorTest {
         DataObject singleObject = new DataObject("value1", "value2", "value3");
 
         //Convert the object to a JSON string
-        String json = new Gson().toJson(singleObject).toString();
-        System.out.println(json);
+//        String json = new Gson().toJson(singleObject).toString();
+//        System.out.println(json);
 
         asyncTask.execute("hello-world", singleObject, activity);
         Robolectric.flushBackgroundThreadScheduler();
         String HelloWorldResult = activity.returnResults();
-        System.out.println("helloOutput: " + HelloWorldResult);
+//        System.out.println("helloOutput: " + HelloWorldResult);
 
         Type type = new TypeToken<List<DataObject>>(){}.getType();
         List<DataObject> inpList = new Gson().fromJson(HelloWorldResult, type);
