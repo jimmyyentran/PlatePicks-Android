@@ -12,12 +12,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.foodtinder.ListItemClass;
 import com.foodtinder.R;
 import com.tinderui.object.FoodRequest;
 import com.tinderui.util.AWSIntegratorAsyncTask;
@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class TinderActivity extends AppCompatActivity
         implements AWSIntegratorInterface, ImageLoaderInterface {
+
     // Picture of food fragment
     SwipeImageFragment mainPageFragment;
 
@@ -46,6 +47,7 @@ public class TinderActivity extends AppCompatActivity
     /* Local TextView variable to handle list notification number*/
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
 
+    // Array of ListItemClass that goes to LikedListActivity
     ArrayList<ListItemClass> data = new ArrayList<>();
     int cnt = 1; // used for notification count
 
@@ -56,6 +58,7 @@ public class TinderActivity extends AppCompatActivity
     List<Bitmap> imageList = new LinkedList<>();
     AtomicBoolean imageListHasData = new AtomicBoolean(false);
 
+    // Function: creates list item
     public ListItemClass createListItem(String foodName)
     {
         ListItemClass newItem = new ListItemClass();
