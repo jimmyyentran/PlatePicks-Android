@@ -2,7 +2,7 @@ package com.platepicks.dynamoDB.nosql;
 
 import java.util.List;
 
-public interface NoSQLOperation extends NoSQLOperationListItem {
+public interface NoSQLOperation {
     /**
      * Synchronously Execute the Demo NoSQL operation.
      * @return true if there were results, otherwise return false.

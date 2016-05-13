@@ -571,51 +571,51 @@ public class NoSQLTableComment extends NoSQLTableBase {
         }
     }
 
-    private List<NoSQLOperationListItem> getSupportedDemoOperations(final Context context) {
-        List<NoSQLOperationListItem> noSQLOperationsList = new ArrayList<NoSQLOperationListItem>();
-        noSQLOperationsList.add(new NoSQLOperationListHeader(
-            context.getString(R.string.nosql_operation_header_get)));
-        noSQLOperationsList.add(new GetWithPartitionKeyAndSortKey(context));
+//    private List<NoSQLOperationListItem> getSupportedDemoOperations(final Context context) {
+//        List<NoSQLOperationListItem> noSQLOperationsList = new ArrayList<NoSQLOperationListItem>();
+//        noSQLOperationsList.add(new NoSQLOperationListHeader(
+//            context.getString(R.string.nosql_operation_header_get)));
+//        noSQLOperationsList.add(new GetWithPartitionKeyAndSortKey(context));
+//
+//        noSQLOperationsList.add(new NoSQLOperationListHeader(
+//            context.getString(R.string.nosql_operation_header_primary_queries)));
+//        noSQLOperationsList.add(new QueryWithPartitionKeyOnly(context));
+//        noSQLOperationsList.add(new QueryWithPartitionKeyAndFilter(context));
+//        noSQLOperationsList.add(new QueryWithPartitionKeyAndSortKeyCondition(context));
+//        noSQLOperationsList.add(new QueryWithPartitionKeySortKeyConditionAndFilter(context));
+//
+//        noSQLOperationsList.add(new NoSQLOperationListHeader(
+//            context.getString(R.string.nosql_operation_header_scan)));
+//        noSQLOperationsList.add(new ScanWithoutFilter(context));
+//        noSQLOperationsList.add(new ScanWithFilter(context));
+//        return noSQLOperationsList;
+//    }
 
-        noSQLOperationsList.add(new NoSQLOperationListHeader(
-            context.getString(R.string.nosql_operation_header_primary_queries)));
-        noSQLOperationsList.add(new QueryWithPartitionKeyOnly(context));
-        noSQLOperationsList.add(new QueryWithPartitionKeyAndFilter(context));
-        noSQLOperationsList.add(new QueryWithPartitionKeyAndSortKeyCondition(context));
-        noSQLOperationsList.add(new QueryWithPartitionKeySortKeyConditionAndFilter(context));
-
-        noSQLOperationsList.add(new NoSQLOperationListHeader(
-            context.getString(R.string.nosql_operation_header_scan)));
-        noSQLOperationsList.add(new ScanWithoutFilter(context));
-        noSQLOperationsList.add(new ScanWithFilter(context));
-        return noSQLOperationsList;
-    }
-
-    @Override
-    public void getSupportedDemoOperations(final Context context,
-                                           final SupportedDemoOperationsHandler opsHandler) {
-        AWSMobileClient
-            .defaultMobileClient()
-            .getIdentityManager()
-            .getUserID(new IdentityManager.IdentityHandler() {
-                @Override
-                public void handleIdentityID(final String identityId) {
-                    cognitoIdentityId = identityId;
-                    ThreadUtils.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            opsHandler.onSupportedOperationsReceived(getSupportedDemoOperations(context));
-                        }
-                    });
-                }
-
-                @Override
-                public void handleError(final Exception exception) {
-                    // This should never happen since the Identity ID is retrieved
-                    // when the Application starts.
-                    cognitoIdentityId = null;
-                    opsHandler.onSupportedOperationsReceived(new ArrayList<NoSQLOperationListItem>());
-                }
-            });
-    }
+//    @Override
+//    public void getSupportedDemoOperations(final Context context,
+//                                           final SupportedDemoOperationsHandler opsHandler) {
+//        AWSMobileClient
+//            .defaultMobileClient()
+//            .getIdentityManager()
+//            .getUserID(new IdentityManager.IdentityHandler() {
+//                @Override
+//                public void handleIdentityID(final String identityId) {
+//                    cognitoIdentityId = identityId;
+//                    ThreadUtils.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            opsHandler.onSupportedOperationsReceived(getSupportedDemoOperations(context));
+//                        }
+//                    });
+//                }
+//
+//                @Override
+//                public void handleError(final Exception exception) {
+//                    // This should never happen since the Identity ID is retrieved
+//                    // when the Application starts.
+//                    cognitoIdentityId = null;
+//                    opsHandler.onSupportedOperationsReceived(new ArrayList<NoSQLOperationListItem>());
+//                }
+//            });
+//    }
 }

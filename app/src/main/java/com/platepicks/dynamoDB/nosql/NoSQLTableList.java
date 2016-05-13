@@ -787,58 +787,58 @@ public class NoSQLTableList extends NoSQLTableBase {
         }
     }
 
-    private List<NoSQLOperationListItem> getSupportedDemoOperations(final Context context) {
-        List<NoSQLOperationListItem> noSQLOperationsList = new ArrayList<NoSQLOperationListItem>();
-        noSQLOperationsList.add(new NoSQLOperationListHeader(
-            context.getString(R.string.nosql_operation_header_get)));
-        noSQLOperationsList.add(new DemoGetWithPartitionKeyAndSortKey(context));
+//    private List<NoSQLOperationListItem> getSupportedDemoOperations(final Context context) {
+//        List<NoSQLOperationListItem> noSQLOperationsList = new ArrayList<NoSQLOperationListItem>();
+//        noSQLOperationsList.add(new NoSQLOperationListHeader(
+//            context.getString(R.string.nosql_operation_header_get)));
+//        noSQLOperationsList.add(new DemoGetWithPartitionKeyAndSortKey(context));
+//
+//        noSQLOperationsList.add(new NoSQLOperationListHeader(
+//            context.getString(R.string.nosql_operation_header_primary_queries)));
+//        noSQLOperationsList.add(new DemoQueryWithPartitionKeyOnly(context));
+//        noSQLOperationsList.add(new DemoQueryWithPartitionKeyAndFilter(context));
+//        noSQLOperationsList.add(new DemoQueryWithPartitionKeyAndSortKeyCondition(context));
+//        noSQLOperationsList.add(new DemoQueryWithPartitionKeySortKeyConditionAndFilter(context));
+//
+//        noSQLOperationsList.add(new NoSQLOperationListHeader(
+//            context.getString(R.string.nosql_operation_header_secondary_queries, "DateSorted")));
+//
+//        noSQLOperationsList.add(new DemoDateSortedQueryWithPartitionKeyOnly(context));
+//        noSQLOperationsList.add(new DemoDateSortedQueryWithPartitionKeyAndFilterCondition(context));
+//        noSQLOperationsList.add(new DemoDateSortedQueryWithPartitionKeyAndSortKeyCondition(context));
+//        noSQLOperationsList.add(new DemoDateSortedQueryWithPartitionKeySortKeyAndFilterCondition(context));
+//        noSQLOperationsList.add(new NoSQLOperationListHeader(
+//            context.getString(R.string.nosql_operation_header_scan)));
+//        noSQLOperationsList.add(new DemoScanWithoutFilter(context));
+//        noSQLOperationsList.add(new DemoScanWithFilter(context));
+//        return noSQLOperationsList;
+//    }
 
-        noSQLOperationsList.add(new NoSQLOperationListHeader(
-            context.getString(R.string.nosql_operation_header_primary_queries)));
-        noSQLOperationsList.add(new DemoQueryWithPartitionKeyOnly(context));
-        noSQLOperationsList.add(new DemoQueryWithPartitionKeyAndFilter(context));
-        noSQLOperationsList.add(new DemoQueryWithPartitionKeyAndSortKeyCondition(context));
-        noSQLOperationsList.add(new DemoQueryWithPartitionKeySortKeyConditionAndFilter(context));
-
-        noSQLOperationsList.add(new NoSQLOperationListHeader(
-            context.getString(R.string.nosql_operation_header_secondary_queries, "DateSorted")));
-
-        noSQLOperationsList.add(new DemoDateSortedQueryWithPartitionKeyOnly(context));
-        noSQLOperationsList.add(new DemoDateSortedQueryWithPartitionKeyAndFilterCondition(context));
-        noSQLOperationsList.add(new DemoDateSortedQueryWithPartitionKeyAndSortKeyCondition(context));
-        noSQLOperationsList.add(new DemoDateSortedQueryWithPartitionKeySortKeyAndFilterCondition(context));
-        noSQLOperationsList.add(new NoSQLOperationListHeader(
-            context.getString(R.string.nosql_operation_header_scan)));
-        noSQLOperationsList.add(new DemoScanWithoutFilter(context));
-        noSQLOperationsList.add(new DemoScanWithFilter(context));
-        return noSQLOperationsList;
-    }
-
-    @Override
-    public void getSupportedDemoOperations(final Context context,
-                                           final SupportedDemoOperationsHandler opsHandler) {
-        AWSMobileClient
-            .defaultMobileClient()
-            .getIdentityManager()
-            .getUserID(new IdentityManager.IdentityHandler() {
-                @Override
-                public void handleIdentityID(final String identityId) {
-                    cognitoIdentityId = identityId;
-                    ThreadUtils.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            opsHandler.onSupportedOperationsReceived(getSupportedDemoOperations(context));
-                        }
-                    });
-                }
-
-                @Override
-                public void handleError(final Exception exception) {
-                    // This should never happen since the Identity ID is retrieved
-                    // when the Application starts.
-                    cognitoIdentityId = null;
-                    opsHandler.onSupportedOperationsReceived(new ArrayList<NoSQLOperationListItem>());
-                }
-            });
-    }
+//    @Override
+//    public void getSupportedDemoOperations(final Context context,
+//                                           final SupportedDemoOperationsHandler opsHandler) {
+//        AWSMobileClient
+//            .defaultMobileClient()
+//            .getIdentityManager()
+//            .getUserID(new IdentityManager.IdentityHandler() {
+//                @Override
+//                public void handleIdentityID(final String identityId) {
+//                    cognitoIdentityId = identityId;
+//                    ThreadUtils.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            opsHandler.onSupportedOperationsReceived(getSupportedDemoOperations(context));
+//                        }
+//                    });
+//                }
+//
+//                @Override
+//                public void handleError(final Exception exception) {
+//                    // This should never happen since the Identity ID is retrieved
+//                    // when the Application starts.
+//                    cognitoIdentityId = null;
+//                    opsHandler.onSupportedOperationsReceived(new ArrayList<NoSQLOperationListItem>());
+//                }
+//            });
+//    }
 }

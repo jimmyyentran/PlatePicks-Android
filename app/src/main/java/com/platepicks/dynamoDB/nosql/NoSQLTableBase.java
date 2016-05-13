@@ -50,16 +50,16 @@ public abstract class NoSQLTableBase {
     /**
      * Handler interface to retrieve the supported table operations.
      */
-    public interface SupportedDemoOperationsHandler {
-        /**
-         * @param supportedOperations the list of supported table operations.
-         */
-        void onSupportedOperationsReceived(List<NoSQLOperationListItem> supportedOperations);
-    }
-
-    /**
-     * Get a list of supported demo operations.
-     * @return a list of support get, query, and scan operations.
-     */
-    public abstract void getSupportedDemoOperations(Context context, SupportedDemoOperationsHandler opsHandler);
+//    public interface SupportedDemoOperationsHandler {
+//        /**
+//         * @param supportedOperations the list of supported table operations.
+//         */
+//        void onSupportedOperationsReceived(List<NoSQLOperationListItem> supportedOperations);
+//    }
+//
+//    /**
+//     * Get a list of supported demo operations.
+//     * @return a list of support get, query, and scan operations.
+//     */
+//    public abstract void getSupportedDemoOperations(Context context, SupportedDemoOperationsHandler opsHandler);
 }
