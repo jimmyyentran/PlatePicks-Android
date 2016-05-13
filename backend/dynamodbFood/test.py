@@ -10,7 +10,6 @@ params = {
        "radius_filter": 40000,
        "category_filter": "vietnamese,filipino",
        "sort": 1,
-       "offset": 0
         }
 
 response = Yelp_API(params).call_API()
