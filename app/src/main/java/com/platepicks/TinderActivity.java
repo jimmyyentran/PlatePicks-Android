@@ -1,6 +1,5 @@
 package com.platepicks;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -29,8 +28,6 @@ import com.platepicks.util.ConvertToObject;
 import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -290,10 +287,12 @@ public class TinderActivity extends AppCompatActivity
      * side. */
     class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         public int state = ViewPager.SCROLL_STATE_IDLE;
-        ViewPager imagePager;
+        CustomViewPager imagePager;
+        ImageView fancy_image;
 
-        public ImageChangeListener(ViewPager imagePager) {
+        public ImageChangeListener(CustomViewPager imagePager) {
             this.imagePager = imagePager;
+            this.fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
         }
 
         @Override
@@ -316,14 +315,16 @@ public class TinderActivity extends AppCompatActivity
             if (imagePager.getCurrentItem() != 1 && state == ViewPager.SCROLL_STATE_IDLE) {
                 int otherPage;
 
+                // Critical section (if request is active)
+                accessList.lock();
+
                 /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
-                if (imagePager.getCurrentItem() == 0) {
+                if (imagePager.getCurrentItem() == 0) { // Like
                     otherPage = 2;
 
                     update_list_number(cnt);
 
                     /* move liked image into fancy button */
-                    ImageView fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
                     fancy_image.setImageDrawable(mainPageFragment.getFoodPicture().getDrawable());
                     //fancy_image.setBackgroundResource();
                     String name = "Food " + cnt;
@@ -339,15 +340,11 @@ public class TinderActivity extends AppCompatActivity
 
                     data.add(toAdd);
                     ++cnt;
-                } else {
+                } else {    // Dislike
                     otherPage = 0;
                 }
 
                 /* Changing the image while image page is out of sight */
-                /* If no request is active */
-                // Critical section (if request is active)
-                accessList.lock();
-
                 /* If more images are still around */
                 if (imageList.size() > 1) {
                     mainPageFragment.changeImage(imageList.get(1)); // Next image
@@ -356,8 +353,8 @@ public class TinderActivity extends AppCompatActivity
                 }
                 /* Out of images */
                 else {
-                    // FIXME: Null argument should mean placeholder
-                    mainPageFragment.changeImage(null);
+                    mainPageFragment.changeImage(null); // Put placeholder
+                    imagePager.setSwiping(false);       // Disable swipe
                 }
                 /* Low on images */
                 if (imageList.size() < 5 && !requestMade) {

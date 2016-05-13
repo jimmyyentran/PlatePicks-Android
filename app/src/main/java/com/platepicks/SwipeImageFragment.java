@@ -30,9 +30,9 @@ public class SwipeImageFragment extends Fragment {
         if (image == null) {
             foodPicture.setBackgroundColor(Color.BLUE);
             foodPicture.setImageDrawable(null);
+        } else {
+            foodPicture.setImageBitmap(image);
         }
-
-        foodPicture.setImageBitmap(image);
     }
 
     @Nullable
