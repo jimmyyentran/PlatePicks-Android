@@ -182,6 +182,7 @@ public class TinderActivity extends AppCompatActivity
     void requestImages() {
         int maxHeight = 0;
         int maxWidth = 0;
+
         // Network request to download images
         if(imagePager != null) {
             maxHeight = imagePager.getHeight();
@@ -210,12 +211,14 @@ public class TinderActivity extends AppCompatActivity
         // Critical Section: Add images to list here in activity
         accessList.lock();
         imageList.addAll(images);
-        mainPageFragment.changeImage(images.get(0));
         requestMade = false;
         accessList.unlock();
 
         // Remove splash screen
         if (splashScreen.getVisibility() != View.GONE) {
+            // Set first image
+            mainPageFragment.changeImage(imageList.get(0));
+
             // Fade, then set to gone through listener
             splashScreen.animate()
                     .alpha(0f)
@@ -344,14 +347,10 @@ public class TinderActivity extends AppCompatActivity
                     otherPage = 0;
                 }
 
-                /* FIXME----------------------------------------------------------------- */
                 /* Changing the image while image page is out of sight */
                 /* If no request is active */
                 // Critical section (if request is active)
-                boolean needLock = accessList.isLocked() || requestMade;
-                if (needLock) {
-                    accessList.lock();
-                }
+                accessList.lock();
 
                 /* If more images are still around */
                 if (imageList.size() > 1) {
@@ -369,11 +368,8 @@ public class TinderActivity extends AppCompatActivity
                     requestMade = true;
                 }
 
+                accessList.unlock();
                 // End critical section
-                if (needLock) {
-                    accessList.unlock();
-                }
-                /* FIXME----------------------------------------------------------------- */
 
                 /* The "new image" animation. Only do it if an animation is idle. */
                 imagePager.setCurrentItem(otherPage, false);    /* false = no animation on change */

@@ -21,15 +21,9 @@ public class SwipeImageFragment extends Fragment {
     public static String PAGE_POSITION = "Page position", PIC_INDEX = "Pic index";
 
     private SquareImageButton foodPicture;
-    private Bitmap bitmap;
-
-    private void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
-    // FIXME: param will be bitmap once we have them
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
      * when image page is out of sight. */
     public void changeImage(Bitmap image) {
@@ -54,9 +48,7 @@ public class SwipeImageFragment extends Fragment {
         RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
         /* Set the image resource here */
-        if (pagePosition == 1) {
-            foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
-        } else {
+        if (pagePosition != 1) {
             foodBorder.setVisibility(View.GONE);
         }
 
