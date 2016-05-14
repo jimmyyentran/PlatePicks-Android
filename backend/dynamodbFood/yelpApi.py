@@ -34,6 +34,7 @@ class Yelp_API(object):
             #  list_to_be_returned += Crawler.limit("http://www.yelp.com/biz_photos/" + bus.id + "?tab=food&start=0", self.food_per_business)
         dict_of_urls = {}
         for bus in response.businesses:
+            #  pprint(vars(bus))
             #  pprint(bus.categories[0].name)
             #  pprint(vars(bus.location.coordinate))
             url = "http://www.yelp.com/biz_photos/"+bus.id+"?tab=food&start=0"

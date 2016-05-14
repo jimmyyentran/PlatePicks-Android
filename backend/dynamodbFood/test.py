@@ -11,7 +11,7 @@ params = {
        "radius_filter": 40000,
        "category_filter": "chinese",
        "sort": 0,
-       "offset": 0,
+       "offset": 981,
         }
 
 response = Yelp_API(params).call_API()
