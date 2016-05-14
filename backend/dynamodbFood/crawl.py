@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from urlparse import urljoin
 from nameParser import NameParser
 import grequests
+import requests
 #  import unirest
 #  from requests_futures.sessions import FuturesSession
 
@@ -13,6 +14,10 @@ class Crawler(object):
         self.urls = data;
         self.parse = NameParser("unwantedWords.txt")
         self.information = []
+        #  self.counter = {} # holds number of food received
+        #  for key in data:
+            #  counter[key] = 0
+
         #  self.session = FuturesSession()
         #  tornado.httpclient.AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
 
@@ -37,6 +42,19 @@ class Crawler(object):
 
     #  @profile
     def extract_food_names(self, response, **kwargs):
+        #  original_url = response.url
+        #  # Find number of pages manually bc Soup takes too much time
+        #  html = response.content
+        #  string_to_find = "Page 1 of"
+        #  start_index = html.find("Page 1 of") + len(string_to_find)
+        #  end_index = start_index + 2
+        #  sz = (int(html[ start_index : end_index]))
+
+        #  #R
+        #  for i in range(sz)
+            #  if 
+
+    #  def extract_food_names_single_page(self, url, content):
         #  print(vars(response))
         url = response.url
         firstUrl = url
@@ -44,9 +62,17 @@ class Crawler(object):
         #  url = args['url']
         #  html = args['response']
         #  soup = BeautifulSoup(html, 'html.parser')
-        # parse for the number of pages
+        #  soup = BeautifulSoup(html, 'lxml')
+        #  parse for the number of pages
         #  for sz in soup.find("div", "page-of-pages arrange_unit arrange_unit--fill"):
             #  sz = int(sz[sz.find("of") + 2:])
+        original_url = response.url
+        # Find number of pages manually bc Soup takes too much time
+        html = response.content
+        string_to_find = "Page 1 of"
+        start_index = html.find("Page 1 of") + len(string_to_find)
+        end_index = start_index + 2
+        sz = (int(html[ start_index : end_index]))
 
         visited = [url]  # keeps track of visited urls
         pics = []
@@ -54,17 +80,19 @@ class Crawler(object):
         com = []
         flag = True # if reached limit
 
-        sz = 1 #just query on the first page
+        #  sz = 1 #just query on the first page
         for i in range(sz):
             if not flag: break # if reached limit then break this loop
+
             url.find("&start")
             url = url[:url.find("&start")] + "&start=" + str(30 * i)
             i += 1
 
             # parse the url for html code
-            #  source_code = requests.get(url)  # variable = requests.get(url)
-            #  html = source_code.text  # get source code of page
+            source_code = requests.get(url)  # variable = requests.get(url)
+            html = source_code.text  # get source code of page
             soup = BeautifulSoup(html, 'lxml')
+
             #find all the links thats are img urls
             for link in soup.findAll('img', attrs={'height' : '226'}):
                 #  print(link)
@@ -111,3 +139,10 @@ class Crawler(object):
             #  self.information.append(dict(url=pic, food_id=pic_id,
                 #  name=coms).update(original_info))
         #  return information
+
+        #  self.counter[firstUrl] += len(pics_id)
+        print(firstUrl)
+        print("Number of pages: {}".format(sz))
+        print("Foods got at business: {}".format(len(pics_id)))
+
+

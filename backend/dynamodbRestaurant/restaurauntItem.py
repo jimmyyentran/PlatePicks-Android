@@ -15,9 +15,10 @@ class DecimalEncoder(json.JSONEncoder):
                 return int(o)
         return super(DecimalEncoder, self).default(o)
 
-dynamodb = boto3.resource("dynamodb", region_name='us-east-1')
-
-table = dynamodb.Table('foodtinder-mobilehub-761050320-restaurant')
+class FoodInsert(object):
+    def __init__(self):
+        dynamodb = boto3.resource("dynamodb", region_name='us-east-1')
+        table = dynamodb.Table('foodtinder-mobilehub-761050320-restaurant')
 
 restaurantId = "Pho Huynh"
 
