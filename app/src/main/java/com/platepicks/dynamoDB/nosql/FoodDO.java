@@ -9,7 +9,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
 public class FoodDO {
     private String _foodId;
-    private String _businessId;
+    private String _restaurantId;
     private double _dislike;
     private double _like;
 
@@ -22,14 +22,14 @@ public class FoodDO {
     public void setFoodId(final String _foodId) {
         this._foodId = _foodId;
     }
-    @DynamoDBRangeKey(attributeName = "businessId")
-    @DynamoDBAttribute(attributeName = "businessId")
+    @DynamoDBRangeKey(attributeName = "restaurantId")
+    @DynamoDBAttribute(attributeName = "restaurantId")
     public String getBusinessId() {
-        return _businessId;
+        return _restaurantId;
     }
 
-    public void setBusinessId(final String _businessId) {
-        this._businessId = _businessId;
+    public void setRestaurantId(final String _restaurantId) {
+        this._restaurantId = _restaurantId;
     }
     @DynamoDBAttribute(attributeName = "dislike")
     public double getDislike() {

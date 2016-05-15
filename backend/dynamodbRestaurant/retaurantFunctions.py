@@ -63,7 +63,10 @@ class FoodUpload(object):
             print("Success: {}".format(restaurantId))
             json.dumps(response, indent=4, cls=DecimalEncoder)
         except Exception as e:
-            print("Fail: {}".format(restaurantId))
+            try:
+                print("Fail: {}".format(restaurantId))
+            except Exception as e:
+                print("Can't Print")
             print(e)
 
     # Upload from yelpApi list (cap 20)

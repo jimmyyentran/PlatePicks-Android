@@ -478,7 +478,7 @@ public class NoSQLTableFood extends NoSQLTableBase {
         final FoodDO firstItem = new FoodDO();
 
         firstItem.setFoodId(getDemoPartitionValue());
-        firstItem.setBusinessId(DEMO_SORT_VALUE);
+        firstItem.setRestaurantId(DEMO_SORT_VALUE);
         firstItem.setDislike(SampleDataGenerator.getRandomSampleNumber());
         firstItem.setLike(SampleDataGenerator.getRandomSampleNumber());
         AmazonClientException lastException = null;
@@ -494,7 +494,7 @@ public class NoSQLTableFood extends NoSQLTableBase {
         for (int count = 0; count < SAMPLE_DATA_ENTRIES_PER_INSERT-1; count++) {
             final FoodDO item = new FoodDO();
             item.setFoodId(SampleDataGenerator.getRandomPartitionSampleString("foodId"));
-            item.setBusinessId(SampleDataGenerator.getRandomSampleString("businessId"));
+            item.setRestaurantId(SampleDataGenerator.getRandomSampleString("businessId"));
             item.setDislike(SampleDataGenerator.getRandomSampleNumber());
             item.setLike(SampleDataGenerator.getRandomSampleNumber());
 
