@@ -23,6 +23,9 @@
   <!--<string name="facebook_app_id">615719665253279</string>-->
   <string name="facebook_app_id">477586705772225</string>
 
+  <string name="placeholder_1">One sec.</string>
+  <string name="placeholder_2">In the meantime, why don\'t you check out your other dishes?</string>
+
   <!--Amazon code-->
   <!-- This can be anything, but it should be unique to the app. -->
   <string name="content_file_provider_authority">com.mysampleapp.fileprovider</string>
