@@ -20,18 +20,20 @@ import com.platepicks.support.SquareImageButton;
 public class SwipeImageFragment extends Fragment {
     public static String PAGE_POSITION = "Page position", PIC_INDEX = "Pic index";
 
-    private SquareImageButton foodPicture;
+    private SquareImageButton foodPicture = null;
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
      * when image page is out of sight. */
     public void changeImage(Bitmap image) {
-        if (image == null) {
-            foodPicture.setBackgroundColor(Color.BLUE);
-            foodPicture.setImageDrawable(null);
-        } else {
-            foodPicture.setImageBitmap(image);
+        if (foodPicture != null) {
+            if (image == null) {
+                foodPicture.setBackgroundColor(Color.BLUE);
+                foodPicture.setImageDrawable(null);
+            } else {
+                foodPicture.setImageBitmap(image);
+            }
         }
     }
 
@@ -47,7 +49,7 @@ public class SwipeImageFragment extends Fragment {
         foodPicture = (SquareImageButton) fragmentView.findViewById(R.id.imagebutton_tinder);
         RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
-        /* Set the image resource here */
+        /* Make non-image fragments nonexistent */
         if (pagePosition != 1) {
             foodBorder.setVisibility(View.GONE);
         }
