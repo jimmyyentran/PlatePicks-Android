@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -28,9 +30,11 @@ import com.platepicks.util.ConvertToObject;
 import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -42,10 +46,10 @@ public class TinderActivity extends AppCompatActivity
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
 
     // Picture of food fragment
-    SwipeImageFragment mainPageFragment;
+    SwipeImageFragment mainPageFragment = null;
 
     // Splash screen
-    FrameLayout splashScreen;
+    FrameLayout splashScreen = null;
 
     /* local seekBar variable */
     SeekBar rad_seekBar = null;
@@ -62,6 +66,9 @@ public class TinderActivity extends AppCompatActivity
 
     // Contains downloaded data from backend. Currently just image urls.
     List<ListItemClass> listItems = new LinkedList<>();  // Actual received data
+
+    ReentrantLock waitForUILock = new ReentrantLock();  // Race condition between first network request and creation of UI
+    boolean firstRequest;                               // Flag to indicate first request
 
     // List of images
     // locks: http://docs.oracle.com/javase/tutorial/essential/concurrency/newlocks.html
@@ -156,19 +163,28 @@ public class TinderActivity extends AppCompatActivity
         });
 
         // First batch of images
+        Log.d("TinderActivity", "Locked!");
+        waitForUILock.lock();   // Ensure that first network request cannot get lock first
+        firstRequest = true;
         requestFromDatabase();
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
         splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
-        splashScreen.animate()
-                .alpha(0f)
-                .setStartDelay(3000)
-                .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
-
     }
     /* end onCreate() */
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Release lock once UI is visible to let splash screen be removed and show first pic
+        if (waitForUILock.isHeldByCurrentThread()) {
+            waitForUILock.unlock();
+            Log.d("TinderActivity", "Unlocked!");
+        }
+    }
 
     // Requests for urls from backend AWS database
     void requestFromDatabase() {
@@ -220,15 +236,10 @@ public class TinderActivity extends AppCompatActivity
         requestMade = false;
         accessList.unlock();
 
-        // Remove splash screen
-        if (splashScreen.getVisibility() != View.GONE) {
-            // Set first image
-            mainPageFragment.changeImage(imageList.get(0));
-
-            // Fade, then set to gone through listener
-            splashScreen.animate()
-                    .alpha(0f)
-                    .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
+        // Remove splash screen and post first pic
+        if (firstRequest) {
+            new PostFirstImageTask().execute();
+            firstRequest = false;
         }
     }
 
@@ -375,12 +386,6 @@ public class TinderActivity extends AppCompatActivity
     /* Class to listen to the state of splash screen animation. Only uses onAnimationEnd() to know
      * when the animation is finished. */
     class mAnimatorListener implements Animator.AnimatorListener {
-        FrameLayout splashScreen;
-
-        mAnimatorListener(FrameLayout splashScreen) {
-            this.splashScreen = splashScreen;
-        }
-
         @Override
         public void onAnimationStart(Animator animation) {
         }
@@ -389,7 +394,6 @@ public class TinderActivity extends AppCompatActivity
         @Override
         public void onAnimationEnd(Animator animation) {
             splashScreen.setVisibility(View.GONE);
-            splashScreen = null;
         }
 
         @Override
@@ -494,8 +498,34 @@ public class TinderActivity extends AppCompatActivity
         public void onStopTrackingTouch(SeekBar seekBar) {}
 
     }
+
+    // Called after the first network request completes to remove the splash screen and add the
+    // first pic. Created because a race condition existed between the UI and the first request.
+    class PostFirstImageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Wait for UI thread to release this given lock to indicate that UI is on screen
+            Log.d("PostFirstImageTask", "About to lock!");
+            waitForUILock.lock();
+            Log.d("PostFirstImageTask", "Locked!");
+            waitForUILock.unlock();
+            Log.d("PostFirstImageTask", "Unlock. Going to post picture!");
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            // Set first image
+            mainPageFragment.changeImage(imageList.get(0));
+
+            // Fade, then set to gone through listener
+            splashScreen.animate()
+                    .alpha(0f)
+                    .setListener(new mAnimatorListener()); /* Listener to remove view once finished */
+        }
+
+    }
 }
-
-
 
     /* end Tinder Activity */
