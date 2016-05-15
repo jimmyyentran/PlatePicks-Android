@@ -28,10 +28,15 @@ public class DynamodbTest {
     public void setUp() {
     }
 
-    @Test
+//    @Test
     public void DynamodbInsertToFoodTest() {
         // Start all test input as 'test' so it can be easily removed from table later
         insertSampleData("testId", "testRestaurant");
+    }
+
+    @Test
+    public void DynamodbUpdateFoodTest(){
+        updateSampleData("testId", "testUpdatedRestaurant");
     }
 
     public void insertSampleData(String foodId, String restaurantId) throws AmazonClientException {
@@ -55,6 +60,29 @@ public class DynamodbTest {
         }
 
         System.out.println("Insert successful");
+    }
+
+    public void updateSampleData(String foodId, String restaurantId) throws AmazonClientException {
+        System.out.println("Updating Sample data");
+        final FoodDO firstItem = new FoodDO();
+
+        firstItem.setFoodId(foodId);
+        firstItem.setRestaurantId(restaurantId);
+        AmazonClientException lastException = null;
+
+        try {
+            mapper.save(firstItem);
+        } catch (final AmazonClientException ex) {
+            System.out.println("Failed saving item batch: " + ex.getMessage());
+            lastException = ex;
+        }
+
+        if (lastException != null) {
+            // Re-throw the last exception encountered to alert the user.
+            throw lastException;
+        }
+
+        System.out.println("Update successful");
     }
 }
 
