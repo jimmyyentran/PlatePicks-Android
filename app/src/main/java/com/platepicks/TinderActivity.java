@@ -64,7 +64,7 @@ public class TinderActivity extends AppCompatActivity
     int cnt = 1; // used for notification count
 
     // Contains downloaded data from backend. Currently just image urls.
-    List<ListItemClass> listItems = new ArrayList<>();  // Actual received data
+    List<ListItemClass> listItems = new LinkedList<>();  // Actual received data
 
     // List of images
     // locks: http://docs.oracle.com/javase/tutorial/essential/concurrency/newlocks.html
@@ -204,7 +204,11 @@ public class TinderActivity extends AppCompatActivity
     public void doSomethingWithResults(String ob) {
         Log.d("TinderActivity", ob);
         List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(ob);
+
+        // Critical section
+        accessList.lock();
         listItems.addAll(ConvertToObject.toListItemClassList(foodReceives));
+        accessList.unlock();
 
         requestImages();
     }
@@ -349,6 +353,7 @@ public class TinderActivity extends AppCompatActivity
                 if (imageList.size() > 1) {
                     mainPageFragment.changeImage(imageList.get(1)); // Next image
                     imageList.remove(0);                            // Remove old image from list
+                    listItems.remove(0);                            // Remove old data from list
                 }
                 /* Out of images */
                 else {
