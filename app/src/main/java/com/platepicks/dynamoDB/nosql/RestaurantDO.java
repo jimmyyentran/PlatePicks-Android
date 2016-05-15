@@ -15,12 +15,12 @@ import java.util.Set;
 
 public class RestaurantDO {
     private String _restaurantId;
-    private Set<String> _address;
-    private Set<String> _categories;
+    private List<String> _address;
+    private List<String> _categories;
     private String _city;
     private double _latitude;
     private double _longitude;
-    private double _postalCode;
+    private String _postalCode;
     private String _restaurantName;
     private String _state;
 
@@ -34,19 +34,19 @@ public class RestaurantDO {
         this._restaurantId = _restaurantId;
     }
     @DynamoDBAttribute(attributeName = "address")
-    public Set<String> getAddress() {
+    public List<String> getAddress() {
         return _address;
     }
 
-    public void setAddress(final Set<String> _address) {
+    public void setAddress(final List<String> _address) {
         this._address = _address;
     }
     @DynamoDBAttribute(attributeName = "categories")
-    public Set<String> getCategories() {
+    public List<String> getCategories() {
         return _categories;
     }
 
-    public void setCategories(final Set<String> _categories) {
+    public void setCategories(final List<String> _categories) {
         this._categories = _categories;
     }
     @DynamoDBAttribute(attributeName = "city")
@@ -74,11 +74,11 @@ public class RestaurantDO {
         this._longitude = _longitude;
     }
     @DynamoDBAttribute(attributeName = "postal_code")
-    public double getPostalCode() {
+    public String getPostalCode() {
         return _postalCode;
     }
 
-    public void setPostalCode(final double _postalCode) {
+    public void setPostalCode(final String _postalCode) {
         this._postalCode = _postalCode;
     }
     @DynamoDBAttribute(attributeName = "restaurant_name")
