@@ -1,4 +1,4 @@
-package com.platepicks.dynamoDB.nosql;
+package com.mysampleapp.demo.nosql;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
