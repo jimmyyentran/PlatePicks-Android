@@ -112,7 +112,7 @@ public class getRestaurantTest {
     }
 
     public void getSampleData(String foodId){
-        FoodDO itemToGet = new RestaurantDO();
+        RestaurantDO itemToGet = new RestaurantDO();
         itemToGet.setFoodId(foodId);
 
         itemToGet = mapper.load(FoodDO.class, foodId);
