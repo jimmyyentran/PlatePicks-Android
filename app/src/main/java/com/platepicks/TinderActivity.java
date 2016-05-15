@@ -20,10 +20,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
+import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.FoodRequest;
 import com.platepicks.support.CustomViewPager;
 import com.platepicks.util.AWSIntegratorAsyncTask;
 import com.platepicks.util.AWSIntegratorInterface;
+import com.platepicks.util.ConvertToObject;
 import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
@@ -62,7 +64,7 @@ public class TinderActivity extends AppCompatActivity
     int cnt = 1; // used for notification count
 
     // Contains downloaded data from backend. Currently just image urls.
-    ArrayList<String> imageUrls;
+    List<ListItemClass> listItems = new ArrayList<>();  // Actual received data
 
     // List of images
     // locks: http://docs.oracle.com/javase/tutorial/essential/concurrency/newlocks.html
@@ -173,7 +175,6 @@ public class TinderActivity extends AppCompatActivity
 
     // Requests for urls from backend AWS database
     void requestFromDatabase() {
-        // FIXME: Set up request to put array of image urls into field member imageUrls
         FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", 4, 40000, "", 1, 0);
         new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
     }
@@ -191,6 +192,10 @@ public class TinderActivity extends AppCompatActivity
         if (maxHeight == 0) maxHeight = DFLT_IMG_MAX_HEIGHT;
         if (maxWidth == 0) maxWidth = DFLT_IMG_MAX_WIDTH;
 
+        ArrayList<String> imageUrls = new ArrayList<>();
+        for (ListItemClass item : listItems)
+            imageUrls.add(item.getImageUrl());
+
         new GetImagesAsyncTask(this, maxHeight, maxWidth).execute(imageUrls.toArray());
     }
 
@@ -198,8 +203,8 @@ public class TinderActivity extends AppCompatActivity
     @Override
     public void doSomethingWithResults(String ob) {
         Log.d("TinderActivity", ob);
-        imageUrls = parseUrls(ob);
-        for (String url : imageUrls) Log.d("TinderActivity", url);
+        List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(ob);
+        listItems.addAll(ConvertToObject.toListItemClassList(foodReceives));
 
         requestImages();
     }
@@ -221,19 +226,6 @@ public class TinderActivity extends AppCompatActivity
                     .alpha(0f)
                     .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
         }
-    }
-
-    ArrayList<String> parseUrls(String s) {
-        int index = 0;
-        ArrayList<String> urls = new ArrayList<>();
-
-        while ((index = s.indexOf("http", index)) != -1) {
-            int jpg = s.indexOf(".jpg", index) + 4;
-            urls.add(s.substring(index, jpg));
-            index = jpg;
-        }
-
-        return urls;
     }
 
     /* ImagePagerAdapter:

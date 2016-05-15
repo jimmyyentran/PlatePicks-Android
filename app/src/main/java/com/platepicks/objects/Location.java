@@ -1,5 +1,7 @@
 package com.platepicks.objects;
 
+import android.util.Log;
+
 import java.util.List;
 
 /**
@@ -68,5 +70,19 @@ public class Location {
 
     public void setAddress(List<String> address) {
         this.address = address;
+    }
+
+    public void printLocation() {
+        String fa = "";
+        for (String adr : address) fa += adr + ",";
+
+        Log.d("Location", name + ", " + city + "," + state + "," + postal_code + ": " + fa);
+    }
+
+    public String getAddressString() {
+        String fa = "";
+        for (String adr : address) fa += adr + ", ";
+
+        return fa + city + " " + state + ", " + postal_code;
     }
 }
