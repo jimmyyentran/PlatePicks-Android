@@ -152,8 +152,8 @@ public class NoSQLFoodResult implements NoSQLResult {
         resultNumberTextView.setText(String.format("#%d", + position+1));
         foodIdKeyTextView.setText("foodId");
         foodIdValueTextView.setText(result.getFoodId());
-        businessIdKeyTextView.setText("businessId");
-        businessIdValueTextView.setText(result.getBusinessId());
+        businessIdKeyTextView.setText("restaurantId");
+        businessIdValueTextView.setText(result.getRestaurantId());
         dislikeKeyTextView.setText("dislike");
         dislikeValueTextView.setText("" + (long) result.getDislike());
         likeKeyTextView.setText("like");
