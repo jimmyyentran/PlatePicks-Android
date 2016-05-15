@@ -19,7 +19,7 @@ public class FoodDO {
     private double _dislike;
     private double _like;
     private String _name;
-    private String _rating;
+    private double _rating;
 
     @DynamoDBHashKey(attributeName = "foodId")
     @DynamoDBAttribute(attributeName = "foodId")
@@ -64,11 +64,11 @@ public class FoodDO {
         this._name = _name;
     }
     @DynamoDBAttribute(attributeName = "rating")
-    public String getRating() {
+    public double getRating() {
         return _rating;
     }
 
-    public void setRating(final String _rating) {
+    public void setRating(final double _rating) {
         this._rating = _rating;
     }
 
