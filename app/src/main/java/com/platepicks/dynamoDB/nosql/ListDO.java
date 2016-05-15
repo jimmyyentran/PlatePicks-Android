@@ -7,6 +7,10 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRan
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 @DynamoDBTable(tableName = "foodtinder-mobilehub-761050320-list")
 
 public class ListDO {
