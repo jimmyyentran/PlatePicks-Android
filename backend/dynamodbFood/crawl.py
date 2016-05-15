@@ -66,13 +66,13 @@ class Crawler(object):
         #  parse for the number of pages
         #  for sz in soup.find("div", "page-of-pages arrange_unit arrange_unit--fill"):
             #  sz = int(sz[sz.find("of") + 2:])
-        original_url = response.url
+        #  original_url = response.url
         # Find number of pages manually bc Soup takes too much time
-        html = response.content
-        string_to_find = "Page 1 of"
-        start_index = html.find("Page 1 of") + len(string_to_find)
-        end_index = start_index + 2
-        sz = (int(html[ start_index : end_index]))
+        #  html = response.content
+        #  string_to_find = "Page 1 of"
+        #  start_index = html.find("Page 1 of") + len(string_to_find)
+        #  end_index = start_index + 2
+        #  sz = (int(html[ start_index : end_index]))
 
         visited = [url]  # keeps track of visited urls
         pics = []
@@ -80,17 +80,17 @@ class Crawler(object):
         com = []
         flag = True # if reached limit
 
-        #  sz = 1 #just query on the first page
+        sz = 1 #just query on the first page
         for i in range(sz):
             if not flag: break # if reached limit then break this loop
 
-            url.find("&start")
-            url = url[:url.find("&start")] + "&start=" + str(30 * i)
-            i += 1
+            #  url.find("&start")
+            #  url = url[:url.find("&start")] + "&start=" + str(30 * i)
+            #  i += 1
 
             # parse the url for html code
-            source_code = requests.get(url)  # variable = requests.get(url)
-            html = source_code.text  # get source code of page
+            #  source_code = requests.get(url)  # variable = requests.get(url)
+            #  html = source_code.text  # get source code of page
             soup = BeautifulSoup(html, 'lxml')
 
             #find all the links thats are img urls

@@ -46,6 +46,7 @@ class Yelp_API(object):
 
             dict_of_urls[url]= dict(address=bus.location.address, 
                     name=bus.name,
+                    business_id=bus.id,
                     city=bus.location.city,
                     state=bus.location.state_code,
                     postal_code=bus.location.postal_code,
@@ -54,11 +55,8 @@ class Yelp_API(object):
                     longitude=bus.location.coordinate.longitude,
                     category=category_list
                     )
-            #  print dict_of_urls
-
-            #  pprint(list_of_urls)
-            #  print (list_of_urls)
-        #  Crawler.limit(list_of_urls, 1)
+            print(dict_of_urls[url]['business_id'])
+            #  pprint(dict_of_urls)
         return Crawler(dict_of_urls).limit(self.food_per_business)
 
     #  return list_to_be_returned

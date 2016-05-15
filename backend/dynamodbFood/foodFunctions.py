@@ -23,7 +23,7 @@ class FoodUpload(object):
     # Upload single item
     def upload(self, item):
         foodId = item["food_id"]
-        restaurantId = item['location']['name']
+        restaurantId = item['location']['business_id']
         name = item['name']
 
         try:
@@ -35,7 +35,7 @@ class FoodUpload(object):
                 },
             ConditionExpression='attribute_not_exists(foodId)'
             )
-            print("Success: {}".format(foodId))
+            print("Success: {} {}".format(foodId, restaurantId))
             json.dumps(response, indent=4, cls=DecimalEncoder)
         except Exception as e:
             print("Fail: {}".format(foodId))
@@ -46,12 +46,13 @@ class FoodUpload(object):
             self.upload(item)
 
     # Upload until no more business returns
-    def uploadAllFilter(self, category, term):
-        offset = 0;
+    def uploadAllFilter(self, category, term, os):
+        offset = os;
         while True:
+            print("Offset: {}".format(offset))
             params = {
                 "term": term,
-                "food_per_business": 1000,
+                "food_per_business": 5,
                 "ll": "33.9533, -117.3962",
                 "limit": 20,
                 "radius_filter": 40000,
@@ -67,5 +68,11 @@ class FoodUpload(object):
             offset += 20
             FoodUpload().uploadList(response)
 
+    def scanAndUpload(self, attribute, value):
+        response = table.scan(
+
+                )
+
+
 if __name__ == "__main__":
-    FoodUpload().uploadAllFilter("", "mexican")
+    FoodUpload().uploadAllFilter("", "restaurant", 120)
