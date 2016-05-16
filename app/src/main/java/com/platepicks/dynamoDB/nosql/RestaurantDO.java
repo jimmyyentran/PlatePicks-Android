@@ -20,7 +20,7 @@ public class RestaurantDO {
     private String _city;
     private double _latitude;
     private double _longitude;
-    private String _postalCode;
+    private int _postalCode;
     private String _restaurantName;
     private String _state;
 
@@ -74,11 +74,11 @@ public class RestaurantDO {
         this._longitude = _longitude;
     }
     @DynamoDBAttribute(attributeName = "postal_code")
-    public String getPostalCode() {
+    public int getPostalCode() {
         return _postalCode;
     }
 
-    public void setPostalCode(final String _postalCode) {
+    public void setPostalCode(final int _postalCode) {
         this._postalCode = _postalCode;
     }
     @DynamoDBAttribute(attributeName = "restaurant_name")

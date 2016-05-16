@@ -25,7 +25,6 @@ class FoodUpload(object):
     def upload(self, item):
         #  getcontext().prec = 5
 
-        # print(item)
         # Convert float -> string -> decimal
         restaurantId    = item['restaurantId']
         restaurant_name = item['restaurant_name']
@@ -34,17 +33,8 @@ class FoodUpload(object):
         city            = item['city']
         latitude        = Decimal(str(item['latitude']))
         longitude       = Decimal(str(item['longitude']))
-        postal_code     = item['postal_code']
+        postal_code     = int(item['postal_code'])
         state           = item['state']
-        # print(restaurantId )
-        # print(restaurant_name )
-        # print(address  )
-        # print(categories   )
-        # print(city    )
-        # print(latitude   )
-        # print(longitude  )
-        # print(postal_code )
-        # print(state)
         try:
             response = self.table.put_item(
             Item={
@@ -58,7 +48,7 @@ class FoodUpload(object):
                 'restaurant_name'   :   restaurant_name,
                 'state'             :   state
                 },
-            #  ConditionExpression='attribute_not_exists(restaurantId)'
+            ConditionExpression='attribute_not_exists(restaurantId)'
             )
             print("Success: {}".format(restaurantId))
             json.dumps(response, indent=4, cls=DecimalEncoder)
@@ -91,7 +81,8 @@ class FoodUpload(object):
             }
 
             response = Yelp_API(params).call_API()
-            # print("Number of food: {}".format(len(response)))
+            #  print("Number of food: {}".format(len(response)))
+            print("Offset: {}".format(offset))
             if len(response) == 0:
                 break
             offset += 20
@@ -99,4 +90,4 @@ class FoodUpload(object):
             FoodUpload().uploadList(response)
 
 if __name__ == "__main__":
-    FoodUpload().uploadAllFilter("", "mexican")
+    FoodUpload().uploadAllFilter("", "restaurant")

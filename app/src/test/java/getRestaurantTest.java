@@ -117,6 +117,7 @@ public class getRestaurantTest {
         RestaurantDO itemToGet;
 
         itemToGet = mapper.load(RestaurantDO.class, restaurantId);
-        System.out.println("Got: " + itemToGet.getState());
+        System.out.println("Got State: " + itemToGet.getState());
+        System.out.println("Got Postal Code: " + itemToGet.getPostalCode());
     }
 }
