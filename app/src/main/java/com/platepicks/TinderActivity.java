@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,11 +29,9 @@ import com.platepicks.util.ConvertToObject;
 import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -44,6 +41,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class TinderActivity extends AppCompatActivity
         implements AWSIntegratorInterface, ImageLoaderInterface {
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
+    final int MAX_RADIUS = 40000;   // meters
 
     // Picture of food fragment
     SwipeImageFragment mainPageFragment = null;
@@ -77,8 +75,8 @@ public class TinderActivity extends AppCompatActivity
     ReentrantLock accessList = new ReentrantLock();
     boolean requestMade = false;
 
-    int limit = 4;  // Number of businesses returned per request
-    int offset = 0; // Number of businesses to offset by in yelp request
+    int limit = 4;      // Number of businesses returned per request
+    int offset = 0;     // Number of businesses to offset by in yelp request
 
     // Function: creates list item
     public ListItemClass createListItem(String foodName) {
@@ -192,7 +190,11 @@ public class TinderActivity extends AppCompatActivity
 
     // Requests for urls from backend AWS database
     void requestFromDatabase() {
-        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", limit, 40000, "", 1, offset);
+        // FIXME: Use user settings to determine this
+        // FIXME: add location
+        int radius = convertMilesToMeters(rad_seekBar.getProgress());
+
+        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", limit, radius, "", 1, offset);
         new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
     }
 
@@ -255,6 +257,12 @@ public class TinderActivity extends AppCompatActivity
             new PostFirstImageTask().execute();
             firstRequest = false;
         }
+    }
+
+    int convertMilesToMeters(int radius) {
+        int meters = (int) (radius * 1609.344);
+
+        return Math.min(meters, MAX_RADIUS);
     }
 
     /* ImagePagerAdapter:
