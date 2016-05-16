@@ -20,6 +20,8 @@ public class AboutFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aboutfood);
 
+        ListItemClass item = getIntent().getParcelableExtra("key2");
+
         /* set custom fonts */
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
         Typeface archistico_bold = Typeface.createFromAsset(getAssets(), "fonts/Archistico_Bold.ttf");
@@ -30,8 +32,11 @@ public class AboutFoodActivity extends AppCompatActivity {
 
         TextView restaurant = (TextView) findViewById(R.id.restaurant_name);
         restaurant.setTypeface(archistico_bold);
+        restaurant.setText(item.getRestaurantName());
 
         TextView food = (TextView) findViewById(R.id.food_name);
+        food.setText(item.getFoodName());
+
         TextView tmp1 = (TextView) findViewById(R.id.street);
         tmp1.setTypeface(quicksand);
         tmp1 = (TextView) findViewById(R.id.city_state);
