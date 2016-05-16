@@ -548,7 +548,6 @@ public class TinderActivity extends AppCompatActivity
                     .alpha(0f)
                     .setListener(new mAnimatorListener()); /* Listener to remove view once finished */
         }
-
     }
 }
 
