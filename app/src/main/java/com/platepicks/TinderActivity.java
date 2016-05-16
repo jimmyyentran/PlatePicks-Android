@@ -439,6 +439,7 @@ public class TinderActivity extends AppCompatActivity
                     ++cnt;
                 } else {    // Dislike
                     otherPage = 0;
+                    imageList.get(0).recycle(); // Clear up data
                 }
 
                 /* Changing the image while image page is out of sight */
@@ -460,7 +461,6 @@ public class TinderActivity extends AppCompatActivity
 
                 // Either way, remove old data from list
                 if (!imageList.isEmpty()) {
-                    imageList.get(0).recycle(); // Clear up data
                     imageList.remove(0);        // Remove old image from list
                     listItems.remove(0);        // Remove old data from list
                 }
