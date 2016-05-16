@@ -16,6 +16,7 @@ public class ListItemClass implements Parcelable {
     private String restaurantAddress;
     private String imageUrl;
     private int clicked = 0;
+    private boolean downloaded = false; // Daniel: don't need to save this in parcelable
 
     // member functions
     public String getFoodId() {return foodId;}
@@ -43,6 +44,8 @@ public class ListItemClass implements Parcelable {
     public void setClicked(int n) {
         this.clicked = n;
     }
+    public boolean isDownloaded() {return downloaded;}
+    public void setDownloaded(boolean downloaded) {this.downloaded = downloaded;}
 
     public static final Parcelable.Creator<ListItemClass> CREATOR = new Parcelable.Creator<ListItemClass>() {
         public ListItemClass createFromParcel(Parcel source) {

@@ -77,6 +77,9 @@ public class TinderActivity extends AppCompatActivity
     ReentrantLock accessList = new ReentrantLock();
     boolean requestMade = false;
 
+    int limit = 4;  // Number of businesses returned per request
+    int offset = 0; // Number of businesses to offset by in yelp request
+
     // Function: creates list item
     public ListItemClass createListItem(String foodName) {
         ListItemClass newItem = new ListItemClass();
@@ -189,7 +192,7 @@ public class TinderActivity extends AppCompatActivity
 
     // Requests for urls from backend AWS database
     void requestFromDatabase() {
-        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", 4, 40000, "", 1, 0);
+        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", limit, 40000, "", 1, offset);
         new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
     }
 
@@ -207,25 +210,27 @@ public class TinderActivity extends AppCompatActivity
         if (maxHeight == 0) maxHeight = DFLT_IMG_MAX_HEIGHT;
         if (maxWidth == 0) maxWidth = DFLT_IMG_MAX_WIDTH;
 
-        ArrayList<String> imageUrls = new ArrayList<>();
+        ArrayList<ListItemClass> requestedImages = new ArrayList<>();
         for (ListItemClass item : listItems)
-            imageUrls.add(item.getImageUrl());
+            if (!item.isDownloaded())
+                requestedImages.add(item);
 
-        new GetImagesAsyncTask(this, maxHeight, maxWidth).execute(imageUrls.toArray());
+        new GetImagesAsyncTask(this, maxHeight, maxWidth).execute(requestedImages.toArray());
     }
 
     // Called by AWSIntegratorTask to return json
     @Override
     public void doSomethingWithResults(String ob) {
+        offset += limit;    // Successful request -> Increase offset for next request
+
         Log.d("TinderActivity", ob);
         List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(ob);
 
         // Critical section
         accessList.lock();
         listItems.addAll(ConvertToObject.toListItemClassList(foodReceives));
-        accessList.unlock();
-
         requestImages();
+        accessList.unlock();
     }
 
     // Called by GetImagesAsyncTask to return list of bitmaps
@@ -365,9 +370,12 @@ public class TinderActivity extends AppCompatActivity
                 /* Changing the image while image page is out of sight */
                 /* If more images are still around */
                 if (imageList.size() > 1) {
+                    Log.d("TinderActivity items", listItems.get(1).getFoodId() + "," +
+                            listItems.get(1).getFoodName() + "," +
+                            listItems.get(1).getRestaurantName() + "," +
+                            listItems.get(1).getImageUrl());
+
                     mainPageFragment.changeImage(imageList.get(1)); // Next image
-                    imageList.remove(0);                            // Remove old image from list
-                    listItems.remove(0);                            // Remove old data from list
                 }
                 /* Out of images */
                 else {
@@ -375,6 +383,14 @@ public class TinderActivity extends AppCompatActivity
                     imagePager.setSwiping(false);       // Disable swipe
                     placeholderIsPresent = true;        // Set flag
                 }
+
+                // Either way, remove old data from list
+                if (!imageList.isEmpty()) {
+                    imageList.get(0).recycle(); // Clear up data
+                    imageList.remove(0);        // Remove old image from list
+                    listItems.remove(0);        // Remove old data from list
+                }
+
                 /* Low on images */
                 if (imageList.size() < 5 && !requestMade) {
                     requestFromDatabase();

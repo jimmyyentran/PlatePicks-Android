@@ -14,22 +14,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
 
+import com.platepicks.ListItemClass;
+
 /**
  * Created by pokeforce on 5/6/16.
  */
 public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitmap>> {
-//    String[] testArray = {
-//    "http://s3-media1.fl.yelpcdn.com/bphoto/oYEqKGlXLqyz9eB0nOlJpw/o.jpg",
-//            "http://s3-media2.fl.yelpcdn.com/bphoto/pwdLeRw0YGp48M8ZjCXrsA/o.jpg",
-//            "http://s3-media4.fl.yelpcdn.com/bphoto/Zh-oY7L5i4GKggt1fmJNZg/o.jpg",
-//            "http://s3-media1.fl.yelpcdn.com/bphoto/lFwxOdrokRYKT33PVW0rJQ/o.jpg",
-//            "http://s3-media3.fl.yelpcdn.com/bphoto/F1_rPJaEypsYMhYeuqq__g/o.jpg",
-//            "http://s3-media1.fl.yelpcdn.com/bphoto/NwbJkYOgBqOc4OAPDwTo5w/o.jpg",
-//            "http://s3-media4.fl.yelpcdn.com/bphoto/JaVpbHJTRHTKi2VqrUxsTw/o.jpg",
-//            "http://s3-media3.fl.yelpcdn.com/bphoto/z6wPUKX06ofmaKwqqcONAw/o.jpg",
-//            "http://s3-media1.fl.yelpcdn.com/bphoto/zcda10Pklt4LLGyjkw2r3Q/o.jpg",
-//            "http://s3-media3.fl.yelpcdn.com/bphoto/KlbsVMic2T5bkXqZtfbZGQ/o.jpg"};
-
     final int maxMemory = (int) (Runtime.getRuntime().maxMemory());  // In bytes
     final int limitMemory = maxMemory / 8;                           // Use 1/8 of max memory
     int maxHeight, maxWidth;
@@ -51,10 +41,13 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
         options = new BitmapFactory.Options();
         LinkedList<Bitmap> images = new LinkedList<>();
 
-        for (Object url : params) {
+        for (Object item : params) {
 //        for (Object url : testArray) {
-            Bitmap b = downloadImage((String) url);
+            ListItemClass ref = (ListItemClass) item;
+
+            Bitmap b = downloadImage(ref.getImageUrl());
             images.add(b);
+            ref.setDownloaded(true);
 
             // Size in terms of memory
             int bytes;
