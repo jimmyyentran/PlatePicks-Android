@@ -51,9 +51,7 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         // Populate the data into the template view using the data object
         fname.setText(item.getFoodName());
         rname.setText(item.getRestaurantName());
-        // for bitmap
 
-        // /here context can be anything like getActivity() for fragment, this or MainActivity.this
         Bitmap bitmap = new ImageSaver(getContext()).
                 setFileName(item.getFoodName()).
                 setDirectoryName("images").
