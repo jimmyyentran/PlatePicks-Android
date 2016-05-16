@@ -69,6 +69,7 @@ public class TinderActivity extends AppCompatActivity
 
     ReentrantLock waitForUILock = new ReentrantLock();  // Race condition between first network request and creation of UI
     boolean firstRequest;                               // Flag to indicate first request
+    boolean placeholderIsPresent = false;               // Flag to indicate out of images
 
     // List of images
     // locks: http://docs.oracle.com/javase/tutorial/essential/concurrency/newlocks.html
@@ -109,14 +110,14 @@ public class TinderActivity extends AppCompatActivity
 
         /* ViewPager: A view that enables swiping images left and right
          * Has 3 pages, 0-2 (reason is explained in class definition below). */
-        final CustomViewPager imagePager = (CustomViewPager) findViewById(R.id.viewPager_images);
+        imagePager = (CustomViewPager) findViewById(R.id.viewPager_images);
         imagePager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
 
         /* Ensure that we start on page 1, the middle page with the image. */
         imagePager.setCurrentItem(1, false);
 
         /* Listen for change in swipe animation's current state */
-        final ImageChangeListener changeListener = new ImageChangeListener(imagePager);
+        final ImageChangeListener changeListener = new ImageChangeListener();
         imagePager.addOnPageChangeListener(changeListener);
 
         /* initialize radius seekBar and link it to a listener*/
@@ -232,8 +233,16 @@ public class TinderActivity extends AppCompatActivity
     public void doSomethingWithDownloadedImages(List<Bitmap> images) {
         // Critical Section: Add images to list here in activity
         accessList.lock();
+
+        // Put images into list of images
         imageList.addAll(images);
         requestMade = false;
+
+        // Remove placeholder if one is made
+        if (placeholderIsPresent) {
+            mainPageFragment.changeImage(imageList.get(0));
+            imagePager.setSwiping(true);
+        }
         accessList.unlock();
 
         // Remove splash screen and post first pic
@@ -298,11 +307,9 @@ public class TinderActivity extends AppCompatActivity
      * side. */
     class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         public int state = ViewPager.SCROLL_STATE_IDLE;
-        CustomViewPager imagePager;
         ImageView fancy_image;
 
-        public ImageChangeListener(CustomViewPager imagePager) {
-            this.imagePager = imagePager;
+        public ImageChangeListener() {
             this.fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
         }
 
@@ -366,6 +373,7 @@ public class TinderActivity extends AppCompatActivity
                 else {
                     mainPageFragment.changeImage(null); // Put placeholder
                     imagePager.setSwiping(false);       // Disable swipe
+                    placeholderIsPresent = true;        // Set flag
                 }
                 /* Low on images */
                 if (imageList.size() < 5 && !requestMade) {
