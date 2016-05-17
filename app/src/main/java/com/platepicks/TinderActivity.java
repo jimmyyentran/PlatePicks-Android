@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
@@ -252,6 +253,21 @@ public class TinderActivity extends AppCompatActivity
         if (!categoryFilter.isEmpty())
             categoryFilter = categoryFilter.substring(0, categoryFilter.length() - 1);
 
+        Log.d("TinderActivity", categoryFilter);
+
+//        return "tradamerican," +
+//                "chinese";
+//                "mexican," +
+//                "japanese,jpsweets";
+//                "italian",
+//                "vietnamese",
+//                "thai",
+//                "indpak",
+//                "mediterranean",
+//                "korean"
+
+//        return "japanese,chinese";
+
         return categoryFilter;
     }
 
@@ -302,8 +318,12 @@ public class TinderActivity extends AppCompatActivity
 
         // Remove placeholder if one is made
         if (placeholderIsPresent) {
-            mainPageFragment.changeImage(imageList.get(0));
-            imagePager.setSwiping(true);
+            if (!imageList.isEmpty()) {
+                mainPageFragment.changeImage(imageList.get(0));
+                imagePager.setSwiping(true);
+            } else {
+                Toast.makeText(this, "Request failed", Toast.LENGTH_SHORT).show();
+            }
         }
         accessList.unlock();
 
@@ -670,10 +690,10 @@ public class TinderActivity extends AppCompatActivity
 
     static class FoodTypes {
         static public final String[] left = {
-                "tradamerican",
+                "tradamerican,newamerican",
                 "chinese",
                 "mexican",
-                "japanese,jpsweets",
+                "japanese",
                 "italian",
                 "vietnamese",
                 "thai",
@@ -688,7 +708,7 @@ public class TinderActivity extends AppCompatActivity
                 "seafood",
                 "dimsum",
                 "asianfusion",
-                "sandwiches,opensandwiches",
+                "sandwiches",
                 "burgers",
                 "hotdogs",
                 "coffee",
