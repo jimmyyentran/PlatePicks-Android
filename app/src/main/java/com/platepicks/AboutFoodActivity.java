@@ -1,5 +1,7 @@
 package com.platepicks;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -45,6 +48,15 @@ public class AboutFoodActivity extends AppCompatActivity {
         tmp1.setTypeface(quicksand);
         food.setTypeface(quicksand);
 
+        // Food image
+        ImageView img = (ImageView) findViewById(R.id.about_image);
+        Bitmap bitmap = new ImageSaver(AboutFoodActivity.this).
+                setFileName(item.getFoodName()).
+                setDirectoryName("images").
+                load();
+
+        img.setImageBitmap(bitmap);
+
 
         /* handle font size for restaurant name */
         int str_length = restaurant.getText().length();
@@ -81,4 +93,7 @@ public class AboutFoodActivity extends AppCompatActivity {
     public void backArrow (View view){
         super.onBackPressed();
     }
+
+
+   
 }
