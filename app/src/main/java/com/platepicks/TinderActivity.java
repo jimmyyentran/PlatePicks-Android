@@ -356,12 +356,13 @@ public class TinderActivity extends AppCompatActivity
             gpsLocation = String.valueOf(mLastLocation.getLatitude()) + ", "
                     + String.valueOf(mLastLocation.getLongitude());
             Log.d("TinderActivity", gpsLocation);
-
-            if (waitForGPSLock.isHeldByCurrentThread())
-                waitForGPSLock.unlock();
         } else {
             Log.e("TinderActivity", "No location!");
+            gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside. Should ask for permission/ask for place.
         }
+
+        if (waitForGPSLock.isHeldByCurrentThread())
+            waitForGPSLock.unlock();
     }
 
     @Override
@@ -655,8 +656,6 @@ public class TinderActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            // FIXME: Use user settings to determine this
-            // FIXME: add location
             int radius = convertMilesToMeters(rad_seekBar.getProgress());
 
             FoodRequest req = new FoodRequest("", 3, gpsLocation, limit, radius, getAllFoodTypes(), 1, offset);
