@@ -58,7 +58,6 @@ public class TinderActivity extends AppCompatActivity
         implements AWSIntegratorInterface, ImageLoaderInterface, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
     final int MAX_RADIUS = 40000;   // meters
-    final int REQUEST_LOCATION = 1;
 
     // Location
     GoogleApiClient mGoogleApiClient;
@@ -348,17 +347,7 @@ public class TinderActivity extends AppCompatActivity
         // If permission not granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("TinderActivity", "Not allowed...");
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
-        } else {
-            getLocation();
-        }
-    }
-
-    void getLocation() {
-        // If permission not granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TinderActivity", "Not allowed...");
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
+            return;
         }
 
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -367,15 +356,12 @@ public class TinderActivity extends AppCompatActivity
             gpsLocation = String.valueOf(mLastLocation.getLatitude()) + ", "
                     + String.valueOf(mLastLocation.getLongitude());
             Log.d("TinderActivity", gpsLocation);
+
+            if (waitForGPSLock.isHeldByCurrentThread())
+                waitForGPSLock.unlock();
         } else {
             Log.e("TinderActivity", "No location!");
-            gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside. Should ask for permission/ask for place.
-            // Maybe add location services to some settings?
-            // what if locations are off?
         }
-
-        if (waitForGPSLock.isHeldByCurrentThread())
-            waitForGPSLock.unlock();
     }
 
     @Override
@@ -388,26 +374,8 @@ public class TinderActivity extends AppCompatActivity
         Log.d("TinderActivity", connectionResult.getErrorMessage());
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation();
-                } else {
-                    gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside. Should ask for permission/ask for place.
-                    Toast.makeText(this, "Using Riverside for default", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
-        }
-    }
-
     /* ImagePagerAdapter:
-         * Feeds ViewPager the imageViews for its pages */
+     * Feeds ViewPager the imageViews for its pages */
     class ImagePagerAdapter extends FragmentStatePagerAdapter {
         public ImagePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -687,6 +655,8 @@ public class TinderActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            // FIXME: Use user settings to determine this
+            // FIXME: add location
             int radius = convertMilesToMeters(rad_seekBar.getProgress());
 
             FoodRequest req = new FoodRequest("", 3, gpsLocation, limit, radius, getAllFoodTypes(), 1, offset);
