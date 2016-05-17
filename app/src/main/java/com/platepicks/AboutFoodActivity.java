@@ -1,13 +1,22 @@
 package com.platepicks;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by pokeforce on 4/24/16.
@@ -75,5 +84,54 @@ public class AboutFoodActivity extends AppCompatActivity {
 
     public void backArrow (View view){
         super.onBackPressed();
+    }
+
+    public void openCommentInput (View view) {
+        LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
+        if(tmp.getVisibility() == view.GONE)
+            tmp.setVisibility(view.VISIBLE);
+        else
+            tmp.setVisibility(view.GONE);
+
+        /* Hide the soft keyboard if necessary */
+        EditText edit = (EditText) findViewById((R.id.input_box));
+        InputMethodManager mgr = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(edit.getWindowToken(),0);
+
+        /* emtpy the EditText view */
+        TextView tmp1 = (TextView)findViewById(R.id.input_box);
+        tmp1.setText("");
+    }
+
+    public void submitComment (View view) {
+        TableLayout tabel = (TableLayout) findViewById(R.id.comment_list);
+        TextView comment_input = (TextView) findViewById(R.id.input_box);
+
+        LinearLayout ll = new LinearLayout(this);
+
+        LayoutInflater inflater1 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ll = (LinearLayout) inflater1.inflate(R.layout.comment_item, null);
+
+        TextView x = (TextView) ll.findViewById(R.id.item_comment);
+        x.setText(comment_input.getText().toString());
+
+        TextView y = (TextView) ll.findViewById(R.id.item_username);
+        //y.setText();
+
+        tabel.addView(ll);
+
+        /* hide the comment input field */
+        LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
+        if(tmp.getVisibility() == view.VISIBLE)
+            tmp.setVisibility(view.GONE);
+
+        /* Hide the soft keyboard if necessary */
+        EditText edit = (EditText) findViewById((R.id.input_box));
+        InputMethodManager mgr = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(edit.getWindowToken(),0);
+
+        /* empty the EditText view */
+        TextView tmp1 = (TextView)findViewById(R.id.input_box);
+        tmp1.setText("");
     }
 }

@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -169,6 +170,9 @@ public class TinderActivity extends AppCompatActivity
                 .alpha(0f)
                 .setStartDelay(3000)
                 .setListener(new mAnimatorListener(splashScreen)); /* Listener to remove view once finished */
+
+
+        LayoutInflater myInflater;
 
     }
     /* end onCreate() */
