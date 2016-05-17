@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -58,6 +59,12 @@ public class LikedListActivity extends AppCompatActivity {
 
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.listview_liked);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                gotoAbout(view);
+            }
+        });
 
         listView.setAdapter(adapter);
 

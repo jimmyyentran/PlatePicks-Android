@@ -95,5 +95,5 @@ public class AboutFoodActivity extends AppCompatActivity {
     }
 
 
-   
+
 }

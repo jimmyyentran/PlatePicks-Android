@@ -16,7 +16,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignLeft="@+id/rname"
             android:layout_alignStart="@+id/rname"
-            android:onClick="gotoAbout"/>
+            />
     <TextView
         android:id="@+id/rname"
         android:layout_width="wrap_content"
@@ -39,7 +39,20 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+
         />
+    <ImageView
+        android:id="@+id/hollow_circle"
+        android:rotation="180"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/hollow_circle"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <!--Top Checker Border-->
 </RelativeLayout>
