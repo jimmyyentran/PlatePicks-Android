@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -45,6 +46,8 @@ import com.platepicks.util.ConvertToObject;
 import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
