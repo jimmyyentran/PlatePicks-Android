@@ -30,7 +30,7 @@ public class FoodDO {
     public void setFoodId(final String _foodId) {
         this._foodId = _foodId;
     }
-    @DynamoDBRangeKey(attributeName = "restaurantId")
+//    @DynamoDBRangeKey(attributeName = "restaurantId")
     @DynamoDBAttribute(attributeName = "restaurantId")
     public String getRestaurantId() {
         return _restaurantId;

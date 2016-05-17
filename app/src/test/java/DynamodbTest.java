@@ -28,11 +28,12 @@ public class DynamodbTest {
     public void setUp() {
     }
 
-//    @Test
+    @Test
     public void DynamodbInsertToFoodTest() {
         // Start all test input as 'test' so it can be easily removed from table later
         insertSampleData("testId", "testRestaurant");
     }
+
 
     @Test
     public void DynamodbUpdateFoodTest(){
