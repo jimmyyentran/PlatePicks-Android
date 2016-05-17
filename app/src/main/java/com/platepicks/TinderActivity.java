@@ -325,14 +325,16 @@ public class TinderActivity extends AppCompatActivity
                     //fancy_image.setBackgroundResource();
                     String name = "Food " + cnt;
 
+                    //ListItemClass toAdd = createListItem(name);
+                    ListItemClass toAdd = listItems.get(0);
+
                     // store "yes" bitmap in internal storage
                     Bitmap toSend = imageList.get(0);
                     new ImageSaver(TinderActivity.this).
-                            setFileName(name).
+                            setFileName(toAdd.getFoodName()).
                             setDirectoryName("images").
                             save(toSend);
 
-                    ListItemClass toAdd = createListItem(name);
 
                     data.add(toAdd);
                     ++cnt;

@@ -67,7 +67,7 @@ public class ListItemClass implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.getFoodId());
         parcel.writeString(this.getFoodName());
-        parcel.writeString(this.getRestaurantAddress());
+        parcel.writeString(this.getRestaurantName());
         parcel.writeString(this.getRestaurantAddress());
         parcel.writeString(this.getImageUrl());
         parcel.writeInt(clicked);
