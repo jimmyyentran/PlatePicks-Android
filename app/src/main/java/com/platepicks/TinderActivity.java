@@ -65,6 +65,7 @@ public class TinderActivity extends AppCompatActivity
     int cnt = 1; // used for notification count
 
     // Contains downloaded data from backend. Currently just image urls.
+
     List<ListItemClass> listItems = new LinkedList<>();  // Actual received data
 
     // List of images
