@@ -3,6 +3,7 @@ package com.platepicks;
         import android.content.Context;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
+        import android.graphics.Matrix;
         import android.support.annotation.NonNull;
 
         import java.io.File;
@@ -50,6 +51,7 @@ public class ImageSaver {
             }
         }
     }
+
 
     @NonNull
     private File createFile() {

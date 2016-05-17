@@ -1,11 +1,18 @@
 package com.platepicks;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -24,14 +31,15 @@ public class LikedListActivity extends AppCompatActivity {
      */
     private GoogleApiClient client;
 
+    // Construct the data source
+    ArrayList<ListItemClass> data;
+    ListItemClass item = new ListItemClass();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liked_list);
 
-        // Construct the data source
-        ArrayList<ListItemClass> data = getIntent().getParcelableArrayListExtra("key");
 
         // font stuff
         String fontPath = "fonts/Hamburger_Heaven.TTF";
@@ -51,16 +59,40 @@ public class LikedListActivity extends AppCompatActivity {
 
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.listview_liked);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                gotoAbout(view);
+            }
+        });
 
         listView.setAdapter(adapter);
 
-      /*  likedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-            }
-        }; */
     }
+
+    public void gotoAbout(View view) {
+        TextView keyFood = (TextView) view.findViewById(R.id.fname);
+        String foo = keyFood.getText().toString();
+        item = lookUp(foo, data);
+
+        Intent intent = new Intent(LikedListActivity.this, AboutFoodActivity.class);
+        intent.putExtra("key2", item);
+        LikedListActivity.this.startActivity(intent);
+    }
+
+    public ListItemClass lookUp (String key, ArrayList<ListItemClass> array)
+    {
+        for (int i = 0; i < array.size(); ++i) {
+            Log.d(key, array.get(i).getFoodName());
+            if ( (array.get(i).getFoodName().equals(key))) {
+                Log.d(key, array.get(i).getFoodName());
+                return array.get(i);
+            }
+        }
+        return array.get(0);
+    }
+
 
 
 }

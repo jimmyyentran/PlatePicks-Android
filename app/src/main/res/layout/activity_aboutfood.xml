@@ -144,23 +144,6 @@
                         android:textSize="15sp"
                         android:textColor="@color/material_grey_800" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Riverside, CA"
-                        android:id="@+id/city_state"
-                        android:textSize="15sp"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/material_grey_800" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="92760"
-                        android:id="@+id/zip_code"
-                        android:textSize="15sp"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/material_grey_800" />
                 </LinearLayout>
 
                 <ImageView

@@ -315,12 +315,13 @@ public class TinderActivity extends AppCompatActivity
 
         // Put images into list of images
         imageList.addAll(images);
+        mainPageFragment.changeFood(images.get(0), listItems.get(0));
         requestMade = false;
 
         // Remove placeholder if one is made
         if (placeholderIsPresent) {
             if (!imageList.isEmpty()) {
-                mainPageFragment.changeImage(imageList.get(0));
+                mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
                 imagePager.setSwiping(true);
             } else {
                 Toast.makeText(this, "Request failed", Toast.LENGTH_SHORT).show();
@@ -501,14 +502,16 @@ public class TinderActivity extends AppCompatActivity
                     //fancy_image.setBackgroundResource();
                     String name = "Food " + cnt;
 
+                    //ListItemClass toAdd = createListItem(name);
+                    ListItemClass toAdd = listItems.get(0);
+
                     // store "yes" bitmap in internal storage
                     Bitmap toSend = imageList.get(0);
                     new ImageSaver(TinderActivity.this).
-                            setFileName(name).
+                            setFileName(toAdd.getFoodName()).
                             setDirectoryName("images").
                             save(toSend);
 
-                    ListItemClass toAdd = createListItem(name);
 
                     data.add(toAdd);
                     ++cnt;
@@ -520,18 +523,14 @@ public class TinderActivity extends AppCompatActivity
                 /* Changing the image while image page is out of sight */
                 /* If more images are still around */
                 if (imageList.size() > 1) {
-                    Log.d("TinderActivity items", listItems.get(1).getFoodId() + "," +
-                            listItems.get(1).getFoodName() + "," +
-                            listItems.get(1).getRestaurantName() + "," +
-                            listItems.get(1).getImageUrl());
-
-                    mainPageFragment.changeImage(imageList.get(1)); // Next image
+                    mainPageFragment.changeFood(imageList.get(1), listItems.get(1)); // Next image
+                    imageList.remove(0);                            // Remove old image from list
+                    listItems.remove(0);                            // Remove old data from list
                 }
                 /* Out of images */
                 else {
-                    mainPageFragment.changeImage(null); // Put placeholder
-                    imagePager.setSwiping(false);       // Disable swipe
-                    placeholderIsPresent = true;        // Set flag
+                    // FIXME: Null argument should mean placeholder
+                    mainPageFragment.changeFood(null, null);
                 }
 
                 // Either way, remove old data from list
@@ -709,7 +708,7 @@ public class TinderActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             // Set first image
-            mainPageFragment.changeImage(imageList.get(0));
+            mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
 
             // Fade, then set to gone through listener
             splashScreen.animate()

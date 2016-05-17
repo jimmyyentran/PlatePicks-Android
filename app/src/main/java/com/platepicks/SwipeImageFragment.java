@@ -23,12 +23,19 @@ public class SwipeImageFragment extends Fragment {
 
     private SquareImageButton foodPicture = null;
     private LinearLayout placeholder = null; // Only shown when out of images
+    private Bitmap bitmap;
+    private ListItemClass item;
+
+    private void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
-    /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
+    // FIXME: param will be bitmap once we have them
+    /* Changes image in imagebutton from ImageChangeListener in TinderActivity, should only be called
      * when image page is out of sight. */
-    public void changeImage(Bitmap image) {
+    public void changeFood(Bitmap image, ListItemClass item) {
         if (foodPicture != null) {
             // Put placeholder indicating that more images are loading
             if (image == null) {
@@ -43,6 +50,7 @@ public class SwipeImageFragment extends Fragment {
                 }
 
                 foodPicture.setImageBitmap(image);
+                this.item = item;
             }
         }
     }
@@ -56,13 +64,14 @@ public class SwipeImageFragment extends Fragment {
             pagePosition = getArguments().getInt(PAGE_POSITION);
 
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
-
         foodPicture = (SquareImageButton) fragmentView.findViewById(R.id.imagebutton_tinder);
         placeholder = (LinearLayout) fragmentView.findViewById(R.id.placeholder_container);
         RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
-        /* Make non-image fragments nonexistent */
-        if (pagePosition != 1) {
+        /* Set the image resource here */
+        if (pagePosition == 1) {
+            foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
+        } else {
             foodBorder.setVisibility(View.GONE);
         }
 
@@ -70,12 +79,14 @@ public class SwipeImageFragment extends Fragment {
         foodPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
+                aboutPage.putExtra("key2", item);
                 startActivity(aboutPage);
             }
         });
         // lat and longitude could be negative (west/east)
-        // Meters not miles (raidus)
+        // Meters not miles (radius)
         // Json with these things grab a list of restaurant ids, which divvy's code grabs
         // images/comments/food names/food ids for
         
