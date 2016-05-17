@@ -62,7 +62,7 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
 
 
         // Additional style
-        fname.setShadowLayer(30, 0, 0, Color.YELLOW);
+        fname.setShadowLayer(24, 0, 0, Color.YELLOW);
 
        // byte[] byteArray = item.getFoodImage();
       //  Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
