@@ -75,4 +75,4 @@ class FoodUpload(object):
 
 
 if __name__ == "__main__":
-    FoodUpload().uploadAllFilter("", "restaurant", 120)
+    FoodUpload().uploadAllFilter("", "restaurant", 0)
