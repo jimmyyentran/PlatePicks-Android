@@ -524,8 +524,6 @@ public class TinderActivity extends AppCompatActivity
                 /* If more images are still around */
                 if (imageList.size() > 1) {
                     mainPageFragment.changeFood(imageList.get(1), listItems.get(1)); // Next image
-                    imageList.remove(0);                            // Remove old image from list
-                    listItems.remove(0);                            // Remove old data from list
                 }
                 /* Out of images */
                 else {
