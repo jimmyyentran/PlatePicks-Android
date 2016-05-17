@@ -1,6 +1,5 @@
 package com.platepicks;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -29,8 +28,6 @@ import com.platepicks.util.ConvertToObject;
 import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -219,7 +216,7 @@ public class TinderActivity extends AppCompatActivity
         // Critical Section: Add images to list here in activity
         accessList.lock();
         imageList.addAll(images);
-        mainPageFragment.changeImage(images.get(0));
+        mainPageFragment.changeFood(images.get(0), listItems.get(0));
         requestMade = false;
         accessList.unlock();
 
@@ -353,14 +350,14 @@ public class TinderActivity extends AppCompatActivity
 
                 /* If more images are still around */
                 if (imageList.size() > 1) {
-                    mainPageFragment.changeImage(imageList.get(1)); // Next image
+                    mainPageFragment.changeFood(imageList.get(1), listItems.get(1)); // Next image
                     imageList.remove(0);                            // Remove old image from list
                     listItems.remove(0);                            // Remove old data from list
                 }
                 /* Out of images */
                 else {
                     // FIXME: Null argument should mean placeholder
-                    mainPageFragment.changeImage(null);
+                    mainPageFragment.changeFood(null, null);
                 }
                 /* Low on images */
                 if (imageList.size() < 5 && !requestMade) {

@@ -22,6 +22,7 @@ public class SwipeImageFragment extends Fragment {
 
     private SquareImageButton foodPicture;
     private Bitmap bitmap;
+    private ListItemClass item;
 
     private void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
@@ -32,11 +33,12 @@ public class SwipeImageFragment extends Fragment {
     // FIXME: param will be bitmap once we have them
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
      * when image page is out of sight. */
-    public void changeImage(Bitmap image) {
+    public void changeFood(Bitmap image, ListItemClass item) {
         if (image == null) {
             foodPicture.setBackgroundColor(Color.BLUE);
             foodPicture.setImageDrawable(null);
         }
+        this.item = item;
 
         foodPicture.setImageBitmap(image);
     }
@@ -64,12 +66,14 @@ public class SwipeImageFragment extends Fragment {
         foodPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
+                aboutPage.putExtra("key2", item);
                 startActivity(aboutPage);
             }
         });
         // lat and longitude could be negative (west/east)
-        // Meters not miles (raidus)
+        // Meters not miles (radius)
         // Json with these things grab a list of restaurant ids, which divvy's code grabs
         // images/comments/food names/food ids for
         
