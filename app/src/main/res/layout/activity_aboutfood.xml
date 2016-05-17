@@ -53,7 +53,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <!--hidden view for comment input-->
 
@@ -217,7 +218,8 @@
                     android:src="@drawable/alternate_logo"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_gravity="center_horizontal|bottom" />
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:alpha="0.4" />
 
             </LinearLayout>
         </ScrollView>
@@ -226,7 +228,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/comment_input_field"
             android:background="#ffffff">
             <!--Exit Button-->
