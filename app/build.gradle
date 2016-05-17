@@ -70,4 +70,6 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.robolectric:shadows-multidex:3.0'
     compile 'com.google.android.gms:play-services-appindexing:8.3.0'
+    compile 'com.google.android.gms:play-services:8.4.0'
+
 }

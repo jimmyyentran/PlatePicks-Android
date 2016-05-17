@@ -25,6 +25,35 @@
             android:adjustViewBounds="true"
             android:background="#ffffff" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/placeholder_container"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/placeholder_1"
+                android:id="@+id/textView_placeholder"
+                android:textSize="25sp"
+                android:textColor="@color/main_red"
+                android:gravity="center"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/progressBar_placeholder"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/main_red"/>
+            <!--FIXME need to use a PRE-API 21 supported way to change color. A custom drawable xml...-->
+        </LinearLayout>
+
     </RelativeLayout>
 
 </FrameLayout>

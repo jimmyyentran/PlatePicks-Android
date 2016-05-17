@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.platepicks.support.SquareImageButton;
@@ -20,25 +21,30 @@ import com.platepicks.support.SquareImageButton;
 public class SwipeImageFragment extends Fragment {
     public static String PAGE_POSITION = "Page position", PIC_INDEX = "Pic index";
 
-    private SquareImageButton foodPicture;
-    private Bitmap bitmap;
-
-    private void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
+    private SquareImageButton foodPicture = null;
+    private LinearLayout placeholder = null; // Only shown when out of images
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
-    // FIXME: param will be bitmap once we have them
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
      * when image page is out of sight. */
     public void changeImage(Bitmap image) {
-        if (image == null) {
-            foodPicture.setBackgroundColor(Color.BLUE);
-            foodPicture.setImageDrawable(null);
-        }
+        if (foodPicture != null) {
+            // Put placeholder indicating that more images are loading
+            if (image == null) {
+                foodPicture.setImageDrawable(null);
+                placeholder.setVisibility(View.VISIBLE);
+            }
+            // Change picture
+            else {
+                // Remove placeholder if need be
+                if (placeholder.getVisibility() != View.GONE) {
+                    placeholder.setVisibility(View.GONE);
+                }
 
-        foodPicture.setImageBitmap(image);
+                foodPicture.setImageBitmap(image);
+            }
+        }
     }
 
     @Nullable
@@ -50,13 +56,13 @@ public class SwipeImageFragment extends Fragment {
             pagePosition = getArguments().getInt(PAGE_POSITION);
 
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
+
         foodPicture = (SquareImageButton) fragmentView.findViewById(R.id.imagebutton_tinder);
+        placeholder = (LinearLayout) fragmentView.findViewById(R.id.placeholder_container);
         RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
-        /* Set the image resource here */
-        if (pagePosition == 1) {
-            foodPicture.setImageResource(R.drawable.main_screen_no_checkers);
-        } else {
+        /* Make non-image fragments nonexistent */
+        if (pagePosition != 1) {
             foodBorder.setVisibility(View.GONE);
         }
 
