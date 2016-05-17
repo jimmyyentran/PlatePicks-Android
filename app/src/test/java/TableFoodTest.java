@@ -71,6 +71,7 @@ public class TableFoodTest {
         FoodReceive foodItemReceived = getFood(foodId);
         String foodName = foodItemReceived.getName();
         System.out.println("food name: " + foodName);
+        System.out.println("URL: " + foodItemReceived.getUrl() );
 
         Location loc = foodItemReceived.getLocation();
         System.out.println("restaurant name: " + loc.getName());

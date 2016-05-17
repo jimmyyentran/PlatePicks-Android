@@ -22,51 +22,42 @@ public class Location {
 
     }
 
-    public String getCity() {
-        return city;
-    }
 
+    //mutator methods
     public void setCity(String city) {
         this.city = city;
     }
-
-//    public String getDisplay_address() {
-//        return display_address;
-//    }
-//
-//    public void setDisplay_address(String display_address) {
-//        this.display_address = display_address;
-//    }
-
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getPostal_code() {
-        return postal_code;
-    }
-
     public void setPostal_code(String postal_code) {
         this.postal_code = postal_code;
     }
-
-    public String getState() {
-        return state;
-    }
-
     public void setState(String state) {
         this.state = state;
     }
-
-    public List<String> getAddress() {
-        return address;
-    }
-
     public void setAddress(List<String> address) {
         this.address = address;
     }
+    //    public String getDisplay_address() { return display_address; }
+
+    //accessor methods
+    public String getCity() {
+        return city;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getPostal_code() {
+        return postal_code;
+    }
+    public String getState() {
+        return state;
+    }
+    public List<String> getAddress() {
+        return address;
+    }
+    //    public void setDisplay_address(String display_address) { this.display_address = display_address; }
+
+
 }
