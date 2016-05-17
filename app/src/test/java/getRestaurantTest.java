@@ -1,11 +1,16 @@
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+//import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
+//import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+//import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+//import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
 import com.amazonaws.services.dynamodbv2.model.GetItemResult;
-import com.platepicks.dynamoDB.nosql.FoodDO;
+//import com.platepicks.dynamoDB.nosql.FoodDO;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +40,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 //import context.arch.comm.DataObject; //added
@@ -44,7 +52,7 @@ import java.util.Set;
 @Config(manifest="src/main/AndroidManifest.xml", sdk = 18) //sdk level may change
 public class getRestaurantTest {
 
-    private final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();;
+    private final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
 
     //Set up persistent activity
     @Before
@@ -62,10 +70,15 @@ public class getRestaurantTest {
         //updateSampleData("testRestaurant", "testAddress");
     }
 
-   @Test
+//   @Test
     public void DynamodbGetFoodTest(){
         getSampleData("tortas-sinaloa-corona");
     }
+    @Test
+    public void DynamodbGetFoodFromFoodTest(){
+        getSampleDataFromFood("nAckXM1Z7qg6qQUBDZ8mXg");
+    }
+
 
 //    public void insertSampleData(String restId, Set<String> address) throws AmazonClientException {
 //        System.out.println("Inserting Sample data");
@@ -120,4 +133,34 @@ public class getRestaurantTest {
         System.out.println("Got State: " + itemToGet.getState());
         System.out.println("Got Postal Code: " + itemToGet.getPostalCode());
     }
-}
+    public void getSampleDataFromFood(String foodId) {
+        FoodDO foodToGet;
+        foodToGet = mapper.load(FoodDO.class, foodId);
+        System.out.println("Got restaurant Id: " + foodToGet.getRestaurantId());
+    }
+
+
+
+        //itemToGet = mapper.load(FoodDO.class, "gAdqUpIbkuaYFyzfIAyjSg");
+//        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+//        eav.put(":_id", new AttributeValue().withS("gAdqUpIbkuaYFyzfIAyjSg"));
+//        DynamoDBQueryExpression<FoodDO> queryExpression = new DynamoDBQueryExpression<FoodDO>()
+//                .withKeyConditionExpression("foodId = :_id")
+//                .withExpressionAttributeValues(eav);
+//        QuerySpec spec = new QuerySpec()
+
+//                .withValueMap(new ValueMap()
+//                        .withString(":_id", "gAdqUpIbkuaYFyzfIAyjSg"));
+
+        //itemToGet = mapper.query(FoodDO.class, "id = :gAdqUpIbkuaYFyzfIAyjSg");
+//        List<FoodDO> itemsToGetList = mapper.query(FoodDO.class, queryExpression);
+//        DynamoDBQueryExpression<FoodDO> queryExpression = new DynamoDBQueryExpression<FoodDO>()
+//                .withKeyConditionExpression("id = :_id")
+//                .withValueMap(new ValueMap()
+//                    .withString(":_id", "gAdqUpIbkuaYFyzfIAyjSg");
+
+
+        //System.out.println("Got food name: " + itemToGet.getName());
+
+    }
+
