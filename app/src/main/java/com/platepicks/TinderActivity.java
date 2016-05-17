@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
 import android.location.Location;
+import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -18,15 +19,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.FoodRequest;
 import com.platepicks.support.CustomViewPager;
@@ -65,6 +73,7 @@ public class TinderActivity extends AppCompatActivity
     /* Local TextView variable to handle list notification number*/
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
 
+    LinearLayout leftFoodTypes, rightFoodTypes; // 2 columns of food types
 
     // View Pager for swiping
     CustomViewPager imagePager;
@@ -78,6 +87,8 @@ public class TinderActivity extends AppCompatActivity
     ReentrantLock waitForUILock = new ReentrantLock();  // Race condition between first network request and creation of UI
     boolean firstRequest;                               // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
+
+    ReentrantLock waitForGPSLock = new ReentrantLock(); // Wait for GPS location to be retrieved before making yelp request
 
     // List of images
     // locks: http://docs.oracle.com/javase/tutorial/essential/concurrency/newlocks.html
@@ -111,13 +122,11 @@ public class TinderActivity extends AppCompatActivity
         /* initialize facebook SDK first */
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
 
         /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.activity_tinderui);
@@ -146,6 +155,9 @@ public class TinderActivity extends AppCompatActivity
         TextView radius_value = (TextView) findViewById(R.id.radius_number);
         radius_value.setText(String.valueOf(rad_seekBar.getProgress()));
         rad_seekBar.setOnSeekBarChangeListener(new rad_seekBar_listener());
+
+        leftFoodTypes = (LinearLayout) findViewById(R.id.food_types_left);
+        rightFoodTypes = (LinearLayout) findViewById(R.id.food_types_right);
 
         /* Yes and No Buttons:
          * Finding reference to buttons in xml layout to keep as objects in Java */
@@ -184,10 +196,10 @@ public class TinderActivity extends AppCompatActivity
         });
 
         // First batch of images
-        Log.d("TinderActivity", "Locked!");
-        waitForUILock.lock();   // Ensure that first network request cannot get lock first
-        firstRequest = true;
-        requestFromDatabase();
+        waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
+        waitForUILock.lock();   // Ensure that first network request does not post image before UI is visible
+        firstRequest = true;    // Flag to remove splash screen after first request
+        new RequestFromDatabase().execute();
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
@@ -201,10 +213,8 @@ public class TinderActivity extends AppCompatActivity
         super.onResume();
 
         // Release lock once UI is visible to let splash screen be removed and show first pic
-        if (waitForUILock.isHeldByCurrentThread()) {
+        if (waitForUILock.isHeldByCurrentThread())
             waitForUILock.unlock();
-            Log.d("TinderActivity", "Unlocked!");
-        }
     }
 
     @Override
@@ -219,14 +229,30 @@ public class TinderActivity extends AppCompatActivity
         super.onStop();
     }
 
-    // Requests for urls from backend AWS database
-    void requestFromDatabase() {
-        // FIXME: Use user settings to determine this
-        // FIXME: add location
-        int radius = convertMilesToMeters(rad_seekBar.getProgress());
+    String getAllFoodTypes() {
+        StringBuilder appender = new StringBuilder();
 
-        FoodRequest req = new FoodRequest("", 3, "33.7175, -117.8311", limit, radius, "", 1, offset);
-        new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
+        // Check left food type categories
+        for (int i = 0; i < leftFoodTypes.getChildCount(); i++)
+            if (((CheckBox) leftFoodTypes.getChildAt(i)).isChecked()) {
+                appender.append(FoodTypes.left[i]);
+                appender.append(",");
+            }
+
+        // Check right food type categories
+        for (int i = 0; i < rightFoodTypes.getChildCount(); i++)
+            if (((CheckBox) rightFoodTypes.getChildAt(i)).isChecked()) {
+                appender.append(FoodTypes.right[i]);
+                appender.append(",");
+            }
+
+        String categoryFilter = appender.toString();
+
+        // truncate the last extra comma
+        if (!categoryFilter.isEmpty())
+            categoryFilter = categoryFilter.substring(0, categoryFilter.length() - 1);
+
+        return categoryFilter;
     }
 
     // Called after requestFromDatabase in doSomethingWithResults()
@@ -255,8 +281,6 @@ public class TinderActivity extends AppCompatActivity
     @Override
     public void doSomethingWithResults(String ob) {
         offset += limit;    // Successful request -> Increase offset for next request
-
-        Log.d("TinderActivity", ob);
         List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(ob);
 
         // Critical section
@@ -298,15 +322,11 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
-        // Autogenerated...
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        Log.d("TinderActivity", "Connected!");
+
+        // If permission not granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("TinderActivity", "Not allowed...");
             return;
         }
 
@@ -316,6 +336,9 @@ public class TinderActivity extends AppCompatActivity
             gpsLocation = String.valueOf(mLastLocation.getLatitude()) + ", "
                     + String.valueOf(mLastLocation.getLongitude());
             Log.d("TinderActivity", gpsLocation);
+
+            if (waitForGPSLock.isHeldByCurrentThread())
+                waitForGPSLock.unlock();
         } else {
             Log.e("TinderActivity", "No location!");
         }
@@ -328,7 +351,7 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.d("TinderActivity", connectionResult.getErrorMessage());
     }
 
     /* ImagePagerAdapter:
@@ -467,7 +490,7 @@ public class TinderActivity extends AppCompatActivity
 
                 /* Low on images */
                 if (imageList.size() < 5 && !requestMade) {
-                    requestFromDatabase();
+                    new RequestFromDatabase().execute();
                     requestMade = true;
                 }
 
@@ -597,17 +620,38 @@ public class TinderActivity extends AppCompatActivity
 
     }
 
+    class RequestFromDatabase extends AsyncTask<Void, Void, Void> {
+        // Personal note: the request is called at least by the time the UI is visible in onStart()
+        // so we should be able to access all the checkBoxes through getAllFoodTypes() without issue.
+        // However, if it turns out that we will access saved food types settings, then this cuts
+        // out the reliance on the checkboxes being visible, making 1 less race.
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            waitForGPSLock.lock();
+            waitForGPSLock.unlock();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            // FIXME: Use user settings to determine this
+            // FIXME: add location
+            int radius = convertMilesToMeters(rad_seekBar.getProgress());
+
+            FoodRequest req = new FoodRequest("", 3, gpsLocation, limit, radius, getAllFoodTypes(), 1, offset);
+            new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
+        }
+    }
+
     // Called after the first network request completes to remove the splash screen and add the
     // first pic. Created because a race condition existed between the UI and the first request.
     class PostFirstImageTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
             // Wait for UI thread to release this given lock to indicate that UI is on screen
-            Log.d("PostFirstImageTask", "About to lock!");
             waitForUILock.lock();
-            Log.d("PostFirstImageTask", "Locked!");
             waitForUILock.unlock();
-            Log.d("PostFirstImageTask", "Unlock. Going to post picture!");
 
             return null;
         }
@@ -622,6 +666,34 @@ public class TinderActivity extends AppCompatActivity
                     .alpha(0f)
                     .setListener(new mAnimatorListener()); /* Listener to remove view once finished */
         }
+    }
+
+    static class FoodTypes {
+        static public final String[] left = {
+                "tradamerican",
+                "chinese",
+                "mexican",
+                "japanese,jpsweets",
+                "italian",
+                "vietnamese",
+                "thai",
+                "indpak",
+                "mediterranean",
+                "korean"
+        };
+
+        static public final String[] right = {
+                "french",
+                "pizza",
+                "seafood",
+                "dimsum",
+                "asianfusion",
+                "sandwiches,opensandwiches",
+                "burgers",
+                "hotdogs",
+                "coffee",
+                "breakfast_brunch"
+        };
     }
 }
 

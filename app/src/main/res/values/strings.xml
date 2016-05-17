@@ -26,6 +26,9 @@
   <string name="placeholder_1">One sec.</string>
   <string name="placeholder_2">In the meantime, why don\'t you check out your other dishes?</string>
 
+  <!--google id for using locations (in daniel's dev console)-->
+  <string name="google_app_id">plate-picks</string>
+
   <!--Amazon code-->
   <!-- This can be anything, but it should be unique to the app. -->
   <string name="content_file_provider_authority">com.mysampleapp.fileprovider</string>

@@ -645,6 +645,7 @@
                                     android:orientation="vertical"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:id="@+id/food_types_left"
                                     android:paddingTop="15dp"
                                     android:paddingLeft="12dp"
                                     android:paddingRight="15dp">
@@ -735,6 +736,7 @@
                                     android:orientation="vertical"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:id="@+id/food_types_right"
                                     android:paddingTop="15dp"
                                     android:paddingRight="12dp">
 
