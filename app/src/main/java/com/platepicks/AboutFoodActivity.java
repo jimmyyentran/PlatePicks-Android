@@ -40,13 +40,14 @@ public class AboutFoodActivity extends AppCompatActivity {
         TextView food = (TextView) findViewById(R.id.food_name);
         food.setText(item.getFoodName());
 
-        TextView tmp1 = (TextView) findViewById(R.id.street);
-        tmp1.setTypeface(quicksand);
-        tmp1 = (TextView) findViewById(R.id.city_state);
+        TextView address = (TextView) findViewById(R.id.street);
+        address.setTypeface(quicksand);
+        address.setText(item.getRestaurantAddress());
+        /*tmp1 = (TextView) findViewById(R.id.city_state);
         tmp1.setTypeface(quicksand);
         tmp1 = (TextView) findViewById(R.id.zip_code);
         tmp1.setTypeface(quicksand);
-        food.setTypeface(quicksand);
+        food.setTypeface(quicksand);*/
 
         // Food image
         ImageView img = (ImageView) findViewById(R.id.about_image);

@@ -3,6 +3,7 @@ package com.platepicks;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -60,6 +61,8 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         img.setImageBitmap(RotateBitmap(bitmap, 180));
 
 
+        // Additional style
+        fname.setShadowLayer(30, 0, 0, Color.YELLOW);
 
        // byte[] byteArray = item.getFoodImage();
       //  Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
