@@ -1,5 +1,7 @@
 package com.platepicks.util;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.platepicks.objects.FoodReceive;
@@ -19,6 +21,7 @@ import java.util.List;
 public class ConvertToObject {
 
     public static List<FoodReceive> toFoodReceiveList(String json){
+        Log.d("ConvertToObject", json);
         Type foodReceiveCollection = new TypeToken<Collection<FoodReceive>>(){}.getType();
         Collection<FoodReceive> receivedCollection = new Gson().fromJson(json, foodReceiveCollection);
         FoodReceive[] foodReceiveArray = receivedCollection.toArray(new FoodReceive[receivedCollection.size()]);

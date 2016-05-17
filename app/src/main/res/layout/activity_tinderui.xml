@@ -311,6 +311,7 @@
                         <LinearLayout
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:orientation="vertical"
                             android:id="@+id/exit_icon_bg"
                             android:background="@color/main_red"/>
 
@@ -644,6 +645,7 @@
                                     android:orientation="vertical"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:id="@+id/food_types_left"
                                     android:paddingTop="15dp"
                                     android:paddingLeft="12dp"
                                     android:paddingRight="15dp">
@@ -734,6 +736,7 @@
                                     android:orientation="vertical"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:id="@+id/food_types_right"
                                     android:paddingTop="15dp"
                                     android:paddingRight="12dp">
 
