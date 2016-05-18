@@ -19,37 +19,34 @@ public class FoodReceive {
         this.url = v4;
 
     }
-
-    public String getFood_id() {
-        return food_id;
-    }
-
+    /* mutator methods */
     public void setFood_id(String food_id) {
         this.food_id = food_id;
     }
-
-    public Location getLocation() {
-        return location;
-    }
-
     public void setLocation(Location location) {
         this.location = location;
     }
-
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
-
-    public URL getUrl() {
-        return url;
-    }
-
     public void setUrl(URL url) {
         this.url = url;
+    }
+
+    /* accessor methods */
+    public String getFood_id() {
+        return food_id;
+    }
+    public Location getLocation() {
+        return location;
+    }
+    public String getName() {
+
+        return name;
+    }
+    public URL getUrl() {
+
+        return url;
     }
 
     //    public static void main(){
