@@ -326,10 +326,11 @@ public class TinderActivity extends AppCompatActivity
                     // store "yes" bitmap in internal storage
                     Bitmap toSend = imageList.get(0);
                     new ImageSaver(TinderActivity.this).
-                            setFileName(toAdd.getFoodName()).
+                            setFileName(toAdd.getFoodId()).
                             setDirectoryName("images").
                             save(toSend);
 
+                    //toAdd.setClicked(1);
                     data.add(toAdd);
                     ++cnt;
                 } else {
@@ -409,12 +410,15 @@ public class TinderActivity extends AppCompatActivity
 
     /* Moves to Like-List Activity */
     public void gotoList(View view) {
+
+        /* Count starts over */
         cnt = 1;
+
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", data);
         TinderActivity.this.startActivity(intent);
 
-        /* Heart starts out empty */
+        /* Heart is empty again */
         notification_number.setVisibility(View.GONE);
 
     }

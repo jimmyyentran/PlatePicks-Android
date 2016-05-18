@@ -94,7 +94,6 @@ public class LikedListActivity extends AppCompatActivity {
     }
 
     public void backArrow (View view){
-        item.setClicked(1);
         super.onBackPressed();
     }
 

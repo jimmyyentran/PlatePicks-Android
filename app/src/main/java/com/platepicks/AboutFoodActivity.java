@@ -1,5 +1,6 @@
 package com.platepicks;
 
+import android.app.LauncherActivity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -16,6 +17,9 @@ import android.widget.TextView;
  * Created by pokeforce on 4/24/16.
  */
 public class AboutFoodActivity extends AppCompatActivity {
+
+    ListItemClass item;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Basic setup of which layout we want to use (aboutfood) and toolbar (set as "action bar"
@@ -23,8 +27,8 @@ public class AboutFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aboutfood);
 
-        ListItemClass item = getIntent().getParcelableExtra("key2");
-
+        item = getIntent().getParcelableExtra("key2");
+        item.setClicked(1);
         /* set custom fonts */
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
         Typeface archistico_bold = Typeface.createFromAsset(getAssets(), "fonts/Archistico_Bold.ttf");
@@ -52,7 +56,7 @@ public class AboutFoodActivity extends AppCompatActivity {
         // Food image
         ImageView img = (ImageView) findViewById(R.id.about_image);
         Bitmap bitmap = new ImageSaver(AboutFoodActivity.this).
-                setFileName(item.getFoodName()).
+                setFileName(item.getFoodId()).
                 setDirectoryName("images").
                 load();
 
@@ -94,7 +98,6 @@ public class AboutFoodActivity extends AppCompatActivity {
     public void backArrow (View view){
         super.onBackPressed();
     }
-
 
 
 }

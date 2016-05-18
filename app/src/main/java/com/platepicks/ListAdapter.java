@@ -20,10 +20,12 @@ import java.util.ArrayList;
  */
 public class ListAdapter extends ArrayAdapter<ListItemClass> {
     private Context mCtx; //<-- declare a Context reference
+    ArrayList<ListItemClass> users;
 
     public ListAdapter(Context context, ArrayList<ListItemClass> users) {
         super(context, 0, users);
         mCtx = context; //<-- fill it with the Context you are passed
+        this.users = users;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
 
 
         // Get the data item for this position
-        ListItemClass item = getItem(position);
+        ListItemClass item = getItem(users.size() - position - 1);
 
         // font stuff
         String fontPath = "fonts/Hamburger_Heaven.TTF";
@@ -51,15 +53,19 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         fname.setTypeface(tf);
 
         // highlight if new food
-        if (item.isClicked()) {
+        if (!item.isClicked()) {
             fname.setShadowLayer(24, 0, 0, Color.YELLOW);
+            item.setClicked(0);
         }
+        else {}
+
+
         // Populate the data into the template view using the data object
         fname.setText(item.getFoodName());
         rname.setText(item.getRestaurantName());
 
         Bitmap bitmap = new ImageSaver(getContext()).
-                setFileName(item.getFoodName()).
+                setFileName(item.getFoodId()).
                 setDirectoryName("images").
                 load();
 
