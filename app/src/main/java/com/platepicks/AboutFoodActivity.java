@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import static com.platepicks.dynamoDB.TableComment.insertComment;
 
 import org.w3c.dom.Text;
 
@@ -133,5 +134,7 @@ public class AboutFoodActivity extends AppCompatActivity {
         /* empty the EditText view */
         TextView tmp1 = (TextView)findViewById(R.id.input_box);
         tmp1.setText("");
+
+        insertComment("Foodie_93", "", x.getText().toString());
     }
 }
