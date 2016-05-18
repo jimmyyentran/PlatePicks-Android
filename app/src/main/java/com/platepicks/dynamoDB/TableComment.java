@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class TableComment {
 
-    public static void insertSampleData(String userId, String foodId, String content) throws AmazonClientException {
+    public static void insertComment(String userId, String foodId, String content) throws AmazonClientException {
         System.out.println("Inserting comment");
         final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
         final CommentDO firstItem = new CommentDO();
