@@ -21,12 +21,18 @@ public class TableComment {
 
     public static void insertComment(String userId, String foodId, String content) throws AmazonClientException {
         System.out.println("Inserting comment");
+
+        long time = System.currentTimeMillis();
+        String s = String.valueOf(time/1000);
+//        System.out.println("time: " + time);
+
         final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
         final CommentDO firstItem = new CommentDO();
 
         firstItem.setUserId(userId);
         firstItem.setFoodId(foodId);
         firstItem.setContent(content);
+        firstItem.setTime(time);
         AmazonClientException lastException = null;
 
         try {

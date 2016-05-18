@@ -11,7 +11,7 @@ import com.platepicks.dynamoDB.nosql.CommentDO;
 import com.platepicks.dynamoDB.nosql.ListDO;
 import com.platepicks.dynamoDB.nosql.SampleDataGenerator;
 
-import static com.platepicks.dynamoDB.TableComment.insertSampleData;
+import static com.platepicks.dynamoDB.TableComment.insertComment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,9 +36,11 @@ public class InsertCommentTest {
     @Test
     public void DynamodbInsertToFoodTest() {
         // Start all test input as 'test' so it can be easily removed from table later
-        insertSampleData("testUserId1", "testFoodID1", "testCommentContent1");
+        insertComment("testUserId1", "testFoodID1", "testCommentContent1");
+
 
     }
+
 
 }
 

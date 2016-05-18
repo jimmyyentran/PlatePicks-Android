@@ -18,45 +18,44 @@ public class CommentDO {
     private String _foodId;
     private String _content;
     private double _rating;
-//    private String _subject;
+    private long   _time;
 
     @DynamoDBHashKey(attributeName = "userId")
     @DynamoDBAttribute(attributeName = "userId")
     public String getUserId() {
         return _userId;
     }
-
     public void setUserId(final String _userId) {
         this._userId = _userId;
     }
+
     @DynamoDBRangeKey(attributeName = "foodId")
     @DynamoDBAttribute(attributeName = "foodId")
     public String getFoodId() {
         return _foodId;
     }
-
     public void setFoodId(final String _foodId) {
         this._foodId = _foodId;
     }
+
     @DynamoDBAttribute(attributeName = "content")
     public String getContent() {
         return _content;
     }
-
     public void setContent(final String _content) {
         this._content = _content;
     }
+
     @DynamoDBAttribute(attributeName = "rating")
     public double getRating() {
         return _rating;
     }
-
     public void setRating(final double _rating) {
         this._rating = _rating;
     }
-//    @DynamoDBAttribute(attributeName = "subject")
-//    public String getSubject() { return _subject;}
 
-//    public void setSubject(final String _subject) {     this._subject = _subject; }
+    @DynamoDBAttribute(attributeName = "time")
+    public long getTime() { return _time;}
+    public void setTime(final long _time) { this._time = _time; }
 
 }
