@@ -41,6 +41,11 @@ public class SwipeImageFragment extends Fragment {
         this.item = item;
 
         foodPicture.setImageBitmap(image);
+
+        new ImageSaver(getContext()).
+                setFileName(item.getFoodId()).
+                setDirectoryName("images").
+                save(image);
     }
 
     @Nullable

@@ -22,7 +22,8 @@
             android:layout_marginRight="15dp"
             android:ellipsize="end"
             android:singleLine="false"
-            android:layout_toRightOf="@+id/hollow_circle" />
+            android:layout_toRightOf="@+id/hollow_circle"
+            android:maxLines="2"/>
     <TextView
         android:id="@+id/rname"
         android:layout_width="wrap_content"

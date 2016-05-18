@@ -7,11 +7,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
 
 /**
  * Created by pokeforce on 4/24/16.
@@ -95,7 +98,11 @@ public class AboutFoodActivity extends AppCompatActivity {
         }
     }
 
-    public void backArrow (View view){
+    public void backArrow (View view) {
+        // delete from internal storage
+        File dir = getFilesDir();
+        File file = new File(dir, item.getFoodId());
+        boolean deleted = file.delete();
         super.onBackPressed();
     }
 

@@ -100,7 +100,8 @@
                         android:allowUndo="false"
                         android:alpha="0.7"
                         android:textSize="15sp"
-                        android:ellipsize="end" />
+                        android:ellipsize="end"
+                        />
                 </FrameLayout>
 
             </RelativeLayout>
