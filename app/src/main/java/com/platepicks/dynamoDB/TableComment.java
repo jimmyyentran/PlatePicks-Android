@@ -61,7 +61,7 @@ public class TableComment {
 
     }
 
-    public static void getCommentsFromFoodID(String foodId) {
+    public static List<CommentDO> getCommentsFromFoodID(String foodId) {
         Log.d(LOG_TAG, "Getting the comments from foodId");
 
         PaginatedScanList<CommentDO> results;
@@ -86,11 +86,6 @@ public class TableComment {
 
         // Execute Scan
         results = mapper.scan(CommentDO.class, scanExpression);
-        if (results != null) {
-            for (CommentDO returnComment : results){
-                System.out.println(returnComment.getContent());
-            }
-        }
-
+        return results;
     }
 }

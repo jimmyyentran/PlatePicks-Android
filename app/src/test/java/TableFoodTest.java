@@ -58,6 +58,15 @@ public class TableFoodTest {
         updateDislike("gAdqUpIbkuaYFyzfIAyjSg");
     }
 
+    @Test
+    public void LikeFoodWithInvalidFoodIDTest(){
+        likeFood("InvalidID123");
+    }
+
+    @Test
+    public void DisLikeFoodWithInvalidFoodIDTest(){
+        dislikeFood("InvalidID123");
+    }
 
     public void getSampleData(String restaurantId){
         RestaurantDO itemToGet;

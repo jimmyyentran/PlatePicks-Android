@@ -15,12 +15,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.platepicks.dynamoDB.TableRestaurant.getRestaurantInfo;
+
 /**
  * Created by jimmytran on 5/15/16.
  */
 public final class TableFood {
     private static final String LOG_TAG = TableFood.class.getSimpleName();
-
 
     /*
     * Query the dabase and return a FoodReceive
@@ -45,7 +46,6 @@ public final class TableFood {
     * private String _restaurantName;
     * private String _state;
     * */
-
     public static FoodReceive getFood (String foodId){
         final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
         FoodDO foodToGet;
@@ -66,21 +66,64 @@ public final class TableFood {
         return new FoodReceive(foodId, loc, foodName, myURL);
     }
 
-    public static Location getRestaurantInfo (String restId){
+    /**
+     * Increase 'like' attribute by 1. If food does not exist, add it to database
+     * @param food The object to be increased
+     */
+    public static void likeFood (FoodReceive food){
+        Log.d(LOG_TAG, "Inserting like!");
         final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
-        RestaurantDO restaurantToGet;
-        restaurantToGet = mapper.load(RestaurantDO.class, restId);
 
-        //get information to construct Location object
-        String city = restaurantToGet.getCity();
-        String restaurantName = restaurantToGet.getRestaurantName();
-        String postalCode = String.valueOf(restaurantToGet.getPostalCode());
-        String state = restaurantToGet.getState();
-        List<String> address = restaurantToGet.getAddress();
+        FoodDO foodToGet = null;
+        try {
+            foodToGet = mapper.load(FoodDO.class, food.getFood_id());
+        } catch (final AmazonClientException ex) {
+            Log.d(LOG_TAG, "The foodId does not exist, attempting to add to database");
+            //TODO
+        }
+        double likes = foodToGet.getLike();
+        likes += 1.0;
+        foodToGet.setLike(likes);
 
-        return new Location(city, restaurantName, postalCode, state, address);
+        AmazonClientException lastException = null;
 
+        try {
+            mapper.save(foodToGet);
+        } catch (final AmazonClientException ex) {
+            Log.d(LOG_TAG,"Failed saving item batch: " + ex.getMessage());
+            lastException = ex;
+        }
 
+        if (lastException != null) {
+//            // Re-throw the last exception encountered to alert the user.
+            throw lastException;
+        }
+
+        Log.d(LOG_TAG,"Insert like successful");
+    }
+
+    public static void insertFood(FoodReceive food){
+        Log.d(LOG_TAG, "Inserting: " + food.getName());
+        final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
+        final FoodDO firstItem = new FoodDO();
+
+        firstItem.setFoodId(food.getFood_id());
+//        firstItem.setRestaurantId(food.getLocation().get);
+        AmazonClientException lastException = null;
+
+        try {
+            mapper.save(firstItem);
+        } catch (final AmazonClientException ex) {
+            Log.d(LOG_TAG,"Failed saving item batch: " + ex.getMessage());
+            lastException = ex;
+        }
+
+        if (lastException != null) {
+            // Re-throw the last exception encountered to alert the user.
+            throw lastException;
+        }
+
+        Log.d(LOG_TAG, "Insert successful");
     }
 
     /*
@@ -88,11 +131,8 @@ public final class TableFood {
     * pull current value first, increase by 1, then push
     * Log if successful
     * */
-
     public static void likeFood (String foodId){
-//        Log.d(LOG_TAG, "Like food update successful: " + foodId);
-
-        System.out.println("Inserting like!");
+        Log.d(LOG_TAG, "Inserting like!");
         final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
 
         FoodDO foodToGet;
@@ -106,7 +146,7 @@ public final class TableFood {
         try {
             mapper.save(foodToGet);
         } catch (final AmazonClientException ex) {
-            System.out.println("Failed saving item batch: " + ex.getMessage());
+            Log.d(LOG_TAG,"Failed saving item batch: " + ex.getMessage());
             lastException = ex;
         }
 
@@ -115,7 +155,7 @@ public final class TableFood {
             throw lastException;
         }
 
-        System.out.println("Insert like successful");
+        Log.d(LOG_TAG,"Insert like successful");
 
     }
 
@@ -125,13 +165,17 @@ public final class TableFood {
     * Log if successful
     * */
     public static void dislikeFood (String foodId){
-//        Log.d(LOG_TAG, "Dislike food update successful: " + foodId);
-
-        System.out.println("Inserting dislike!");
+        Log.d(LOG_TAG, "Inserting dislike!");
         final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
 
-        FoodDO foodToGet;
-        foodToGet = mapper.load(FoodDO.class, foodId);
+        FoodDO foodToGet = null;
+        try {
+            foodToGet = mapper.load(FoodDO.class, foodId);
+        } catch (final AmazonClientException ex) {
+            Log.d(LOG_TAG, "The foodId does not exist:" + ex.getMessage() +
+            "\nAtempting to add the food");
+
+        }
 
         double dislikes = foodToGet.getDislike();
         dislikes += 1.0;
@@ -142,7 +186,7 @@ public final class TableFood {
         try {
             mapper.save(foodToGet);
         } catch (final AmazonClientException ex) {
-            System.out.println("Failed saving item batch: " + ex.getMessage());
+            Log.d(LOG_TAG, "Failed saving item batch: " + ex.getMessage());
             lastException = ex;
         }
 
@@ -152,8 +196,6 @@ public final class TableFood {
         }
 
         System.out.println("Insert dislike successful");
-
     }
-
 
 }
