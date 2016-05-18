@@ -38,6 +38,7 @@ public class SwipeImageFragment extends Fragment {
             foodPicture.setBackgroundColor(Color.BLUE);
             foodPicture.setImageDrawable(null);
         }
+
         this.item = item;
 
         foodPicture.setImageBitmap(image);

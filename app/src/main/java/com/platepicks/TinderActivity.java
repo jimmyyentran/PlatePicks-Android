@@ -1,5 +1,6 @@
 package com.platepicks;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -53,10 +54,10 @@ public class TinderActivity extends AppCompatActivity
     /* Local TextView variable to handle list notification number*/
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
 
-
     // View Pager for swiping
     CustomViewPager imagePager;
 
+    // Data
     ArrayList<ListItemClass> data = new ArrayList<>();
     int cnt = 1; // used for notification count
 
@@ -75,15 +76,33 @@ public class TinderActivity extends AppCompatActivity
         newItem.setFoodName(foodName);
         newItem.setRestaurantName("test_restaurant");
         newItem.setRestaurantAddress("test_address");
+        newItem.setClicked(1);
         return newItem;
     }
 
     /* Drawer declaration */
     public android.support.v4.widget.DrawerLayout my_drawer = null;
 
+    /* onActivityResult() */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case (1) :
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    this.data = data.getParcelableArrayListExtra("gohead");
+                }
+                break;
+            }
+        }
+    }
+
     /* onCreate():
-     * First function called by Android when creating an activity
-     * */
+         * First function called by Android when creating an activity
+         * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -321,6 +340,14 @@ public class TinderActivity extends AppCompatActivity
                     fancy_image.setImageDrawable(mainPageFragment.getFoodPicture().getDrawable());
 
                     /* create ListItemClass object passed into LikedListActivity */
+
+                    // if we haven't moved to LikedList yet
+                    if (getIntent().hasExtra("gohead"))
+                    {
+                        data = getIntent().getParcelableArrayListExtra("gohead");
+                        Log.d("hello", "i'm getting here");
+                    }
+
                     ListItemClass toAdd = listItems.get(0);
 
                     // store "yes" bitmap in internal storage
@@ -416,7 +443,7 @@ public class TinderActivity extends AppCompatActivity
 
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", data);
-        TinderActivity.this.startActivity(intent);
+        startActivityForResult(intent, 1);
 
         /* Heart is empty again */
         notification_number.setVisibility(View.GONE);

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +21,24 @@ import java.util.ArrayList;
  */
 public class ListAdapter extends ArrayAdapter<ListItemClass> {
     private Context mCtx; //<-- declare a Context reference
-    ArrayList<ListItemClass> users;
+    ArrayList<ListItemClass> data;
+    private int selectedIndex;
 
-    public ListAdapter(Context context, ArrayList<ListItemClass> users) {
-        super(context, 0, users);
+
+    public ListAdapter(Context context, ArrayList<ListItemClass> data) {
+        super(context, 0, data);
         mCtx = context; //<-- fill it with the Context you are passed
-        this.users = users;
+        this.data = data;
+        selectedIndex = -1;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        int pos = data.size() - position - 1;
 
         // Get the data item for this position
-        ListItemClass item = getItem(users.size() - position - 1);
+        ListItemClass item = getItem(pos);
 
         // font stuff
         String fontPath = "fonts/Hamburger_Heaven.TTF";
@@ -43,6 +48,7 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.likeditem_custom, parent, false);
         }
+
 
         // Lookup view for data population
         TextView fname = (TextView) convertView.findViewById(R.id.fname);
@@ -55,7 +61,6 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         // highlight if new food
         if (!item.isClicked()) {
             fname.setShadowLayer(24, 0, 0, Color.YELLOW);
-            item.setClicked(0);
         }
         else {}
 
