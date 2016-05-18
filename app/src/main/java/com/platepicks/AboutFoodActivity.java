@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,6 +25,9 @@ import android.widget.TableLayout;
 import android.widget.ImageView;
 
 import android.widget.TextView;
+
+import com.platepicks.dynamoDB.TableComment;
+
 import static com.platepicks.dynamoDB.TableComment.insertComment;
 
 import org.w3c.dom.Text;
@@ -32,6 +36,8 @@ import org.w3c.dom.Text;
  * Created by pokeforce on 4/24/16.
  */
 public class AboutFoodActivity extends AppCompatActivity {
+
+    ListItemClass item = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Basic setup of which layout we want to use (aboutfood) and toolbar (set as "action bar"
@@ -39,7 +45,7 @@ public class AboutFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aboutfood);
 
-        ListItemClass item = getIntent().getParcelableExtra("key2");
+        item = getIntent().getParcelableExtra("key2");
 
         /* set custom fonts */
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
@@ -56,9 +62,32 @@ public class AboutFoodActivity extends AppCompatActivity {
         TextView food = (TextView) findViewById(R.id.food_name);
         food.setText(item.getFoodName());
 
-        TextView address = (TextView) findViewById(R.id.street);
-        address.setTypeface(quicksand);
-        address.setText(item.getRestaurantAddress());
+        TextView street = (TextView) findViewById(R.id.street);
+        TextView city = (TextView) findViewById(R.id.city_state);
+        TextView zip = (TextView) findViewById(R.id.zip_code);
+
+        String whole_address = item.getRestaurantAddress();
+
+        int comma_count = 0;
+        for(int i=0; i<whole_address.length(); ++i){
+            char x = whole_address.charAt(i);
+            if(x == ','){
+                ++comma_count;
+            }
+        }
+
+        if(comma_count <= 2){
+            street.setText(whole_address.split("\\,")[0]);
+            city.setText(whole_address.split("\\, ")[1]);
+            zip.setText(whole_address.split("\\, ")[2]);
+        }
+        else{
+            street.setText(whole_address.split("\\,")[0] + ',' + whole_address.split("\\,")[1]);
+            city.setText(whole_address.split("\\, ")[2]);
+            zip.setText(whole_address.split("\\, ")[3]);
+        }
+
+
         /*tmp1 = (TextView) findViewById(R.id.city_state);
         tmp1.setTypeface(quicksand);
         tmp1 = (TextView) findViewById(R.id.zip_code);
@@ -114,13 +143,18 @@ public class AboutFoodActivity extends AppCompatActivity {
 
     public void openCommentInput (View view) {
         LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
-        if(tmp.getVisibility() == view.GONE)
+        EditText edit = (EditText) findViewById((R.id.input_box));
+        if(tmp.getVisibility() == view.GONE) {
+            edit.setMaxLines(6);
+            edit.setVerticalScrollBarEnabled(true);
             tmp.setVisibility(view.VISIBLE);
+            edit.requestFocus();
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
         else
             tmp.setVisibility(view.GONE);
 
         /* Hide the soft keyboard if necessary */
-        EditText edit = (EditText) findViewById((R.id.input_box));
         InputMethodManager mgr = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow(edit.getWindowToken(),0);
 
@@ -160,7 +194,7 @@ public class AboutFoodActivity extends AppCompatActivity {
         TextView tmp1 = (TextView)findViewById(R.id.input_box);
         tmp1.setText("");
 
-        insertComment("Foodie_93", "", x.getText().toString());
+        new TableComment().execute("Foodie_93", item.getFoodId(), x.getText().toString());
     }
 
 }

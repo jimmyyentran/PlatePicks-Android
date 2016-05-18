@@ -1,5 +1,6 @@
 package com.platepicks.dynamoDB;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.amazonaws.AmazonClientException;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * Created by alyza on 5/17/16.
  */
-public class TableComment {
+public class TableComment extends AsyncTask<String, Void, Void> {
 
     public static void insertComment(String userId, String foodId, String content) throws AmazonClientException {
         System.out.println("Inserting comment");
@@ -47,5 +48,11 @@ public class TableComment {
 //        CommentToGet = mapper.load(CommentDO.class, userId);
 //        System.out.println("Got comment: " + CommentToGet.getContent());
 
+    }
+
+    @Override
+    protected Void doInBackground(String... params) {
+        insertComment(params[0], params[1], params[2]);
+        return null;
     }
 }
