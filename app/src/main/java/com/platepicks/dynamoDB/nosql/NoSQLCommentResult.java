@@ -156,8 +156,8 @@ public class NoSQLCommentResult implements NoSQLResult {
         foodIdValueTextView.setText(result.getFoodId());
         contentKeyTextView.setText("content");
         contentValueTextView.setText(result.getContent());
-        subjectKeyTextView.setText("subject");
-        subjectValueTextView.setText(result.getSubject());
+//        subjectKeyTextView.setText("subject");
+//        subjectValueTextView.setText(result.getSubject());
         return layout;
     }
 }

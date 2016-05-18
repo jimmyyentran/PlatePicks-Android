@@ -11,7 +11,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static com.platepicks.dynamoDB.TableFood.dislikeFood;
 import static com.platepicks.dynamoDB.TableFood.getFood;
+import static com.platepicks.dynamoDB.TableFood.likeFood;
 
 /**
  * Created by alyza on 5/16/16.
@@ -51,7 +53,9 @@ public class TableFoodTest {
 
     @Test
     public void TableFoodTest(){
-        getFoodName("_icxSHw7vkV7gbd-Oi2XWQ");
+//        getFoodName("_icxSHw7vkV7gbd-Oi2XWQ");
+        updateLike("gAdqUpIbkuaYFyzfIAyjSg");
+        updateDislike("gAdqUpIbkuaYFyzfIAyjSg");
     }
 
 
@@ -77,6 +81,12 @@ public class TableFoodTest {
         System.out.println("restaurant name: " + loc.getName());
         System.out.println("restaurant postal code: " + loc.getPostal_code());
         System.out.println("restaurant state: " + loc.getState());
+    }
+    public void updateLike(String foodId){
+        likeFood(foodId);
+    }
+    public void updateDislike(String foodId){
+        dislikeFood(foodId);
     }
 
 

@@ -18,7 +18,7 @@ public class CommentDO {
     private String _foodId;
     private String _content;
     private double _rating;
-    private String _subject;
+//    private String _subject;
 
     @DynamoDBHashKey(attributeName = "userId")
     @DynamoDBAttribute(attributeName = "userId")
@@ -54,13 +54,9 @@ public class CommentDO {
     public void setRating(final double _rating) {
         this._rating = _rating;
     }
-    @DynamoDBAttribute(attributeName = "subject")
-    public String getSubject() {
-        return _subject;
-    }
+//    @DynamoDBAttribute(attributeName = "subject")
+//    public String getSubject() { return _subject;}
 
-    public void setSubject(final String _subject) {
-        this._subject = _subject;
-    }
+//    public void setSubject(final String _subject) {     this._subject = _subject; }
 
 }

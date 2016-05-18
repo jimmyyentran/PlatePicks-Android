@@ -483,8 +483,8 @@ public class NoSQLTableComment extends NoSQLTableBase {
         firstItem.setFoodId(DEMO_SORT_VALUE);
         firstItem.setContent(
             SampleDataGenerator.getRandomSampleString("content"));
-        firstItem.setSubject(
-            SampleDataGenerator.getRandomSampleString("subject"));
+//        firstItem.setSubject(
+//            SampleDataGenerator.getRandomSampleString("subject"));
         AmazonClientException lastException = null;
 
         try {
@@ -500,7 +500,7 @@ public class NoSQLTableComment extends NoSQLTableBase {
             item.setUserId(cognitoIdentityId);
             item.setFoodId(SampleDataGenerator.getRandomSampleString("foodId"));
             item.setContent(SampleDataGenerator.getRandomSampleString("content"));
-            item.setSubject(SampleDataGenerator.getRandomSampleString("subject"));
+//            item.setSubject(SampleDataGenerator.getRandomSampleString("subject"));
 
             items[count] = item;
         }
