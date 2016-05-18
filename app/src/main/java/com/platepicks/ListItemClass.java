@@ -15,7 +15,7 @@ public class ListItemClass implements Parcelable {
     private String restaurantName;
     private String restaurantAddress;
     private String imageUrl;
-    private int clicked = 0;
+    private int clicked = 0; // starts out false
 
     // member functions
     public String getFoodId() {return foodId;}
@@ -35,8 +35,9 @@ public class ListItemClass implements Parcelable {
     public void setRestaurantAddress(String restaurantAddress) {this.restaurantAddress = restaurantAddress;}
     public String getImageUrl() {return imageUrl;}
     public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
+
     public boolean isClicked() {
-        if (clicked == 1)
+        if (clicked == 1) // true
             return true;
         else return false;
     }

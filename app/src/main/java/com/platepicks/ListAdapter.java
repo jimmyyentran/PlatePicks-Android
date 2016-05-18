@@ -24,20 +24,18 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
     public ListAdapter(Context context, ArrayList<ListItemClass> users) {
         super(context, 0, users);
         mCtx = context; //<-- fill it with the Context you are passed
-
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        // get font
-        String fontPath = "fonts/Hamburger_Heaven.TTF";
-
-        // Loading Font Face
-        Typeface tf = Typeface.createFromAsset(mCtx.getAssets(), fontPath);
 
         // Get the data item for this position
         ListItemClass item = getItem(position);
+
+        // font stuff
+        String fontPath = "fonts/Hamburger_Heaven.TTF";
+        Typeface tf = Typeface.createFromAsset(mCtx.getAssets(), fontPath);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -49,6 +47,13 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         TextView rname = (TextView) convertView.findViewById(R.id.rname);
         ImageView img = (ImageView) convertView.findViewById(R.id.food_circle);
 
+        // set font
+        fname.setTypeface(tf);
+
+        // highlight if new food
+        if (item.isClicked()) {
+            fname.setShadowLayer(24, 0, 0, Color.YELLOW);
+        }
         // Populate the data into the template view using the data object
         fname.setText(item.getFoodName());
         rname.setText(item.getRestaurantName());
@@ -59,17 +64,6 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
                 load();
 
         img.setImageBitmap(RotateBitmap(bitmap, 180));
-
-
-        // Additional style
-        fname.setShadowLayer(24, 0, 0, Color.YELLOW);
-
-       // byte[] byteArray = item.getFoodImage();
-      //  Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-       // img.setImageBitmap(bmp);
-
-        // set font
-        fname.setTypeface(tf);
 
         // Return the completed view to render on screen
         return convertView;

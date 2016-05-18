@@ -319,10 +319,8 @@ public class TinderActivity extends AppCompatActivity
                     /* move liked image into fancy button */
                     ImageView fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
                     fancy_image.setImageDrawable(mainPageFragment.getFoodPicture().getDrawable());
-                    //fancy_image.setBackgroundResource();
-                    String name = "Food " + cnt;
 
-                    //ListItemClass toAdd = createListItem(name);
+                    /* create ListItemClass object passed into LikedListActivity */
                     ListItemClass toAdd = listItems.get(0);
 
                     // store "yes" bitmap in internal storage
@@ -331,7 +329,6 @@ public class TinderActivity extends AppCompatActivity
                             setFileName(toAdd.getFoodName()).
                             setDirectoryName("images").
                             save(toSend);
-
 
                     data.add(toAdd);
                     ++cnt;
@@ -412,9 +409,14 @@ public class TinderActivity extends AppCompatActivity
 
     /* Moves to Like-List Activity */
     public void gotoList(View view) {
+        cnt = 1;
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", data);
         TinderActivity.this.startActivity(intent);
+
+        /* Heart starts out empty */
+        notification_number.setVisibility(View.GONE);
+
     }
 
     /* Opens main drawer */
