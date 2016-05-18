@@ -61,12 +61,6 @@ public class Location {
     }
     //    public void setDisplay_address(String display_address) { this.display_address = display_address; }
 
-
-<<<<<<< HEAD
-    public void setAddress(List<String> address) {
-        this.address = address;
-    }
-
     public void printLocation() {
         String fa = "";
         for (String adr : address) fa += adr + ",";
@@ -80,6 +74,4 @@ public class Location {
 
         return fa + city + " " + state + ", " + postal_code;
     }
-=======
->>>>>>> origin/dynamodb
 }

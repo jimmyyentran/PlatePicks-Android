@@ -3,6 +3,7 @@ package com.platepicks;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -51,9 +52,7 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         // Populate the data into the template view using the data object
         fname.setText(item.getFoodName());
         rname.setText(item.getRestaurantName());
-        // for bitmap
 
-        // /here context can be anything like getActivity() for fragment, this or MainActivity.this
         Bitmap bitmap = new ImageSaver(getContext()).
                 setFileName(item.getFoodName()).
                 setDirectoryName("images").
@@ -62,6 +61,8 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         img.setImageBitmap(RotateBitmap(bitmap, 180));
 
 
+        // Additional style
+        fname.setShadowLayer(24, 0, 0, Color.YELLOW);
 
        // byte[] byteArray = item.getFoodImage();
       //  Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
@@ -74,12 +75,14 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         return convertView;
     }
 
+
     public static Bitmap RotateBitmap(Bitmap source, float angle)
     {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
+
 
     /* end ListAdapter */
 }

@@ -14,25 +14,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
 
+import com.platepicks.ListItemClass;
+
 /**
  * Created by pokeforce on 5/6/16.
  */
 public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitmap>> {
-//    String[] testArray = {
-//    "http://s3-media1.fl.yelpcdn.com/bphoto/oYEqKGlXLqyz9eB0nOlJpw/o.jpg",
-//            "http://s3-media2.fl.yelpcdn.com/bphoto/pwdLeRw0YGp48M8ZjCXrsA/o.jpg",
-//            "http://s3-media4.fl.yelpcdn.com/bphoto/Zh-oY7L5i4GKggt1fmJNZg/o.jpg",
-//            "http://s3-media1.fl.yelpcdn.com/bphoto/lFwxOdrokRYKT33PVW0rJQ/o.jpg",
-//            "http://s3-media3.fl.yelpcdn.com/bphoto/F1_rPJaEypsYMhYeuqq__g/o.jpg",
-//            "http://s3-media1.fl.yelpcdn.com/bphoto/NwbJkYOgBqOc4OAPDwTo5w/o.jpg",
-//            "http://s3-media4.fl.yelpcdn.com/bphoto/JaVpbHJTRHTKi2VqrUxsTw/o.jpg",
-//            "http://s3-media3.fl.yelpcdn.com/bphoto/z6wPUKX06ofmaKwqqcONAw/o.jpg",
-//            "http://s3-media1.fl.yelpcdn.com/bphoto/zcda10Pklt4LLGyjkw2r3Q/o.jpg",
-//            "http://s3-media3.fl.yelpcdn.com/bphoto/KlbsVMic2T5bkXqZtfbZGQ/o.jpg"};
-
-    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);  // In bytes
-    final int limitMemory = maxMemory / 8;                                  // Use 1/8 of max memory
-    int currentMemUsed = 0;
+    final int maxMemory = (int) (Runtime.getRuntime().maxMemory());  // In bytes
+    final int limitMemory = maxMemory / 8;                           // Use 1/8 of max memory
     int maxHeight, maxWidth;
     BitmapFactory.Options options;
 
@@ -40,19 +29,25 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
     public GetImagesAsyncTask(ImageLoaderInterface caller, int screenHeight, int screenWidth) {
         this.caller = caller;
-        maxHeight = screenHeight;
-        maxWidth = screenWidth;
+
+        // Memory optimization, 3/4 the width/height of the imageView
+        maxHeight = (screenHeight * 3) / 4;
+        maxWidth = (screenWidth * 3) / 4;
     }
 
     @Override
     protected LinkedList<Bitmap> doInBackground(Object... params) {
+        int currentMemUsed = 0;
         options = new BitmapFactory.Options();
         LinkedList<Bitmap> images = new LinkedList<>();
 
-        for (Object url : params) {
+        for (Object item : params) {
 //        for (Object url : testArray) {
-            Bitmap b = downloadImage((String) url);
+            ListItemClass ref = (ListItemClass) item;
+
+            Bitmap b = downloadImage(ref.getImageUrl());
             images.add(b);
+            ref.setDownloaded(true);
 
             // Size in terms of memory
             int bytes;
@@ -63,7 +58,9 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
             // Add to total amount
             currentMemUsed += bytes;
-            Log.d("GetImagesAsyncTask", "Bytes: " + bytes);
+            Log.d("GetImagesAsyncTask", "Bytes: " + bytes + " " + ref.getFoodName());
+
+            if (currentMemUsed >= limitMemory) break;
         }
 
         return images;
@@ -132,7 +129,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
             // Resulting sample size is what we use to shrink image
             options.inSampleSize = sampleSize;
 
-            Log.d("GetImagesAsyncTask", "width: " + scaledWidth + ", height: " + scaledHeight);
+            Log.d("GetImagesAsyncTask", "width: " + scaledWidth + ", height: " + scaledHeight + " " + url);
 
             // Decoding image from data to return
             options.inJustDecodeBounds = false;

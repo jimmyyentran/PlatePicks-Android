@@ -13,6 +13,7 @@ import android.view.MotionEvent;
  * Useful: http://developer.android.com/training/gestures/viewgroup.html */
 public class CustomViewPager extends ViewPager {
     AnimationStateListener listener;
+    boolean canSwipe = true;
 
     public CustomViewPager(Context context) {
         super(context);
@@ -34,12 +35,40 @@ public class CustomViewPager extends ViewPager {
      * Called before onTouchEvent(). True = intercept & use our onTouchEvent(). False = default. */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        /* If swipe is disabled, do not intercept touch. */
+        if (!canSwipe)
+            return false;
+
+        /* If it's not first item or first item is not stable, do not react to swipe (intercept). */
         if (getCurrentItem() != 1 || listener.state != ViewPager.SCROLL_STATE_IDLE)
             return true;
 
         /* Do not intercept event for the case of the touch gesture being complete (cancel or up),
          * or the case that the current page is the tinder image */
         return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    public void setCurrentItem(int item) {
+        // If swipe is disabled (and front page not visible), do not change item
+        if (canSwipe || getCurrentItem() != 1)
+            super.setCurrentItem(item);
+    }
+
+    @Override
+    public void setCurrentItem(int item, boolean smoothScroll) {
+        // If swipe is disabled (and front page not visible), do not change item
+        if (canSwipe || getCurrentItem() != 1)
+            super.setCurrentItem(item, smoothScroll);
+    }
+
+    /* setSwiping(): Enable or disable swiping */
+    public void setSwiping(boolean enable) {
+        this.canSwipe = enable;
+    }
+
+    public boolean getSwiping() {
+        return this.canSwipe;
     }
 
     /* onTouchEvent(): Handle a touch event. Ignore events during a swipe animation.

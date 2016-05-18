@@ -1,6 +1,11 @@
 package com.platepicks;
 
+
 import android.content.Context;
+
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +15,14 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
+
+import android.widget.ImageView;
+
 import android.widget.TextView;
 import static com.platepicks.dynamoDB.TableComment.insertComment;
 
@@ -30,6 +39,8 @@ public class AboutFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aboutfood);
 
+        ListItemClass item = getIntent().getParcelableExtra("key2");
+
         /* set custom fonts */
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
         Typeface archistico_bold = Typeface.createFromAsset(getAssets(), "fonts/Archistico_Bold.ttf");
@@ -40,15 +51,28 @@ public class AboutFoodActivity extends AppCompatActivity {
 
         TextView restaurant = (TextView) findViewById(R.id.restaurant_name);
         restaurant.setTypeface(archistico_bold);
+        restaurant.setText(item.getRestaurantName());
 
         TextView food = (TextView) findViewById(R.id.food_name);
-        TextView tmp1 = (TextView) findViewById(R.id.street);
-        tmp1.setTypeface(quicksand);
-        tmp1 = (TextView) findViewById(R.id.city_state);
+        food.setText(item.getFoodName());
+
+        TextView address = (TextView) findViewById(R.id.street);
+        address.setTypeface(quicksand);
+        address.setText(item.getRestaurantAddress());
+        /*tmp1 = (TextView) findViewById(R.id.city_state);
         tmp1.setTypeface(quicksand);
         tmp1 = (TextView) findViewById(R.id.zip_code);
         tmp1.setTypeface(quicksand);
-        food.setTypeface(quicksand);
+        food.setTypeface(quicksand);*/
+
+        // Food image
+        ImageView img = (ImageView) findViewById(R.id.about_image);
+        Bitmap bitmap = new ImageSaver(AboutFoodActivity.this).
+                setFileName(item.getFoodName()).
+                setDirectoryName("images").
+                load();
+
+        img.setImageBitmap(bitmap);
 
 
         /* handle font size for restaurant name */
@@ -86,6 +110,7 @@ public class AboutFoodActivity extends AppCompatActivity {
     public void backArrow (View view){
         super.onBackPressed();
     }
+
 
     public void openCommentInput (View view) {
         LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
@@ -137,4 +162,5 @@ public class AboutFoodActivity extends AppCompatActivity {
 
         insertComment("Foodie_93", "", x.getText().toString());
     }
+
 }
