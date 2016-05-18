@@ -2,6 +2,7 @@ package com.platepicks.dynamoDB;
 
 import android.util.Log;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.platepicks.dynamoDB.nosql.FoodDO;
@@ -90,6 +91,32 @@ public final class TableFood {
 
     public static void likeFood (String foodId){
 //        Log.d(LOG_TAG, "Like food update successful: " + foodId);
+
+        System.out.println("Inserting like!");
+        final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
+
+        FoodDO foodToGet;
+        foodToGet = mapper.load(FoodDO.class, foodId);
+        double likes = foodToGet.getLike();
+        likes += 1.0;
+        foodToGet.setLike(likes);
+
+        AmazonClientException lastException = null;
+
+        try {
+            mapper.save(foodToGet);
+        } catch (final AmazonClientException ex) {
+            System.out.println("Failed saving item batch: " + ex.getMessage());
+            lastException = ex;
+        }
+
+        if (lastException != null) {
+//            // Re-throw the last exception encountered to alert the user.
+            throw lastException;
+        }
+
+        System.out.println("Insert like successful");
+
     }
 
     /*
@@ -99,6 +126,33 @@ public final class TableFood {
     * */
     public static void dislikeFood (String foodId){
 //        Log.d(LOG_TAG, "Dislike food update successful: " + foodId);
+
+        System.out.println("Inserting dislike!");
+        final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
+
+        FoodDO foodToGet;
+        foodToGet = mapper.load(FoodDO.class, foodId);
+
+        double dislikes = foodToGet.getDislike();
+        dislikes += 1.0;
+        foodToGet.setDislike(dislikes);
+
+        AmazonClientException lastException = null;
+
+        try {
+            mapper.save(foodToGet);
+        } catch (final AmazonClientException ex) {
+            System.out.println("Failed saving item batch: " + ex.getMessage());
+            lastException = ex;
+        }
+
+        if (lastException != null) {
+//            // Re-throw the last exception encountered to alert the user.
+            throw lastException;
+        }
+
+        System.out.println("Insert dislike successful");
+
     }
 
 

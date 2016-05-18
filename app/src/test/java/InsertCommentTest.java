@@ -11,6 +11,7 @@ import com.platepicks.dynamoDB.nosql.CommentDO;
 import com.platepicks.dynamoDB.nosql.ListDO;
 import com.platepicks.dynamoDB.nosql.SampleDataGenerator;
 
+import static com.platepicks.dynamoDB.TableComment.insertSampleData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,31 +36,10 @@ public class InsertCommentTest {
     @Test
     public void DynamodbInsertToFoodTest() {
         // Start all test input as 'test' so it can be easily removed from table later
-        insertSampleData("testUserId", "testFoodID");
+        insertSampleData("testUserId1", "testFoodID1", "testCommentContent1");
+
     }
 
-    public void insertSampleData(String userId, String foodId) throws AmazonClientException {
-        System.out.println("Inserting Sample data");
-        final CommentDO firstItem = new CommentDO();
-
-        firstItem.setUserId(userId);
-        firstItem.setFoodId(foodId);
-        AmazonClientException lastException = null;
-
-        try {
-            mapper.save(firstItem);
-        } catch (final AmazonClientException ex) {
-            System.out.println("Failed saving item batch: " + ex.getMessage());
-            lastException = ex;
-        }
-
-        if (lastException != null) {
-            // Re-throw the last exception encountered to alert the user.
-            throw lastException;
-        }
-
-        System.out.println("Insert successful");
-    }
 }
 
 
