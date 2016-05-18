@@ -62,7 +62,7 @@ public class LikedListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                gotoAbout(view);
+                gotoAbout(i);
             }
         });
 
@@ -71,26 +71,11 @@ public class LikedListActivity extends AppCompatActivity {
 
     }
 
-    public void gotoAbout(View view) {
-        TextView keyFood = (TextView) view.findViewById(R.id.fname);
-        String foo = keyFood.getText().toString();
-        item = lookUp(foo, data);
-
+    public void gotoAbout(int index) {
+        item = data.get(data.size() - index - 1);
         Intent intent = new Intent(LikedListActivity.this, AboutFoodActivity.class);
         intent.putExtra("key2", item);
         LikedListActivity.this.startActivity(intent);
-    }
-
-    public ListItemClass lookUp (String key, ArrayList<ListItemClass> array)
-    {
-        for (int i = 0; i < array.size(); ++i) {
-            Log.d(key, array.get(i).getFoodName());
-            if ( (array.get(i).getFoodName().equals(key))) {
-                Log.d(key, array.get(i).getFoodName());
-                return array.get(i);
-            }
-        }
-        return array.get(0);
     }
 
     public void backArrow (View view){
