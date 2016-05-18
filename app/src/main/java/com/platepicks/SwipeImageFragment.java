@@ -41,7 +41,7 @@ public class SwipeImageFragment extends Fragment {
             // Put placeholder indicating that more images are loading
             if (image == null) {
                 foodPicture.setImageDrawable(null);
-//                placeholder.setVisibility(View.VISIBLE);
+                placeholder.setVisibility(View.VISIBLE);
                 this.item = null;
             }
             // Change picture
