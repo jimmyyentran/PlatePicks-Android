@@ -99,6 +99,7 @@ public class TinderActivity extends AppCompatActivity
     boolean requestMade = false;
 
     int limit = 4;      // Number of businesses returned per request
+    int foodLimit = 3;  // Number of food per business
     int offset = 0;     // Number of businesses to offset by in yelp request
     String gpsLocation; // "Latitude, Longitude"
 
@@ -254,8 +255,6 @@ public class TinderActivity extends AppCompatActivity
         if (!categoryFilter.isEmpty())
             categoryFilter = categoryFilter.substring(0, categoryFilter.length() - 1);
 
-        Log.d("TinderActivity", categoryFilter);
-
 //        return "tradamerican," +
 //                "chinese";
 //                "mexican," +
@@ -315,8 +314,6 @@ public class TinderActivity extends AppCompatActivity
 
         // Put images into list of images
         imageList.addAll(images);
-        mainPageFragment.changeFood(images.get(0), listItems.get(0));
-        requestMade = false;
 
         // Remove placeholder if one is made
         if (placeholderIsPresent) {
@@ -326,10 +323,13 @@ public class TinderActivity extends AppCompatActivity
             } else {
                 Toast.makeText(this, "Request failed", Toast.LENGTH_SHORT).show();
             }
+
+            placeholderIsPresent = false;
         }
+        requestMade = false;
         accessList.unlock();
 
-        // Remove splash screen and post first pic
+        // Remove splash] screen and post first pic
         if (firstRequest) {
             new PostFirstImageTask().execute();
             firstRequest = false;
@@ -344,8 +344,6 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d("TinderActivity", "Connected!");
-
         // If permission not granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("TinderActivity", "Not allowed...");
@@ -367,7 +365,6 @@ public class TinderActivity extends AppCompatActivity
         if (mLastLocation != null) {
             gpsLocation = String.valueOf(mLastLocation.getLatitude()) + ", "
                     + String.valueOf(mLastLocation.getLongitude());
-            Log.d("TinderActivity", gpsLocation);
         } else {
             Log.e("TinderActivity", "No location!");
             gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside. Should ask for permission/ask for place.
@@ -386,7 +383,7 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("TinderActivity", connectionResult.getErrorMessage());
+        Log.e("TinderActivity", connectionResult.getErrorMessage());
     }
 
     @Override
@@ -512,7 +509,6 @@ public class TinderActivity extends AppCompatActivity
                             setDirectoryName("images").
                             save(toSend);
 
-
                     data.add(toAdd);
                     ++cnt;
                 } else {    // Dislike
@@ -523,12 +519,18 @@ public class TinderActivity extends AppCompatActivity
                 /* Changing the image while image page is out of sight */
                 /* If more images are still around */
                 if (imageList.size() > 1) {
+//                    Log.d("TinderActivity", listItems.get(1).getFoodId() + "," +
+//                            listItems.get(1).getFoodName() + "," +
+//                            listItems.get(1).getRestaurantName() + "," +
+//                            listItems.get(1).getImageUrl());
                     mainPageFragment.changeFood(imageList.get(1), listItems.get(1)); // Next image
                 }
                 /* Out of images */
                 else {
                     // FIXME: Null argument should mean placeholder
                     mainPageFragment.changeFood(null, null);
+                    imagePager.setSwiping(false);
+                    placeholderIsPresent = true;
                 }
 
                 // Either way, remove old data from list
@@ -686,7 +688,7 @@ public class TinderActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             int radius = convertMilesToMeters(rad_seekBar.getProgress());
 
-            FoodRequest req = new FoodRequest("", 3, gpsLocation, limit, radius, getAllFoodTypes(), 1, offset);
+            FoodRequest req = new FoodRequest("", foodLimit, gpsLocation, limit, radius, getAllFoodTypes(), 1, offset);
             new AWSIntegratorAsyncTask().execute("yelpApi", req, TinderActivity.this);
         }
     }
