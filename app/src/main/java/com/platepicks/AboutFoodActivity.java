@@ -5,6 +5,7 @@ import android.app.LauncherActivity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -39,6 +41,7 @@ import java.io.File;
 public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.OnCompleteListener {
 
     ListItemClass item;
+    boolean isScaled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +60,21 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         TextView bar_name = (TextView) findViewById(R.id.bar_title);
         bar_name.setTypeface(ham_heaven);
 
-        TextView restaurant = (TextView) findViewById(R.id.restaurant_name);
+        final TextView restaurant = (TextView) findViewById(R.id.restaurant_name);
+
         restaurant.setTypeface(archistico_bold);
         restaurant.setText(item.getRestaurantName());
+        restaurant.setTextSize(0);
 
         TextView food = (TextView) findViewById(R.id.food_name);
         food.setText(item.getFoodName());
 
         TextView street = (TextView) findViewById(R.id.street);
+        street.setTypeface(quicksand);
         TextView city = (TextView) findViewById(R.id.city_state);
+        city.setTypeface(quicksand);
         TextView zip = (TextView) findViewById(R.id.zip_code);
+        zip.setTypeface(quicksand);
 
         String whole_address = item.getRestaurantAddress();
 
@@ -89,13 +97,6 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
             zip.setText(whole_address.split("\\, ")[3]);
         }
 
-
-        /*tmp1 = (TextView) findViewById(R.id.city_state);
-        tmp1.setTypeface(quicksand);
-        tmp1 = (TextView) findViewById(R.id.zip_code);
-        tmp1.setTypeface(quicksand);
-        food.setTypeface(quicksand);*/
-
         // Food image
         ImageView img = (ImageView) findViewById(R.id.about_image);
         new ImageSaver(AboutFoodActivity.this).
@@ -104,20 +105,23 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                 load(img, this);
 
         /* handle font size for restaurant name */
-        int str_length = restaurant.getText().length();
+        isScaled = false;
+        final ViewTreeObserver vto = restaurant.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    restaurant.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                if(!isScaled) {
+                    LinearLayout ll = (LinearLayout) findViewById(R.id.ll_1);
+                    float width = ll.getWidth() - ll.getPaddingRight() - ll.getPaddingLeft();
+                    scaleText(restaurant, width);
+                    isScaled = true;
+                }
+            }
+        });
 
-        if(str_length <= 15){
-            restaurant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 27);
-        }
-        else if(str_length <= 25){
-            restaurant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 21);
-        }
-        else if(str_length <= 35){
-            restaurant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-        }
-        else{
-            restaurant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
-        }
 
     }
 
@@ -221,5 +225,23 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
 
         TableLayout tl = (TableLayout) findViewById(R.id.comment_list);
         tl.addView(ll);
+    }
+
+    private void scaleText (TextView s, float width) {
+        int i = 1;
+        s.setMaxLines(1);
+
+        s.measure(View.MeasureSpec.UNSPECIFIED, s.getWidth());
+
+        while(s.getMeasuredWidth() < width){
+            ++i;
+            s.setTextSize(i);
+            s.measure(View.MeasureSpec.UNSPECIFIED, s.getWidth());
+        }
+        --i;
+        s.setTextSize(i);
+
+        System.out.println("TextSize = " + Integer.toString(i));
+        System.out.println("TextView width = " + Integer.toString(s.getMeasuredWidth()));
     }
 }

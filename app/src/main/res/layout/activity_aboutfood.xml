@@ -68,7 +68,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="25dp"
-                android:paddingRight="25dp">
+                android:paddingRight="25dp"
+                android:id="@+id/ll_1">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
