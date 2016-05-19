@@ -66,11 +66,16 @@ public class AWSIntegratorTest {
         AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
         TestActivity activity  = new TestActivity();
         FoodRequest req = new FoodRequest("asian", 1, "33.7175, -117.8311", 2, 40000, "japanese", 1, 0);
-        asyncTask.execute("yelpApi", req, activity);
+        asyncTask.execute("yelpApi2_8", req, activity);
         Robolectric.flushBackgroundThreadScheduler();
         List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(activity.returnResults());
+        System.out.println("Id: " + foodReceives.get(0).getLocation().getRestaurantId());
+        System.out.println("Name: " + foodReceives.get(0).getLocation().getRestaurantName());
+        System.out.println("Category 1: " + foodReceives.get(0).getLocation().getCategory().get(0));
+        System.out.println("Longitude: " + foodReceives.get(0).getLocation().getLongitude());
         assertThat(foodReceives.isEmpty(), is(false));
     }
+
 
 //    @Test
 //    public void HelloWorldTest(){

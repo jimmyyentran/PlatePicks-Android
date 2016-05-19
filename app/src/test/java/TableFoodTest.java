@@ -13,6 +13,7 @@ import org.robolectric.annotation.Config;
 
 import static com.platepicks.dynamoDB.TableFood.dislikeFood;
 import static com.platepicks.dynamoDB.TableFood.getFood;
+import static com.platepicks.dynamoDB.TableFood.insertFood;
 import static com.platepicks.dynamoDB.TableFood.likeFood;
 
 /**
@@ -25,12 +26,6 @@ import static com.platepicks.dynamoDB.TableFood.likeFood;
 public class TableFoodTest {
 
     private final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
-
-    //Set up persistent activity
-    @Before
-    public void setUp() {
-    }
-
     //    @Test
     public void DynamodbInsertToFoodTest() {
         // Start all test input as 'test' so it can be easily removed from table later
@@ -40,6 +35,19 @@ public class TableFoodTest {
     // @Test
     public void DynamodbUpdateFoodTest(){
         //updateSampleData("testRestaurant", "testAddress");
+    }
+
+    @Test
+    public void insertFoodTest(){
+        //Make sample food item
+        FoodReceive item = new FoodReceive();
+        Location loc = new Location();
+        loc.setRestaurantId("TestRestaurantID");
+        item.setLocation(loc);
+        item.setName("TestFood");
+        item.setFood_id("TestFoodId");
+
+        insertFood(item);
     }
 
     //   @Test
@@ -52,20 +60,22 @@ public class TableFoodTest {
     }
 
     @Test
-    public void TableFoodTest(){
-//        getFoodName("_icxSHw7vkV7gbd-Oi2XWQ");
-        updateLike("gAdqUpIbkuaYFyzfIAyjSg");
-        updateDislike("gAdqUpIbkuaYFyzfIAyjSg");
+    public void likeFoodWithValidFoodIDTest(){
+        FoodReceive retreived = getFood("_icxSHw7vkV7gbd-Oi2XWQ");
+        likeFood(retreived);
     }
 
     @Test
     public void LikeFoodWithInvalidFoodIDTest(){
-        likeFood("InvalidID123");
+        FoodReceive retreived = getFood("_icxSHw7vkV7gbd-Oi2XWQ");
+        retreived.setFood_id("testingFoodLike");
+        retreived.getLocation().setRestaurantId("testRestaurantLike");
+        likeFood(retreived);
     }
 
     @Test
     public void DisLikeFoodWithInvalidFoodIDTest(){
-        dislikeFood("InvalidID123");
+//        dislikeFood("InvalidID123");
     }
 
     public void getSampleData(String restaurantId){
@@ -91,12 +101,4 @@ public class TableFoodTest {
         System.out.println("restaurant postal code: " + loc.getPostal_code());
         System.out.println("restaurant state: " + loc.getState());
     }
-    public void updateLike(String foodId){
-        likeFood(foodId);
-    }
-    public void updateDislike(String foodId){
-        dislikeFood(foodId);
-    }
-
-
 }
