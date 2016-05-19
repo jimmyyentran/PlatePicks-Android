@@ -38,7 +38,7 @@ public class TableCommentTest {
     //@Test
     public void DynamodbInsertToFoodTest() {
         // Start all test input as 'test' so it can be easily removed from table later
-        insertComment("BurritoLover", "6kNuxODLj-y9XNRACvtzqg", "Yummy hamburgers!");
+        insertComment("testUserId1", "testFoodID1", "testCommentContent1");
     }
 
     @Test

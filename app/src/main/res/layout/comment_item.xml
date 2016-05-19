@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <!-- User comment -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:layout_gravity="left"
+        android:text="I love this food!!"
+        android:maxLength="100"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/material_grey_800"
+        android:id="@+id/item_comment"
+        android:layout_marginRight="25dp" />
+
+    <!-- Username -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="- Foodie93"
+        android:textSize="12sp"
+        android:gravity="right"
+        android:textStyle="bold|italic"
+        android:id="@+id/item_username"
+        android:layout_marginTop="3dp" />
+
+
+</LinearLayout>

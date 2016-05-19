@@ -63,10 +63,32 @@ public class AWSIntegratorTest {
 
     @Test
     public void FoodRequestTest(){
+        String category = "tradamerican,newamerican," +
+                "chinese," +
+                "mexican," +
+                "japanese," +
+                "italian," +
+                "vietnamese," +
+                "thai," +
+                "indpak," +
+                "mediterranean," +
+                "korean";
+
+        String category2 = "french," +
+                "pizza," +
+                "seafood," +
+                "dimsum," +
+                "asianfusion," +
+                "sandwiches," +
+                "burgers," +
+                "hotdogs," +
+                "coffee," +
+                "breakfast_brunch";
+
         AWSIntegratorAsyncTask asyncTask = new AWSIntegratorAsyncTask();
         TestActivity activity  = new TestActivity();
-        FoodRequest req = new FoodRequest("asian", 1, "33.7175, -117.8311", 2, 40000, "japanese", 1, 0);
-        asyncTask.execute("yelpApi2_8", req, activity);
+        FoodRequest req = new FoodRequest("asian", 1, "33.7175, -117.8311", 2, 40000, category + "," + category2, 1, 0);
+        asyncTask.execute("yelpApi", req, activity);
         Robolectric.flushBackgroundThreadScheduler();
         List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(activity.returnResults());
         System.out.println("Id: " + foodReceives.get(0).getLocation().getRestaurantId());

@@ -1,5 +1,6 @@
 package com.platepicks.dynamoDB;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.amazonaws.AmazonClientException;
@@ -27,7 +28,7 @@ import java.util.TimeZone;
 /**
  * Created by alyza on 5/17/16.
  */
-public class TableComment {
+public class TableComment extends AsyncTask<String, Void, Void> {
 
     private final static String LOG_TAG = TableComment.class.getSimpleName();
 
@@ -163,5 +164,11 @@ public class TableComment {
     public static Date getDateObject(long epochTime){
         Date date = new Date(epochTime);
         return date;
+    }
+
+    @Override
+    protected Void doInBackground(String... params) {
+        insertComment(params[0], params[1], params[2]);
+        return null;
     }
 }

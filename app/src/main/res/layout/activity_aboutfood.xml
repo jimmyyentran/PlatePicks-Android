@@ -51,57 +51,63 @@
     <!--food image-->
 
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scrollView2" >
+        android:visibility="visible">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <!--hidden view for comment input-->
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp">
+            android:id="@+id/scrollView2">
 
-            <RelativeLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/food_border"
-                android:padding="5dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp">
+                android:layout_height="match_parent"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
 
-                <FrameLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#ffffff">
+                    android:background="@drawable/food_border"
+                    android:padding="5dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="8dp">
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:id="@+id/about_image"
-                        android:src="@drawable/main_screen_no_checkers"
-                        android:scaleType="centerCrop" />
-
-                    <TextView
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="The &quot;World 3-8&quot; Pizza"
-                        android:id="@+id/food_name"
-                        android:maxLines="1"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:gravity="center_horizontal"
-                        android:background="#ffffff"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:textColor="#000000"
-                        android:allowUndo="false"
-                        android:alpha="0.7"
-                        android:textSize="15sp" />
-                </FrameLayout>
+                        android:background="#ffffff">
 
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:id="@+id/about_image"
+                            android:scaleType="centerCrop" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="The &quot;World 3-8&quot; Pizza"
+                            android:id="@+id/food_name"
+                            android:maxLines="1"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_gravity="center_horizontal|bottom"
+                            android:gravity="center_horizontal"
+                            android:background="#ffffff"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:textColor="#000000"
+                            android:allowUndo="false"
+                            android:alpha="0.7"
+                            android:textSize="15sp"
+                            android:ellipsize="end" />
+                    </FrameLayout>
             </RelativeLayout>
 
             <TextView
@@ -123,62 +129,171 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/location_container">
 
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/address"
-                    android:gravity="center_vertical">
+                    android:id="@+id/location_container">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="334 Maple Ave."
-                        android:id="@+id/street"
-                        android:textSize="15sp"
-                        android:textColor="@color/material_grey_800" />
+                        android:id="@+id/address"
+                        android:gravity="center_vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Riverside, CA"
-                        android:id="@+id/city_state"
-                        android:textSize="15sp"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/material_grey_800" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="334 Maple Ave."
+                            android:id="@+id/street"
+                            android:textSize="15sp"
+                            android:textColor="@color/material_grey_800" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Riverside, CA"
+                            android:id="@+id/city_state"
+                            android:textSize="15sp"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/material_grey_800" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="92760"
+                            android:id="@+id/zip_code"
+                            android:textSize="15sp"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/material_grey_800" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="92760"
-                        android:id="@+id/zip_code"
-                        android:textSize="15sp"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/material_grey_800" />
+                        android:id="@+id/map_button" />
+
+
                 </LinearLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/map_button" />
+                    android:layout_height="1dp"
+                    android:id="@+id/imageView2"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/light_grey"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/comment_list_container">
+
+                    <Button
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="120dp"
+                        android:layout_height="25dp"
+                        android:text="Leave a comment"
+                        android:id="@+id/button"
+                        android:textSize="10dp"
+                        android:textColor="#ffffff"
+                        android:background="@color/main_red"
+                        android:onClick="openCommentInput"/>
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp"
+                        android:layout_marginTop="20dp"
+                        android:id="@+id/comment_list"></TableLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="70dp"
+                    android:id="@+id/imageView3"
+                    android:src="@drawable/alternate_logo"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:alpha="0.4" />
 
             </LinearLayout>
+        </ScrollView>
 
-            <ImageView
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:id="@+id/comment_input_field"
+            android:background="#ffffff">
+            <!--Exit Button-->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingRight="15dp"
+                android:id="@+id/exit_icon"
+                android:onClick="openCommentInput">
+
+                <!--Exit Icon's BG-->
+                <LinearLayout
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:id="@+id/exit_icon_bg"
+                    android:background="@color/main_red"/>
+
+                <!--Exit Icon's Image-->
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:id="@+id/exit_icon_fg"
+                    android:background="@drawable/exit_button_2"/>
+            </FrameLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:id="@+id/imageView2"
-                android:layout_marginTop="8dp"
-                android:background="@color/light_grey"
-                android:layout_marginBottom="8dp" />
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/input_box"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginRight="65dp"
+                    android:textColor="@color/material_grey_800" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="submit"
+                    android:id="@+id/textView2"
+                    android:textAllCaps="true"
+                    android:layout_marginLeft="65dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="65dp"
+                    android:background="@color/main_red"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:onClick="submitComment"/>
+            </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </FrameLayout>
 
 
 </LinearLayout>

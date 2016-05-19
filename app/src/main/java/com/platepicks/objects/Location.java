@@ -1,5 +1,7 @@
 package com.platepicks.objects;
 
+import android.util.Log;
+
 import java.util.List;
 
 /**
@@ -90,5 +92,17 @@ public class Location {
 
     //    public void setDisplay_address(String display_address) { this.display_address = display_address; }
 
+    public void printLocation() {
+        String fa = "";
+        for (String adr : address) fa += adr + ",";
 
+        Log.d("Location", restaurant_name + ", " + city + "," + state + "," + postal_code + ": " + fa);
+    }
+
+    public String getAddressString() {
+        String fa = "";
+        for (String adr : address) fa += adr + ", ";
+
+        return fa + city + " " + state + ", " + postal_code;
+    }
 }

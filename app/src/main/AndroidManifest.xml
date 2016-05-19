@@ -22,13 +22,16 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/main_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:name="com.platepicks.Application">
+        android:name="com.platepicks.Application"
+        android:hardwareAccelerated="false">
 
         <!--The tinder-based activity (main page)-->
         <activity android:name="com.platepicks.TinderActivity"
