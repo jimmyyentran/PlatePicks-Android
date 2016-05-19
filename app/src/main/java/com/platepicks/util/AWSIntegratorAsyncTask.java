@@ -45,7 +45,7 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
     protected InvokeResult doInBackground(Object... params) {
         try {
             String json = new Gson().toJson(params[1]); //added convert to json string
-            System.out.println(json);
+//            System.out.println(json);
             callerActivity = (AWSIntegratorInterface) params[2];
             final ByteBuffer payload =
 //                    ENCODER.encode(CharBuffer.wrap((String) params[1]));
@@ -87,7 +87,7 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
             } else {
                 final ByteBuffer resultPayloadBuffer = invokeResult.getPayload();
                 final String resultPayload = DECODER.decode(resultPayloadBuffer).toString();
-                System.out.println("test:" + resultPayload);
+//                System.out.println("test:" + resultPayload);
                 callerActivity.doSomethingWithResults(resultPayload);
             }
 

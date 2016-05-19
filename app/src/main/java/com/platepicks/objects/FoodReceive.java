@@ -17,8 +17,9 @@ public class FoodReceive {
         this.location = v2;
         this.name = v3;
         this.url = v4;
-
     }
+
+    public FoodReceive(){}
     /* mutator methods */
     public void setFood_id(String food_id) {
         this.food_id = food_id;
