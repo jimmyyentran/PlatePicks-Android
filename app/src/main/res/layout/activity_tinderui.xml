@@ -546,20 +546,12 @@
                             android:layout_marginRight="30dp"
                             android:layout_marginTop="6dp">
 
-                            <com.facebook.login.widget.LoginButton
+                            <fragment
                                 android:id="@+id/login_button"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal" />
-                            <!--
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/imageView"
-                                android:src="@drawable/selector_button_facebook"
-                                android:layout_marginLeft="20dp"
-                                android:layout_gravity="center_vertical" />
-                                -->
+                                android:layout_gravity="center_horizontal"
+                                android:name="com.platepicks.LoginFragment"/>
 
                         </LinearLayout>
 
