@@ -58,13 +58,10 @@ public class AboutFoodActivity extends AppCompatActivity {
 
         // Food image
         ImageView img = (ImageView) findViewById(R.id.about_image);
-        Bitmap bitmap = new ImageSaver(AboutFoodActivity.this).
+        new ImageSaver(AboutFoodActivity.this).
                 setFileName(item.getFoodId()).
                 setDirectoryName("images").
-                load();
-
-        img.setImageBitmap(bitmap);
-
+                load(img);
 
         /* handle font size for restaurant name */
         int str_length = restaurant.getText().length();

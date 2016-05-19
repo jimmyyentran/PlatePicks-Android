@@ -64,17 +64,14 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         }
         else {}
 
-
         // Populate the data into the template view using the data object
         fname.setText(item.getFoodName());
         rname.setText(item.getRestaurantName());
 
-        Bitmap bitmap = new ImageSaver(getContext()).
+        new ImageSaver(getContext()).
                 setFileName(item.getFoodId()).
                 setDirectoryName("images").
-                load();
-
-        img.setImageBitmap(RotateBitmap(bitmap, 180));
+                load(img);
 
         // Return the completed view to render on screen
         return convertView;

@@ -87,9 +87,11 @@ public class LikedListActivity extends AppCompatActivity {
         intent.putParcelableArrayListExtra("gohead", data);
         setResult(RESULT_OK, intent);
         finish();
-        super.onBackPressed();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        backArrow(null);
+    }
 }
 
