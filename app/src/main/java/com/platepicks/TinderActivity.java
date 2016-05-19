@@ -1,6 +1,10 @@
 package com.platepicks;
 
+<<<<<<< HEAD
 import android.Manifest;
+=======
+import android.app.Activity;
+>>>>>>> linkingabout
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -46,8 +50,6 @@ import com.platepicks.util.ConvertToObject;
 import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,10 +81,10 @@ public class TinderActivity extends AppCompatActivity
     TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
 
     LinearLayout leftFoodTypes, rightFoodTypes; // 2 columns of food types
-
     // View Pager for swiping
     CustomViewPager imagePager;
 
+    // Data
     ArrayList<ListItemClass> data = new ArrayList<>();
     int cnt = 1; // used for notification count
 
@@ -117,9 +119,26 @@ public class TinderActivity extends AppCompatActivity
     /* Drawer declaration */
     public android.support.v4.widget.DrawerLayout my_drawer = null;
 
+    /* onActivityResult() */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case (1) :
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    this.data = data.getParcelableArrayListExtra("gohead");
+                }
+                break;
+            }
+        }
+    }
+
     /* onCreate():
-     * First function called by Android when creating an activity
-     * */
+         * First function called by Android when creating an activity
+         * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -323,12 +342,13 @@ public class TinderActivity extends AppCompatActivity
         // Remove placeholder if one is made
         if (placeholderIsPresent) {
             if (!imageList.isEmpty()) {
-                mainPageFragment.changeImage(imageList.get(0));
+                mainPageFragment.changeFood(images.get(0), listItems.get(0));
                 imagePager.setSwiping(true);
             } else {
                 Toast.makeText(this, "Request failed", Toast.LENGTH_SHORT).show();
             }
         }
+
         accessList.unlock();
 
         // Remove splash screen and post first pic
@@ -501,17 +521,24 @@ public class TinderActivity extends AppCompatActivity
 
                     /* move liked image into fancy button */
                     fancy_image.setImageDrawable(mainPageFragment.getFoodPicture().getDrawable());
-                    //fancy_image.setBackgroundResource();
-                    String name = "Food " + cnt;
+
+                    /* create ListItemClass object passed into LikedListActivity */
+
+                    // if we haven't moved to LikedList yet
+                    if (getIntent().hasExtra("gohead"))
+                    {
+                        data = getIntent().getParcelableArrayListExtra("gohead");
+                        Log.d("hello", "i'm getting here");
+                    }
+
+                    ListItemClass toAdd = listItems.get(0);
 
                     // store "yes" bitmap in internal storage
                     Bitmap toSend = imageList.get(0);
                     new ImageSaver(TinderActivity.this).
-                            setFileName(name).
+                            setFileName(toAdd.getFoodId()).
                             setDirectoryName("images").
                             save(toSend);
-
-                    ListItemClass toAdd = createListItem(name);
 
                     data.add(toAdd);
                     ++cnt;
@@ -528,13 +555,13 @@ public class TinderActivity extends AppCompatActivity
                             listItems.get(1).getRestaurantName() + "," +
                             listItems.get(1).getImageUrl());
 
-                    mainPageFragment.changeImage(imageList.get(1)); // Next image
+                    mainPageFragment.changeFood(imageList.get(1), listItems.get(1)); // Next image
                 }
                 /* Out of images */
                 else {
-                    mainPageFragment.changeImage(null); // Put placeholder
-                    imagePager.setSwiping(false);       // Disable swipe
-                    placeholderIsPresent = true;        // Set flag
+                    mainPageFragment.changeFood(null, null);    // Put placeholder
+                    imagePager.setSwiping(false);               // Disable swipe
+                    placeholderIsPresent = true;                // Set flag
                 }
 
                 // Either way, remove old data from list
@@ -586,9 +613,18 @@ public class TinderActivity extends AppCompatActivity
 
     /* Moves to Like-List Activity */
     public void gotoList(View view) {
+
+        /* Count starts over */
+        cnt = 1;
+
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", data);
-        TinderActivity.this.startActivity(intent);
+        startActivityForResult(intent, 1);
+
+        /* Heart is empty again */
+        if (notification_number != null)
+            notification_number.setVisibility(View.GONE);
+
     }
 
     /* Opens main drawer */

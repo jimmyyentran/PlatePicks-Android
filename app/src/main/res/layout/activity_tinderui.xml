@@ -81,8 +81,8 @@
 
                         <ImageButton
                             android:id="@+id/list_button"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="35dp"
+                            android:layout_height="match_parent"
                             android:scaleType="centerInside"
                             android:src="@drawable/list_icon_3"
                             android:background="@android:color/transparent"

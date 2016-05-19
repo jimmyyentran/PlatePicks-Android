@@ -1,11 +1,15 @@
 package com.platepicks;
 
 import android.content.Context;
+import android.app.LauncherActivity;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,14 +18,20 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+
 /**
  * Created by pokeforce on 4/24/16.
  */
-public class AboutFoodActivity extends AppCompatActivity {
+public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.OnCompleteListener {
+
+    ListItemClass item;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Basic setup of which layout we want to use (aboutfood) and toolbar (set as "action bar"
@@ -29,6 +39,8 @@ public class AboutFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aboutfood);
 
+        item = getIntent().getParcelableExtra("key2");
+        item.setClicked(1);
         /* set custom fonts */
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
         Typeface archistico_bold = Typeface.createFromAsset(getAssets(), "fonts/Archistico_Bold.ttf");
@@ -39,16 +51,26 @@ public class AboutFoodActivity extends AppCompatActivity {
 
         TextView restaurant = (TextView) findViewById(R.id.restaurant_name);
         restaurant.setTypeface(archistico_bold);
+        restaurant.setText(item.getRestaurantName());
 
         TextView food = (TextView) findViewById(R.id.food_name);
-        TextView tmp1 = (TextView) findViewById(R.id.street);
-        tmp1.setTypeface(quicksand);
-        tmp1 = (TextView) findViewById(R.id.city_state);
+        food.setText(item.getFoodName());
+
+        TextView address = (TextView) findViewById(R.id.street);
+        address.setTypeface(quicksand);
+        address.setText(item.getRestaurantAddress());
+        /*tmp1 = (TextView) findViewById(R.id.city_state);
         tmp1.setTypeface(quicksand);
         tmp1 = (TextView) findViewById(R.id.zip_code);
         tmp1.setTypeface(quicksand);
-        food.setTypeface(quicksand);
+        food.setTypeface(quicksand);*/
 
+        // Food image
+        ImageView img = (ImageView) findViewById(R.id.about_image);
+        new ImageSaver(AboutFoodActivity.this).
+                setFileName(item.getFoodId()).
+                setDirectoryName("images").
+                load(img, this);
 
         /* handle font size for restaurant name */
         int str_length = restaurant.getText().length();
@@ -82,7 +104,11 @@ public class AboutFoodActivity extends AppCompatActivity {
         }
     }
 
-    public void backArrow (View view){
+    public void backArrow (View view) {
+        // delete from internal storage
+        File dir = getFilesDir();
+        File file = new File(dir, item.getFoodId());
+        boolean deleted = file.delete();
         super.onBackPressed();
     }
 
@@ -122,16 +148,21 @@ public class AboutFoodActivity extends AppCompatActivity {
 
         /* hide the comment input field */
         LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
-        if(tmp.getVisibility() == view.VISIBLE)
+        if (tmp.getVisibility() == view.VISIBLE)
             tmp.setVisibility(view.GONE);
 
         /* Hide the soft keyboard if necessary */
         EditText edit = (EditText) findViewById((R.id.input_box));
-        InputMethodManager mgr = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(edit.getWindowToken(),0);
+        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(edit.getWindowToken(), 0);
 
         /* empty the EditText view */
-        TextView tmp1 = (TextView)findViewById(R.id.input_box);
+        TextView tmp1 = (TextView) findViewById(R.id.input_box);
         tmp1.setText("");
+    }
+
+    @Override
+    public void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId) {
+        imageView.setImageBitmap(b);
     }
 }

@@ -23,12 +23,13 @@ public class SwipeImageFragment extends Fragment {
 
     private SquareImageButton foodPicture = null;
     private LinearLayout placeholder = null; // Only shown when out of images
+    private ListItemClass item;
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
      * when image page is out of sight. */
-    public void changeImage(Bitmap image) {
+    public void changeFood(Bitmap image, ListItemClass item) {
         if (foodPicture != null) {
             // Put placeholder indicating that more images are loading
             if (image == null) {
@@ -43,7 +44,14 @@ public class SwipeImageFragment extends Fragment {
                 }
 
                 foodPicture.setImageBitmap(image);
+
+                new ImageSaver(getContext()).
+                        setFileName(item.getFoodId()).
+                        setDirectoryName("images").
+                        save(image);
             }
+
+            this.item = item;
         }
     }
 
@@ -70,12 +78,14 @@ public class SwipeImageFragment extends Fragment {
         foodPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
+                aboutPage.putExtra("key2", item);
                 startActivity(aboutPage);
             }
         });
         // lat and longitude could be negative (west/east)
-        // Meters not miles (raidus)
+        // Meters not miles (radius)
         // Json with these things grab a list of restaurant ids, which divvy's code grabs
         // images/comments/food names/food ids for
         

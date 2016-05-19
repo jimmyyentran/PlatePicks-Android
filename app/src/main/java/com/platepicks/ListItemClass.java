@@ -1,6 +1,5 @@
 package com.platepicks;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -15,7 +14,7 @@ public class ListItemClass implements Parcelable {
     private String restaurantName;
     private String restaurantAddress;
     private String imageUrl;
-    private int clicked = 0;
+    public int clicked = 0; // starts out false
     private boolean downloaded = false; // Daniel: don't need to save this in parcelable
 
     // member functions
@@ -36,8 +35,9 @@ public class ListItemClass implements Parcelable {
     public void setRestaurantAddress(String restaurantAddress) {this.restaurantAddress = restaurantAddress;}
     public String getImageUrl() {return imageUrl;}
     public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
+
     public boolean isClicked() {
-        if (clicked == 1)
+        if (clicked == 1) // true
             return true;
         else return false;
     }
@@ -70,7 +70,7 @@ public class ListItemClass implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.getFoodId());
         parcel.writeString(this.getFoodName());
-        parcel.writeString(this.getRestaurantAddress());
+        parcel.writeString(this.getRestaurantName());
         parcel.writeString(this.getRestaurantAddress());
         parcel.writeString(this.getImageUrl());
         parcel.writeInt(clicked);
