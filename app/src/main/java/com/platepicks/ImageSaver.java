@@ -51,8 +51,8 @@ public class ImageSaver {
         return new File(directory, fileName);
     }
 
-    public void load(ImageView imageView, boolean rotateRightSideUp) {
-        new LoadImageAsyncTask(imageView, rotateRightSideUp).execute();
+    public void load(ImageView imageView, OnCompleteListener caller) {
+        new LoadImageAsyncTask(imageView, caller).execute();
     }
 
     class SaveImageTask extends AsyncTask<Bitmap, Void, Void> {
@@ -84,11 +84,11 @@ public class ImageSaver {
 
     class LoadImageAsyncTask extends AsyncTask<Void, Void, Bitmap> {
         WeakReference<ImageView> imageViewRef;  // To not stop garbage collection if imageview is gone
-        boolean rotateRightSideUp;
+        WeakReference<OnCompleteListener> callerRef;
 
-        LoadImageAsyncTask(ImageView imageView, boolean rotateRightSideUp) {
+        LoadImageAsyncTask(ImageView imageView, OnCompleteListener caller) {
             this.imageViewRef = new WeakReference<ImageView>(imageView);
-            this.rotateRightSideUp = rotateRightSideUp;
+            this.callerRef = new WeakReference<OnCompleteListener>(caller);
         }
 
         @Override
@@ -108,9 +108,6 @@ public class ImageSaver {
                 accessFiles.unlock();
 
                 Bitmap food = BitmapFactory.decodeStream(inputStream);
-
-                if (rotateRightSideUp)
-                    food = ListAdapter.RotateBitmap(food, 180);
 
                 return food;
             } catch (Exception e) {
@@ -132,9 +129,12 @@ public class ImageSaver {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (imageViewRef.get() != null) {
-                imageViewRef.get().setImageBitmap(bitmap);
-            }
+            if (callerRef.get() != null)
+                callerRef.get().doSomethingWithBitmap(imageViewRef.get(), bitmap, fileName);
         }
+    }
+
+    interface OnCompleteListener {
+        void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId);
     }
 }

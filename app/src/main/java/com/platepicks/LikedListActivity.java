@@ -76,7 +76,6 @@ public class LikedListActivity extends AppCompatActivity {
     }
 
     public void backArrow (View view){
-
         // set all data to be viewed
         for(int i = 0; i < data.size(); ++i)
         {

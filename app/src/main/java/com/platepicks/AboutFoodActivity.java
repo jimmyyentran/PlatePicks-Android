@@ -19,7 +19,7 @@ import java.io.File;
 /**
  * Created by pokeforce on 4/24/16.
  */
-public class AboutFoodActivity extends AppCompatActivity {
+public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.OnCompleteListener {
 
     ListItemClass item;
 
@@ -61,7 +61,7 @@ public class AboutFoodActivity extends AppCompatActivity {
         new ImageSaver(AboutFoodActivity.this).
                 setFileName(item.getFoodId()).
                 setDirectoryName("images").
-                load(img, false);
+                load(img, this);
 
         /* handle font size for restaurant name */
         int str_length = restaurant.getText().length();
@@ -104,4 +104,8 @@ public class AboutFoodActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId) {
+        imageView.setImageBitmap(b);
+    }
 }
