@@ -12,6 +12,7 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.amazonaws.mobile.AWSMobileClient;
+import com.facebook.FacebookSdk;
 
 /**
  * Application class responsible for initializing singletons and other common components.
@@ -30,6 +31,9 @@ public class Application extends MultiDexApplication {
 
     private void initializeApplication() {
         AWSMobileClient.initializeMobileClientIfNecessary(getApplicationContext());
+
+        /* initialize facebook SDK first */
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         // ...Put any application-specific initialization logic here...
     }

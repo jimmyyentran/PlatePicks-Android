@@ -142,9 +142,6 @@ public class TinderActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /* initialize facebook SDK first */
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)

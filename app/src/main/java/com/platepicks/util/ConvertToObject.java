@@ -21,7 +21,7 @@ import java.util.List;
 public class ConvertToObject {
 
     public static List<FoodReceive> toFoodReceiveList(String json){
-        Log.d("ConvertToObject", json);
+        Log.d("ConvertToObject", " ");
         Type foodReceiveCollection = new TypeToken<Collection<FoodReceive>>(){}.getType();
         Collection<FoodReceive> receivedCollection = new Gson().fromJson(json, foodReceiveCollection);
         FoodReceive[] foodReceiveArray = receivedCollection.toArray(new FoodReceive[receivedCollection.size()]);

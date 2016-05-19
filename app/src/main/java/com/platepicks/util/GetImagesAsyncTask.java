@@ -74,7 +74,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
     // Takes in url and downloads webpage, decoding it into a bitmap
     Bitmap downloadImage(String url) {
-        Log.d("GetImagesAsyncTask", url);
+//        Log.d("GetImagesAsyncTask", url);
 
         InputStream is = null;
         Bitmap image = null;
@@ -114,13 +114,13 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
             // Check if height or width of image is greater than those of imageView
             while (scaledHeight >= maxHeight) {
-                Log.d("GetImagesAsyncTask", "Scaling height: " + url + "...");
+//                Log.d("GetImagesAsyncTask", "Scaling height: " + url + "...");
                 scaledHeight /= 2;
                 scaledWidth /= 2;
                 sampleSize *= 2;
             }
             while (scaledWidth >= maxWidth) {
-                Log.d("GetImagesAsyncTask", "Scaling width" + url + "...");
+//                Log.d("GetImagesAsyncTask", "Scaling width" + url + "...");
                 scaledHeight /= 2;
                 scaledWidth /= 2;
                 sampleSize *= 2;
@@ -129,7 +129,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
             // Resulting sample size is what we use to shrink image
             options.inSampleSize = sampleSize;
 
-            Log.d("GetImagesAsyncTask", "width: " + scaledWidth + ", height: " + scaledHeight + " " + url);
+//            Log.d("GetImagesAsyncTask", "width: " + scaledWidth + ", height: " + scaledHeight + " " + url);
 
             // Decoding image from data to return
             options.inJustDecodeBounds = false;
