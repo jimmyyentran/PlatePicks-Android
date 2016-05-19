@@ -64,8 +64,12 @@ public class ImageSaver {
             FileOutputStream fileOutputStream = null;
             try {
                 accessFiles.lock();
-                fileOutputStream = new FileOutputStream(createFile());
-                params[0].compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                File newImg = createFile();
+
+                if (!newImg.exists()) {
+                    fileOutputStream = new FileOutputStream(createFile());
+                    params[0].compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                }
                 accessFiles.unlock();
             } catch (Exception e) {
                 e.printStackTrace();
