@@ -1,6 +1,6 @@
 package com.platepicks;
 
-        import android.content.Context;
+import android.content.Context;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
         import android.graphics.Color;

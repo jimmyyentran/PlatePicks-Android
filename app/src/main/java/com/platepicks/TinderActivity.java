@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.animation.Animator;
 import android.location.Location;
@@ -39,6 +40,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.FoodRequest;
 import com.platepicks.support.CustomViewPager;
@@ -329,6 +331,7 @@ public class TinderActivity extends AppCompatActivity
         // Critical Section: Add images to list here in activity
         accessList.lock();
 
+        Log.d("TinderActivity", "Finished request");
         // Put images into list of images
         imageList.addAll(images);
 
@@ -534,9 +537,22 @@ public class TinderActivity extends AppCompatActivity
 
                     data.add(toAdd);
                     ++cnt;
+
+                    // Send data to database
+                    new Thread(new Runnable() {
+                        public void run() {
+                            TableFood.likeFood(listItems.get(0).getOriginal());
+                        }
+                    }).start();
                 } else {    // Dislike
                     otherPage = 0;
                     imageList.get(0).recycle(); // Clear up data
+
+                    new Thread(new Runnable() {
+                        public void run() {
+                            TableFood.dislikeFood(listItems.get(0).getOriginal());
+                        }
+                    }).start();
                 }
 
                 /* Changing the image while image page is out of sight */
@@ -564,6 +580,7 @@ public class TinderActivity extends AppCompatActivity
 
                 /* Low on images */
                 if (imageList.size() < 5 && !requestMade) {
+                    Log.d("TinderActivity", "asked for request");
                     new RequestFromDatabase().execute();
                     requestMade = true;
                 }
@@ -711,6 +728,7 @@ public class TinderActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... params) {
+            Log.d("TinderActivity", "Start request");
             waitForGPSLock.lock();
             waitForGPSLock.unlock();
             return null;
