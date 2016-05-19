@@ -1,6 +1,6 @@
 package com.platepicks;
 
-        import android.content.Context;
+import android.content.Context;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
         import android.graphics.Color;
@@ -64,8 +64,12 @@ public class ImageSaver {
             FileOutputStream fileOutputStream = null;
             try {
                 accessFiles.lock();
-                fileOutputStream = new FileOutputStream(createFile());
-                params[0].compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                File newImg = createFile();
+
+                if (!newImg.exists()) {
+                    fileOutputStream = new FileOutputStream(createFile());
+                    params[0].compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                }
                 accessFiles.unlock();
             } catch (Exception e) {
                 e.printStackTrace();

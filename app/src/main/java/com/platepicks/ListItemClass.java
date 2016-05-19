@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.TableLayout;
 
+import com.platepicks.objects.FoodReceive;
+
 /**
  * Created by elizamae on 4/29/16.
  */
@@ -17,6 +19,7 @@ public class ListItemClass implements Parcelable {
     private String restaurantAddress;
     private String imageUrl;
     private TableLayout pageComments;
+    private FoodReceive original;
     private int clicked = 0;
     private boolean downloaded = false; // Daniel: don't need to save this in parcelable
 
@@ -49,6 +52,8 @@ public class ListItemClass implements Parcelable {
     }
     public boolean isDownloaded() {return downloaded;}
     public void setDownloaded(boolean downloaded) {this.downloaded = downloaded;}
+    public FoodReceive getOriginal() {return original;}
+    public void setOriginal(FoodReceive original) {this.original = original;}
 
     public static final Parcelable.Creator<ListItemClass> CREATOR = new Parcelable.Creator<ListItemClass>() {
         public ListItemClass createFromParcel(Parcel source) {

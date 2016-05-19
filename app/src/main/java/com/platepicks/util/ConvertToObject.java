@@ -39,6 +39,7 @@ public class ConvertToObject {
             item.setRestaurantName(fr.getLocation().getName());
             item.setRestaurantAddress(fr.getLocation().getAddressString());
             item.setImageUrl(fr.getUrl().toString());
+            item.setOriginal(fr);
 
             convertedObjects.add(item);
         }

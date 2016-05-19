@@ -24,6 +24,7 @@ public class SwipeImageFragment extends Fragment {
 
     private SquareImageButton foodPicture = null;
     private LinearLayout placeholder = null; // Only shown when out of images
+    private Bitmap image;
     private ListItemClass item;
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
@@ -45,13 +46,9 @@ public class SwipeImageFragment extends Fragment {
                 }
 
                 foodPicture.setImageBitmap(image);
-
-                new ImageSaver(getContext()).
-                        setFileName(item.getFoodId()).
-                        setDirectoryName("images").
-                        save(image);
             }
 
+            this.image = image;
             this.item = item;
         }
     }
@@ -79,6 +76,11 @@ public class SwipeImageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (item != null) {
+                    new ImageSaver(getContext()).
+                            setFileName(item.getFoodId()).
+                            setDirectoryName("images").
+                            save(image);
+
                     Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
                     aboutPage.putExtra("key2", item);
                     startActivity(aboutPage);
