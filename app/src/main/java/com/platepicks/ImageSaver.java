@@ -51,8 +51,8 @@ public class ImageSaver {
         return new File(directory, fileName);
     }
 
-    public void load(ImageView imageView) {
-        new LoadImageAsyncTask(imageView).execute();
+    public void load(ImageView imageView, boolean rotateRightSideUp) {
+        new LoadImageAsyncTask(imageView, rotateRightSideUp).execute();
     }
 
     class SaveImageTask extends AsyncTask<Bitmap, Void, Void> {
@@ -84,9 +84,11 @@ public class ImageSaver {
 
     class LoadImageAsyncTask extends AsyncTask<Void, Void, Bitmap> {
         WeakReference<ImageView> imageViewRef;  // To not stop garbage collection if imageview is gone
+        boolean rotateRightSideUp;
 
-        LoadImageAsyncTask(ImageView imageView) {
+        LoadImageAsyncTask(ImageView imageView, boolean rotateRightSideUp) {
             this.imageViewRef = new WeakReference<ImageView>(imageView);
+            this.rotateRightSideUp = rotateRightSideUp;
         }
 
         @Override
@@ -105,7 +107,12 @@ public class ImageSaver {
                 inputStream = new FileInputStream(imgFile);
                 accessFiles.unlock();
 
-                return BitmapFactory.decodeStream(inputStream);
+                Bitmap food = BitmapFactory.decodeStream(inputStream);
+
+                if (rotateRightSideUp)
+                    food = ListAdapter.RotateBitmap(food, 180);
+
+                return food;
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -125,8 +132,9 @@ public class ImageSaver {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (imageViewRef.get() != null)
+            if (imageViewRef.get() != null) {
                 imageViewRef.get().setImageBitmap(bitmap);
+            }
         }
     }
 }

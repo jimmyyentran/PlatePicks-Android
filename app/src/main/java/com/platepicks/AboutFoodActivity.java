@@ -61,7 +61,7 @@ public class AboutFoodActivity extends AppCompatActivity {
         new ImageSaver(AboutFoodActivity.this).
                 setFileName(item.getFoodId()).
                 setDirectoryName("images").
-                load(img);
+                load(img, false);
 
         /* handle font size for restaurant name */
         int str_length = restaurant.getText().length();

@@ -71,7 +71,7 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> {
         new ImageSaver(getContext()).
                 setFileName(item.getFoodId()).
                 setDirectoryName("images").
-                load(img);
+                load(img, true);
 
         // Return the completed view to render on screen
         return convertView;
