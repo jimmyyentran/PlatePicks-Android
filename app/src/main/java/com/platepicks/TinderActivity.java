@@ -1,10 +1,7 @@
 package com.platepicks;
 
-<<<<<<< HEAD
 import android.Manifest;
-=======
 import android.app.Activity;
->>>>>>> linkingabout
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -748,7 +745,7 @@ public class TinderActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             // Set first image
-            mainPageFragment.changeImage(imageList.get(0));
+            mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
 
             // Fade, then set to gone through listener
             splashScreen.animate()
