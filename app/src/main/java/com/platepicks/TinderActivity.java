@@ -5,11 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.animation.Animator;
 import android.location.Location;
-import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -19,7 +17,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,12 +31,7 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.FoodRequest;
@@ -480,9 +472,22 @@ public class TinderActivity extends AppCompatActivity
     class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         public int state = ViewPager.SCROLL_STATE_IDLE;
         ImageView fancy_image;
+        Thread likerThread, dislikerThread;
 
         public ImageChangeListener() {
             this.fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
+
+            likerThread = new Thread(new Runnable() {
+                public void run() {
+                    TableFood.likeFood(listItems.get(0).getOriginal());
+                }
+            });
+
+            dislikerThread = new Thread(new Runnable() {
+                public void run() {
+                    TableFood.dislikeFood(listItems.get(0).getOriginal());
+                }
+            });
         }
 
         @Override
@@ -538,21 +543,12 @@ public class TinderActivity extends AppCompatActivity
                     data.add(toAdd);
                     ++cnt;
 
-                    // Send data to database
-                    new Thread(new Runnable() {
-                        public void run() {
-                            TableFood.likeFood(listItems.get(0).getOriginal());
-                        }
-                    }).start();
+                    likerThread.start();  // Send like to database
                 } else {    // Dislike
                     otherPage = 0;
                     imageList.get(0).recycle(); // Clear up data
 
-                    new Thread(new Runnable() {
-                        public void run() {
-                            TableFood.dislikeFood(listItems.get(0).getOriginal());
-                        }
-                    }).start();
+                    dislikerThread.start();   // Sent dislike to database
                 }
 
                 /* Changing the image while image page is out of sight */
