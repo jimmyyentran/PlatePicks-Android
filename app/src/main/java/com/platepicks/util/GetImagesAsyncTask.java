@@ -58,7 +58,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
             // Add to total amount
             currentMemUsed += bytes;
-            Log.d("GetImagesAsyncTask", "Bytes: " + bytes);
+            Log.d("GetImagesAsyncTask", "Bytes: " + bytes + " " + ref.getFoodName());
 
             if (currentMemUsed >= limitMemory) break;
         }
@@ -129,7 +129,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
             // Resulting sample size is what we use to shrink image
             options.inSampleSize = sampleSize;
 
-            Log.d("GetImagesAsyncTask", "width: " + scaledWidth + ", height: " + scaledHeight);
+            Log.d("GetImagesAsyncTask", "width: " + scaledWidth + ", height: " + scaledHeight + " " + url);
 
             // Decoding image from data to return
             options.inJustDecodeBounds = false;

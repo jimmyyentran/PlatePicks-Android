@@ -1,7 +1,9 @@
 package com.platepicks;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.TableLayout;
 
 /**
  * Created by elizamae on 4/29/16.
@@ -14,7 +16,8 @@ public class ListItemClass implements Parcelable {
     private String restaurantName;
     private String restaurantAddress;
     private String imageUrl;
-    public int clicked = 0; // starts out false
+    private TableLayout pageComments;
+    private int clicked = 0;
     private boolean downloaded = false; // Daniel: don't need to save this in parcelable
 
     // member functions

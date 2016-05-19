@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,12 +65,11 @@ public class SwipeImageFragment extends Fragment {
             pagePosition = getArguments().getInt(PAGE_POSITION);
 
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
-
         foodPicture = (SquareImageButton) fragmentView.findViewById(R.id.imagebutton_tinder);
         placeholder = (LinearLayout) fragmentView.findViewById(R.id.placeholder_container);
         RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
-        /* Make non-image fragments nonexistent */
+        /* Set the image resource here */
         if (pagePosition != 1) {
             foodBorder.setVisibility(View.GONE);
         }
@@ -78,10 +78,15 @@ public class SwipeImageFragment extends Fragment {
         foodPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
-                aboutPage.putExtra("key2", item);
-                startActivity(aboutPage);
+                if (item != null) {
+                    Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
+                    aboutPage.putExtra("key2", item);
+                    startActivity(aboutPage);
+                }
+//                Log.d("SwipeImageFragment", item.getFoodId() + "," +
+//                        item.getFoodName() + "," +
+//                        item.getRestaurantName() + "," +
+//                        item.getImageUrl());
             }
         });
         // lat and longitude could be negative (west/east)

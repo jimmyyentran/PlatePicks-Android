@@ -61,6 +61,8 @@ dependencies {
     compile('com.amazonaws:aws-android-sdk-s3:2.2.11')
     compile('com.amazonaws:aws-android-sdk-core:2.2.11')
     compile('com.amazonaws:aws-android-sdk-cognito:2.2.11')
+    compile('com.amazonaws:aws-android-sdk-ddb:2.2.11')
+    compile('com.amazonaws:aws-android-sdk-ddb-mapper:2.2.11')
     compile('com.amazonaws:aws-android-sdk-mobileanalytics:2.2.11')
     compile('com.amazonaws:aws-android-sdk-lambda:2.2.11')
     compile 'com.google.code.gson:gson:2.6.2'
@@ -73,3 +75,4 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.4.0'
 
 }
+

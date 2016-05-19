@@ -12,17 +12,21 @@ import android.content.Context;
 import android.util.Log;
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.mobile.content.ContentManager;
+import com.amazonaws.mobile.content.UserFileManager;
 import com.amazonaws.mobile.user.IdentityManager;
-
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.AnalyticsConfig;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.EventClient;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.InitializationException;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManager;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.SessionClient;
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.lambdainvoker.LambdaInvokerFactory;
-import com.amazonaws.services.lambda.AWSLambdaClient;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.mobile.content.ContentManager;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.lambda.AWSLambdaClient;
+
 /**
  * The AWS Mobile Client bootstraps the application to make calls to AWS 
  * services. It creates clients which can be used to call services backing the
@@ -39,6 +43,9 @@ public class AWSMobileClient {
     private ClientConfiguration clientConfiguration;
     private IdentityManager identityManager;
     private MobileAnalyticsManager mobileAnalyticsManager;
+    private CognitoSyncManager syncManager;
+    private AmazonDynamoDBClient dynamoDBClient;
+    private DynamoDBMapper dynamoDBMapper;
 
     /**
      * Build class used to create the AWS mobile client.
@@ -126,7 +133,7 @@ public class AWSMobileClient {
     }
 
     private AWSMobileClient(final Context context,
-                            final String  cognitoIdentityPoolID,
+                            final String cognitoIdentityPoolID,
                             final Regions cognitoRegion,
                             final String mobileAnalyticsAppID,
                             final IdentityManager identityManager,
@@ -148,6 +155,11 @@ public class AWSMobileClient {
         catch (final InitializationException ie) {
             Log.e(LOG_TAG, "Unable to initalize Amazon Mobile Analytics. " + ie.getMessage(), ie);
         }
+
+        this.syncManager = new CognitoSyncManager(context, AWSConfiguration.AMAZON_COGNITO_REGION,
+            identityManager.getCredentialsProvider(), clientConfiguration);
+        this.dynamoDBClient = new AmazonDynamoDBClient(identityManager.getCredentialsProvider(), clientConfiguration);
+        this.dynamoDBMapper = new DynamoDBMapper(dynamoDBClient);
     }
 
     /**
@@ -172,6 +184,15 @@ public class AWSMobileClient {
      */
     public IdentityManager getIdentityManager() {
         return this.identityManager;
+    }
+
+    /**
+     * Gets the Amazon Cognito Sync Manager, which is responsible for saving and
+     * loading user profile data, such as game state or user settings.
+     * @return sync manager
+     */
+    public CognitoSyncManager getSyncManager() {
+        return syncManager;
     }
 
     /**
@@ -200,6 +221,23 @@ public class AWSMobileClient {
         Log.d(LOG_TAG, "AWS Mobile Client is OK");
     }
 
+
+    /**
+     * Gets the DynamoDB Client, which allows accessing Amazon DynamoDB tables.
+     * @return the DynamoDB client instance.
+     */
+    public AmazonDynamoDBClient getDynamoDBClient() {
+        return dynamoDBClient;
+    }
+
+    /**
+     * Gets the Dynamo DB Object Mapper, which allows accessing DynamoDB tables using annotated
+     * data object classes to represent your data using POJOs (Plain Old Java Objects).
+     * @return the DynamoDB Object Mapper instance.
+     */
+    public DynamoDBMapper getDynamoDBMapper() {
+        return dynamoDBMapper;
+    }
 
     /**
      * Gets the Amazon Mobile Analytics Manager, which allows you to submit
@@ -275,6 +313,28 @@ public class AWSMobileClient {
      */
     public AWSLambdaClient getCloudFunctionClient() {
         return new AWSLambdaClient(identityManager.getCredentialsProvider(), clientConfiguration);
+    }
+
+    /**
+     * Creates a User File Manager instance, which facilitates file transfers
+     * between the device and the specified Amazon S3 (Simple Storage Service) bucket.
+     *
+     * @param s3Bucket Amazon S3 bucket
+     * @param s3FolderPrefix Folder pre-fix for files affected by this user file
+     *                       manager instance
+     * @param resultHandler handles the resulting UserFileManager instance
+     */
+    public void createUserFileManager(final String s3Bucket,
+                                      final String s3FolderPrefix,
+                                      final UserFileManager.BuilderResultHandler resultHandler) {
+
+        new UserFileManager.Builder().withContext(context)
+            .withIdentityManager(getIdentityManager())
+            .withS3Bucket(s3Bucket)
+            .withS3ObjectDirPrefix(s3FolderPrefix)
+            .withLocalBasePath(context.getFilesDir().getAbsolutePath())
+            .withClientConfiguration(clientConfiguration)
+            .build(resultHandler);
     }
 
     /**
