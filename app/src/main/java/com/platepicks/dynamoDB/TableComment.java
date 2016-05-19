@@ -159,6 +159,7 @@ public class TableComment {
         String formatted = format.format(date);
         return formatted;
     }
+
     public static Date getDateObject(long epochTime){
         Date date = new Date(epochTime);
         return date;
