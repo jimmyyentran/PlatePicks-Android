@@ -1,6 +1,7 @@
 /**
  * Created by alyza on 5/15/16.
  */
+
 import android.util.Log;
 
 import com.amazonaws.AmazonClientException;
@@ -23,12 +24,14 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest="src/main/AndroidManifest.xml", sdk = 18) //sdk level may change
+@Config(manifest = "src/main/AndroidManifest.xml", sdk = 18) //sdk level may change
 public class TableCommentTest {
 
-    private final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();;
+    private final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
+    ;
 
     //Set up persistent activity
     @Before
@@ -42,11 +45,19 @@ public class TableCommentTest {
     }
 
     @Test
-    public void getCommentsFromFoodIDTest(){
-        printCommentList(getCommentsFromFoodID("6kNuxODLj-y9XNRACvtzqg"));
+    public void getCommentsFromFoodIDTest() {
+//        printCommentList(getCommentsFromFoodID("6kNuxODLj-y9XNRACvtzqg"));
 //        printCommentList(getCommentsFromUserID("BurritoLover"));
-        printCommentList(getCommentsFromUserID("testUserId1"));
+//        printCommentList(getCommentsFromUserID("testUserId1"));
 
+        List<CommentDO> list = getCommentsFromFoodID("FlbFh-MFX0TeTamdo4ID0A");
+        if (list != null) {
+            for (CommentDO comment : list) {
+                System.out.println(comment.getContent());
+                System.out.println(comment.getTime());
+                System.out.println(comment.getUserId());
+            }
+        }
     }
 
 

@@ -1,37 +1,30 @@
 package com.platepicks;
 
 import android.content.Context;
-import android.app.LauncherActivity;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
-
-import android.widget.ImageView;
-
 import android.widget.TextView;
 
 import com.platepicks.dynamoDB.TableComment;
-
-import static com.platepicks.dynamoDB.TableComment.insertComment;
-
-import org.w3c.dom.Text;
+import com.platepicks.dynamoDB.nosql.CommentDO;
 
 import java.io.File;
+import java.util.List;
+
+import static com.platepicks.dynamoDB.TableComment.getCommentsFromFoodID;
 
 /**
  * Created by pokeforce on 4/24/16.
@@ -49,6 +42,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
 
         item = getIntent().getParcelableExtra("key2");
         item.setClicked(1);
+
         /* set custom fonts */
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
         Typeface archistico_bold = Typeface.createFromAsset(getAssets(), "fonts/Archistico_Bold.ttf");
@@ -71,19 +65,18 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         String whole_address = item.getRestaurantAddress();
 
         int comma_count = 0;
-        for(int i=0; i<whole_address.length(); ++i){
+        for (int i = 0; i < whole_address.length(); ++i) {
             char x = whole_address.charAt(i);
-            if(x == ','){
+            if (x == ',') {
                 ++comma_count;
             }
         }
 
-        if(comma_count <= 2){
+        if (comma_count <= 2) {
             street.setText(whole_address.split("\\,")[0]);
             city.setText(whole_address.split("\\, ")[1]);
             zip.setText(whole_address.split("\\, ")[2]);
-        }
-        else{
+        } else {
             street.setText(whole_address.split("\\,")[0] + ',' + whole_address.split("\\,")[1]);
             city.setText(whole_address.split("\\, ")[2]);
             zip.setText(whole_address.split("\\, ")[3]);
@@ -106,20 +99,20 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         /* handle font size for restaurant name */
         int str_length = restaurant.getText().length();
 
-        if(str_length <= 15){
+        if (str_length <= 15) {
             restaurant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 27);
-        }
-        else if(str_length <= 25){
+        } else if (str_length <= 25) {
             restaurant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 21);
-        }
-        else if(str_length <= 35){
+        } else if (str_length <= 35) {
             restaurant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-        }
-        else{
+        } else {
             restaurant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
         }
 
+        // Execute the AsyncTask by passing in foodId
+        new QueryCommentsTask(this).execute(item.getFoodId());
     }
+
 
     /* OnOptionsItemSelected():
      * The function that is called when a menu option is clicked. If true is returned, we should
@@ -135,7 +128,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         }
     }
 
-    public void backArrow (View view) {
+    public void backArrow(View view) {
         // delete from internal storage
         File dir = getFilesDir();
         File file = new File(dir, item.getFoodId());
@@ -144,29 +137,28 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
     }
 
 
-    public void openCommentInput (View view) {
+    public void openCommentInput(View view) {
         LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
         EditText edit = (EditText) findViewById((R.id.input_box));
-        if(tmp.getVisibility() == view.GONE) {
+        if (tmp.getVisibility() == view.GONE) {
             edit.setMaxLines(6);
             edit.setVerticalScrollBarEnabled(true);
             tmp.setVisibility(view.VISIBLE);
             edit.requestFocus();
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        }
-        else
+        } else
             tmp.setVisibility(view.GONE);
 
         /* Hide the soft keyboard if necessary */
-        InputMethodManager mgr = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(edit.getWindowToken(),0);
+        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(edit.getWindowToken(), 0);
 
         /* emtpy the EditText view */
-        TextView tmp1 = (TextView)findViewById(R.id.input_box);
+        TextView tmp1 = (TextView) findViewById(R.id.input_box);
         tmp1.setText("");
     }
 
-    public void submitComment (View view) {
+    public void submitComment(View view) {
         TableLayout tabel = (TableLayout) findViewById(R.id.comment_list);
         TextView comment_input = (TextView) findViewById(R.id.input_box);
 
@@ -205,21 +197,44 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         imageView.setImageBitmap(b);
     }
 
-    public void loadComments (String comment, String userID, long date) {
+    public void loadComments(String comment, String userID, long date) {
+        System.out.println("Loading the comments");
         //String final_date = getLocalTime (date)
         LinearLayout ll = new LinearLayout(this);
 
         LayoutInflater lf = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ll = (LinearLayout) lf.inflate(R.layout.comment_item, null);
 
         TextView x = (TextView) ll.findViewById(R.id.item_comment);
         TextView y = (TextView) ll.findViewById(R.id.item_username);
-//        TextView z = (TextView) ll.findViewById(R.id.item_date);
+        TextView z = (TextView) ll.findViewById(R.id.item_date);
 
         x.setText(comment);
         y.setText(userID);
-        //z.setText(final_date);
+//        z.setText(final_date);
 
         TableLayout tl = (TableLayout) findViewById(R.id.comment_list);
         tl.addView(ll);
+    }
+}
+
+class QueryCommentsTask extends AsyncTask<String, Void, List<CommentDO>> {
+    AboutFoodActivity activity;
+
+    public QueryCommentsTask(AboutFoodActivity activity) {
+        this.activity = activity;
+    }
+    /** The system calls this to perform work in a worker thread and
+     * delivers it the parameters given to AsyncTask.execute() */
+    protected List<CommentDO> doInBackground(String... foodId) {
+        return getCommentsFromFoodID(foodId[0]);
+    }
+
+    /** The system calls this to perform work in the UI thread and delivers
+     * the result from doInBackground() */
+    protected void onPostExecute(List<CommentDO> result) {
+        for (CommentDO comment : result) {
+            activity.loadComments(comment.getContent(), comment.getUserId(), comment.getTime());
+        }
     }
 }
