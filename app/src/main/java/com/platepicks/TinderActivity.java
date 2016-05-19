@@ -76,7 +76,6 @@ public class TinderActivity extends AppCompatActivity
         newItem.setFoodName(foodName);
         newItem.setRestaurantName("test_restaurant");
         newItem.setRestaurantAddress("test_address");
-        newItem.setClicked(1);
         return newItem;
     }
 
@@ -357,7 +356,6 @@ public class TinderActivity extends AppCompatActivity
                             setDirectoryName("images").
                             save(toSend);
 
-                    //toAdd.setClicked(1);
                     data.add(toAdd);
                     ++cnt;
                 } else {
@@ -446,7 +444,8 @@ public class TinderActivity extends AppCompatActivity
         startActivityForResult(intent, 1);
 
         /* Heart is empty again */
-        notification_number.setVisibility(View.GONE);
+        if (notification_number != null)
+            notification_number.setVisibility(View.GONE);
 
     }
 
