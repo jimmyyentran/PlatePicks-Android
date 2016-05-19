@@ -43,6 +43,7 @@ import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageLoaderInterface;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -477,9 +478,11 @@ public class TinderActivity extends AppCompatActivity
     class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         public int state = ViewPager.SCROLL_STATE_IDLE;
         ImageView fancy_image;
+        HashMap<FoodReceive, Boolean> cacheForDatabase; // Accumulate 6 likes/dislikes before request
 
         public ImageChangeListener() {
             this.fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
+            this.cacheForDatabase = new HashMap<>(6);
         }
 
         @Override
@@ -536,21 +539,13 @@ public class TinderActivity extends AppCompatActivity
                     ++cnt;
 
                     // Send like to database
-                    new Thread(new Runnable() {
-                        public void run() {
-                            TableFood.likeFood(listItems.get(0).getOriginal());
-                        }
-                    }).start();
+                    cacheForDatabase.put(listItems.get(0).getOriginal(), true);
                 } else {    // Dislike
                     otherPage = 0;
                     imageList.get(0).recycle(); // Clear up data
 
-                    // Sent dislike to database
-                    new Thread(new Runnable() {
-                        public void run() {
-                            TableFood.dislikeFood(listItems.get(0).getOriginal());
-                        }
-                    }).start();
+                    // Send dislike to database
+                    cacheForDatabase.put(listItems.get(0).getOriginal(), false);
                 }
 
                 /* Changing the image while image page is out of sight */
@@ -582,6 +577,11 @@ public class TinderActivity extends AppCompatActivity
                     new RequestFromDatabase().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
 
+                /* After certain number of requests are accumulated, they are all sent to database
+                   in one thread. */
+                if (cacheForDatabase.size() >= 6)
+                    uploadLikesData();
+
                 accessList.unlock();
                 // End critical section
 
@@ -589,6 +589,24 @@ public class TinderActivity extends AppCompatActivity
                 imagePager.setCurrentItem(otherPage, false);    /* false = no animation on change */
                 imagePager.setCurrentItem(1, true);             /* true = animate */
             }
+        }
+
+        private void uploadLikesData() {
+            final HashMap<FoodReceive, Boolean> copyCache = new HashMap<>(cacheForDatabase);
+            cacheForDatabase.clear();
+
+            new Thread(new Runnable() {
+                public void run() {
+                    for (FoodReceive fr : copyCache.keySet()) {
+                        if (copyCache.get(fr))
+                            TableFood.likeFood(fr);
+                        else
+                            TableFood.dislikeFood(fr);
+                    }
+
+                    copyCache.clear();
+                }
+            }).start();
         }
     }
 
