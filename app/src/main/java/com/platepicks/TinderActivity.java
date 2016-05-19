@@ -211,7 +211,7 @@ public class TinderActivity extends AppCompatActivity
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
         waitForUILock.lock();   // Ensure that first network request does not post image before UI is visible
         firstRequest = true;    // Flag to remove splash screen after first request
-        new RequestFromDatabase().execute();
+        new RequestFromDatabase().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
@@ -301,7 +301,8 @@ public class TinderActivity extends AppCompatActivity
             if (!item.isDownloaded())
                 requestedImages.add(item);
 
-        new GetImagesAsyncTask(this, maxHeight, maxWidth).execute(requestedImages.toArray());
+        new GetImagesAsyncTask(this, maxHeight, maxWidth)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, requestedImages.toArray());
     }
 
     // Called by AWSIntegratorTask to return json
@@ -312,6 +313,7 @@ public class TinderActivity extends AppCompatActivity
 
         // Critical section
         accessList.lock();
+        Log.d("TinderActivity", "First request done");
         listItems.addAll(ConvertToObject.toListItemClassList(foodReceives));
         requestImages();
         accessList.unlock();
@@ -338,12 +340,15 @@ public class TinderActivity extends AppCompatActivity
 
             placeholderIsPresent = false;
         }
+
+        Log.d("TinderActivity", "1. Setting request made to false: " + String.valueOf(requestMade));
         requestMade = false;
+        Log.d("TinderActivity", "2. Setting request made to false: " + String.valueOf(requestMade));
         accessList.unlock();
 
         // Remove splash] screen and post first pic
         if (firstRequest) {
-            new PostFirstImageTask().execute();
+            new PostFirstImageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             firstRequest = false;
         }
     }
@@ -472,22 +477,9 @@ public class TinderActivity extends AppCompatActivity
     class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         public int state = ViewPager.SCROLL_STATE_IDLE;
         ImageView fancy_image;
-        Thread likerThread, dislikerThread;
 
         public ImageChangeListener() {
             this.fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
-
-            likerThread = new Thread(new Runnable() {
-                public void run() {
-                    TableFood.likeFood(listItems.get(0).getOriginal());
-                }
-            });
-
-            dislikerThread = new Thread(new Runnable() {
-                public void run() {
-                    TableFood.dislikeFood(listItems.get(0).getOriginal());
-                }
-            });
         }
 
         @Override
@@ -543,12 +535,22 @@ public class TinderActivity extends AppCompatActivity
                     data.add(toAdd);
                     ++cnt;
 
-                    likerThread.start();  // Send like to database
+                    // Send like to database
+                    new Thread(new Runnable() {
+                        public void run() {
+                            TableFood.likeFood(listItems.get(0).getOriginal());
+                        }
+                    }).start();
                 } else {    // Dislike
                     otherPage = 0;
                     imageList.get(0).recycle(); // Clear up data
 
-                    dislikerThread.start();   // Sent dislike to database
+                    // Sent dislike to database
+                    new Thread(new Runnable() {
+                        public void run() {
+                            TableFood.dislikeFood(listItems.get(0).getOriginal());
+                        }
+                    }).start();
                 }
 
                 /* Changing the image while image page is out of sight */
@@ -576,9 +578,8 @@ public class TinderActivity extends AppCompatActivity
 
                 /* Low on images */
                 if (imageList.size() < 5 && !requestMade) {
-                    Log.d("TinderActivity", "asked for request");
-                    new RequestFromDatabase().execute();
                     requestMade = true;
+                    new RequestFromDatabase().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
 
                 accessList.unlock();
@@ -724,9 +725,11 @@ public class TinderActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.d("TinderActivity", "Start request");
+            Log.d("TinderActivity", "1. Start request");
             waitForGPSLock.lock();
             waitForGPSLock.unlock();
+            Log.d("TinderActivity", "2. Start request");
+
             return null;
         }
 
@@ -735,7 +738,7 @@ public class TinderActivity extends AppCompatActivity
             int radius = convertMilesToMeters(rad_seekBar.getProgress());
 
             FoodRequest req = new FoodRequest("", foodLimit, gpsLocation, limit, radius, getAllFoodTypes(), 1, offset);
-            new AWSIntegratorAsyncTask().execute("yelpApi2_8", req, TinderActivity.this);
+            new AWSIntegratorAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "yelpApi2_8", req, TinderActivity.this);
         }
     }
 
