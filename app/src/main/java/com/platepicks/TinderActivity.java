@@ -154,12 +154,6 @@ public class TinderActivity extends AppCompatActivity
         /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.activity_tinderui);
 
-        /* Toolbar: The red bar at the top of the app
-         * Will contain our heart-shaped like button and last-recently-liked button */
-        //setupToolbar();
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle("Food Tinder");
-
         /* ViewPager: A view that enables swiping images left and right
          * Has 3 pages, 0-2 (reason is explained in class definition below). */
         imagePager = (CustomViewPager) findViewById(R.id.viewPager_images);
