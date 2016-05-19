@@ -204,4 +204,22 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
     public void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId) {
         imageView.setImageBitmap(b);
     }
+
+    public void loadComments (String comment, String userID, long date) {
+        //String final_date = getLocalTime (date)
+        LinearLayout ll = new LinearLayout(this);
+
+        LayoutInflater lf = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        TextView x = (TextView) ll.findViewById(R.id.item_comment);
+        TextView y = (TextView) ll.findViewById(R.id.item_username);
+//        TextView z = (TextView) ll.findViewById(R.id.item_date);
+
+        x.setText(comment);
+        y.setText(userID);
+        //z.setText(final_date);
+
+        TableLayout tl = (TableLayout) findViewById(R.id.comment_list);
+        tl.addView(ll);
+    }
 }
