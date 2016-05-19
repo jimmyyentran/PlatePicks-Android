@@ -25,6 +25,7 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,7 +70,7 @@ public class TinderActivity extends AppCompatActivity
     SwipeImageFragment mainPageFragment = null;
 
     // Splash screen
-    FrameLayout splashScreen = null;
+    RelativeLayout splashScreen = null;
 
     /* local seekBar variable */
     SeekBar rad_seekBar = null;
@@ -101,7 +102,7 @@ public class TinderActivity extends AppCompatActivity
     ReentrantLock accessList = new ReentrantLock();
     boolean requestMade = false;
 
-    int limit = 4;      // Number of businesses returned per request
+    int limit = 20;     // Number of businesses returned per request
     int foodLimit = 3;  // Number of food per business
     int offset = 0;     // Number of businesses to offset by in yelp request
     String gpsLocation; // "Latitude, Longitude"
@@ -220,7 +221,7 @@ public class TinderActivity extends AppCompatActivity
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
-        splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
+        splashScreen = (RelativeLayout) findViewById(R.id.framelayout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
     }
     /* end onCreate() */

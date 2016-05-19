@@ -863,21 +863,34 @@
     </android.support.v4.widget.DrawerLayout>
 
     <!--Splash Screen-->
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/main_red"
         android:id="@+id/framelayout_splashScreen"
         android:layout_gravity="center"
-        android:visibility="gone">
+        android:visibility="visible">
         <ImageView
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_centerInParent="true"
             android:id="@+id/imageView_splash"
             android:src="@drawable/main_logo"
             android:contentDescription="@string/contentDescription_logo"/>
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageView_splash"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:indeterminateTint="@android:color/white"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+    </RelativeLayout>
 
 </FrameLayout>
 
