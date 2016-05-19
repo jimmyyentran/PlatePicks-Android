@@ -75,7 +75,10 @@ public class TableFoodTest {
 
     @Test
     public void DisLikeFoodWithInvalidFoodIDTest(){
-//        dislikeFood("InvalidID123");
+        FoodReceive retrieved = getFood("_icxSHw7vkV7gbd-Oi2XWQ");
+        retrieved.setFood_id("testingFoodBad");
+        retrieved.getLocation().setRestaurantId("tesRestaurantBad");
+        dislikeFood(retrieved);
     }
 
     public void getSampleData(String restaurantId){
