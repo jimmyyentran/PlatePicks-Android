@@ -22,8 +22,8 @@
         android:layout_height="match_parent">
 
         <!--Top Bar-->
-        <FrameLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/top_bar_section"
             android:background="#ffffff">
@@ -32,97 +32,91 @@
                 android:layout_width="108dp"
                 android:layout_height="108dp"
                 android:id="@+id/circle_checkers"
-                android:layout_gravity="center_horizontal|top"
                 android:background="@color/main_red"
                 android:alpha="0.3"
-                android:src="@drawable/checker_circle_2" />
+                android:src="@drawable/checker_circle_2"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/contentDescription_circleCheckers"/>
 
-            <LinearLayout
-                android:orientation="vertical"
+            <ImageView
+                android:id="@+id/red_bar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff">
+                android:layout_height="72dp"
+                android:background="@color/main_red"
+                android:layout_gravity="top"
+                android:contentDescription="@string/contentDescription_redBG"/>
 
-                <RelativeLayout
-                    android:id="@+id/top_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:background="@color/main_red"
-                    android:layout_gravity="top"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp">
+            <!--Drawer Icon-->
+            <ImageButton
+                android:id="@+id/droor_icon"
+                android:contentDescription="@string/contentDescription_tinder"
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/settings_icon_3"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:onClick="openDrawer"/>
 
-                    <!--Drawer Icon-->
-                    <ImageButton
-                        android:id="@+id/droor_icon"
-                        android:contentDescription="@string/contentDescription_tinder"
-                        android:layout_width="30dp"
-                        android:layout_height="25dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/settings_icon_3"
-                        android:background="@android:color/transparent"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:onClick="openDrawer"/>
+            <!--List Button-->
+            <FrameLayout
+                android:id="@+id/list_button_frame"
+                android:layout_width="35dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true">
 
-                    <!--List Button-->
-                    <FrameLayout
-                        android:id="@+id/list_button_frame"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="false"
-                        android:layout_centerVertical="true">
+                <ImageButton
+                    android:id="@+id/list_button"
+                    android:layout_width="35dp"
+                    android:layout_height="25dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/list_icon_3"
+                    android:background="@android:color/transparent"
+                    android:onClick="gotoList"
+                    android:contentDescription="@string/contentDescription_list"/>
 
-                        <ImageButton
-                            android:id="@+id/list_button"
-                            android:layout_width="35dp"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/list_icon_3"
-                            android:background="@android:color/transparent"
-                            android:onClick="gotoList"
-                            android:layout_gravity="center" />
-                        <TextView
-                            android:id="@+id/list_notification"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="center"
-                            android:textColor="@color/main_red"
-                            android:typeface="sans"
-                            android:layout_gravity="center" />
-
-                    </FrameLayout>
-                </RelativeLayout>
-
-                <ImageView
-                    android:id="@+id/top_checkers"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/list_notification"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/checker_border_4"
-                    android:rotation="180"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:background="@color/main_red"
-                    android:alpha="0.3" />
-            </LinearLayout>
+                    android:textColor="@color/main_red"
+                    android:typeface="sans" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/top_checkers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="72dp"
+                android:src="@drawable/checker_border_4"
+                android:rotation="180"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:background="@color/main_red"
+                android:alpha="0.3"
+                android:contentDescription="@string/contentDescription_checkerTop"/>
 
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:id="@+id/red_circle"
                 android:background="@drawable/red_circle"
-                android:layout_gravity="center_horizontal|top" />
+                android:layout_gravity="center_horizontal|top"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/contentDescription_redCircle"/>
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
                 android:id="@+id/fancy_button_frame"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp">
@@ -134,7 +128,8 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
                     android:scaleType="centerCrop"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/contentDescription_fancyFood"/>
 
                 <ImageButton
                     android:id="@+id/fancy_button"
@@ -143,13 +138,13 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/fancy_button"
                     android:background="@android:color/transparent"
-                    android:layout_centerInParent="true"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:nestedScrollingEnabled="false"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/contentDescription_fancyButton"/>
             </FrameLayout>
-        </FrameLayout>
+
+        </RelativeLayout>
 
         <!--Center Section-->
         <RelativeLayout
@@ -171,7 +166,8 @@
                 android:layout_centerInParent="true"
                 android:alpha="0.2"
                 android:layout_alignTop="@+id/viewPager_images"
-                android:layout_above="@+id/bot_checkers" />
+                android:layout_above="@+id/bot_checkers"
+                android:contentDescription="@string/contentDescription_fadedLogo"/>
 
 
             <!--Container for Tinder Images-->
@@ -196,7 +192,8 @@
                 android:adjustViewBounds="true"
                 android:layout_alignParentBottom="true"
                 android:background="@color/main_red"
-                android:alpha="0.3" />
+                android:alpha="0.3"
+                android:contentDescription="@string/contentDescription_checkerBottom"/>
         </RelativeLayout>
 
         <!--Bottom Bar-->
