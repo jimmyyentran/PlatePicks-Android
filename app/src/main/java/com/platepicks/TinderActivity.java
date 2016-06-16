@@ -73,7 +73,7 @@ public class TinderActivity extends AppCompatActivity
     GoogleApiClient mGoogleApiClient; // Google location client
 
     SwipeImageFragment mainPageFragment = null; // Picture of food fragment
-    RelativeLayout splashScreen = null;         // Splash screen
+    FrameLayout splashScreen = null;            // Splash screen
     SeekBar rad_seekBar = null;                 // local seekBar variable
     TextView notification_number = null;        // list notification number
     LinearLayout leftFoodTypes, rightFoodTypes; // 2 columns of food types
@@ -214,7 +214,7 @@ public class TinderActivity extends AppCompatActivity
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
-        splashScreen = (RelativeLayout) findViewById(R.id.framelayout_splashScreen);
+        splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
 
         my_drawer= (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
@@ -224,6 +224,31 @@ public class TinderActivity extends AppCompatActivity
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 closeDrawer(my_drawer);
                 return true;
+            }
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return false;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+
             }
         });
     }

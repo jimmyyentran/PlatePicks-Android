@@ -55,11 +55,12 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/settings_icon_3"
                 android:background="@android:color/transparent"
-                android:layout_marginTop="24dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignTop="@id/red_bar"
+                android:layout_alignBottom="@id/red_bar"
                 android:onClick="openDrawer"/>
 
             <!--List Button-->
@@ -68,11 +69,12 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:padding="16dp"
-                android:layout_marginTop="24dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true">
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@id/red_bar"
+                android:layout_alignBottom="@id/red_bar">
 
                 <ImageButton
                     android:id="@+id/list_button"
@@ -96,7 +98,7 @@
                 android:id="@+id/top_checkers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="72dp"
+                android:layout_below="@id/red_bar"
                 android:src="@drawable/checker_border_4"
                 android:rotation="180"
                 android:scaleType="centerCrop"
@@ -261,18 +263,11 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <!--Drawer-->
-<<<<<<< HEAD
-
-
-    <!--Splash Screen-->
-
-=======
+    <!--Settings Drawer-->
     <include layout="@layout/settings_drawer"/>
 
     <!--Splash Screen-->
     <include layout="@layout/splash_screen"/>
->>>>>>> refactor-dbh
 
 </FrameLayout>
 
