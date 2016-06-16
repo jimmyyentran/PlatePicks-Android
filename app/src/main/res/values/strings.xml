@@ -14,6 +14,15 @@
   <!--Content descriptions for images-->
   <string name="contentDescription_tinder">Image of suggested food</string>
   <string name="contentDescription_logo">Plate Picks Logo</string>
+  <string name="contentDescription_circleCheckers">Checkered circle</string>
+  <string name="contentDescription_redBG">Red background for top bar</string>
+  <string name="contentDescription_list">Button for list of liked foods</string>
+  <string name="contentDescription_checkerTop">Checkered line for border</string>
+  <string name="contentDescription_checkerBottom">Checkered line for border</string>
+  <string name="contentDescription_redCircle">Red circle background</string>
+  <string name="contentDescription_fancyFood">Last-liked food image</string>
+  <string name="contentDescription_fancyButton">Click here to see the last-liked food</string>
+  <string name="contentDescription_fadedLogo">App background logo</string>
 
   <!--Name of options in in res/menu/menu_*.xml-->
   <string name="action_like_list">Like list</string>
