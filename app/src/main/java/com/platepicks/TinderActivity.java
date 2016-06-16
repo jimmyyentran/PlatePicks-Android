@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -53,50 +54,36 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by pokeforce on 4/12/16.
  */
 public class TinderActivity extends AppCompatActivity
-        implements AWSIntegratorInterface, ImageLoaderInterface, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        implements AWSIntegratorInterface,
+            ImageLoaderInterface,
+            GoogleApiClient.ConnectionCallbacks,
+            GoogleApiClient.OnConnectionFailedListener {
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
     final int MAX_RADIUS = 40000;   // meters
     final int REQUEST_LOCATION = 1;
 
-    // Location
-    GoogleApiClient mGoogleApiClient;
+    GoogleApiClient mGoogleApiClient; // Google location client
 
-    // Picture of food fragment
-    SwipeImageFragment mainPageFragment = null;
-
-    // Splash screen
-    RelativeLayout splashScreen = null;
-
-    /* local seekBar variable */
-    SeekBar rad_seekBar = null;
-
-    /* Local TextView variable to handle list notification number*/
-    TextView notification_number = null; //(TextView) findViewById(R.id.list_notification);
-
+    SwipeImageFragment mainPageFragment = null; // Picture of food fragment
+    RelativeLayout splashScreen = null;         // Splash screen
+    SeekBar rad_seekBar = null;                 // local seekBar variable
+    TextView notification_number = null;        // list notification number
     LinearLayout leftFoodTypes, rightFoodTypes; // 2 columns of food types
-    // View Pager for swiping
-    CustomViewPager imagePager;
+    CustomViewPager imagePager;                 // View Pager for swiping
+    DrawerLayout my_drawer = null;              // Drawer layout
 
-    // Data
-    ArrayList<ListItemClass> data = new ArrayList<>();
-    int cnt = 1; // used for notification count
-
-    // Contains downloaded data from backend. Currently just image urls.
-
-    List<ListItemClass> listItems = new LinkedList<>();  // Actual received data
+    List<ListItemClass> listItems = new LinkedList<>();     // Data received from network request
+    List<Bitmap> imageList = new LinkedList<>();            // Images downloaded in network request
+    ArrayList<ListItemClass> likedData = new ArrayList<>(); // Food liked by user
 
     ReentrantLock waitForUILock = new ReentrantLock();  // Race condition between first network request and creation of UI
+    ReentrantLock waitForGPSLock = new ReentrantLock(); // Wait for GPS location to be retrieved before making yelp request
+    ReentrantLock accessList = new ReentrantLock();     // Race condition to access listItems or imageList
     boolean firstRequest;                               // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
+    boolean requestMade = false;                        // Flag to indicate making a request
 
-    ReentrantLock waitForGPSLock = new ReentrantLock(); // Wait for GPS location to be retrieved before making yelp request
-
-    // List of images
-    // locks: http://docs.oracle.com/javase/tutorial/essential/concurrency/newlocks.html
-    List<Bitmap> imageList = new LinkedList<>();    // Main list used by front end
-    ReentrantLock accessList = new ReentrantLock();
-    boolean requestMade = false;
-
+    int cnt = 1;        // used for notification count of new liked foods
     int limit = 20;     // Number of businesses returned per request
     int foodLimit = 3;  // Number of food per business
     int offset = 0;     // Number of businesses to offset by in yelp request
@@ -111,9 +98,6 @@ public class TinderActivity extends AppCompatActivity
         return newItem;
     }
 
-    /* Drawer declaration */
-    public android.support.v4.widget.DrawerLayout my_drawer = null;
-
     /* onActivityResult() */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -124,7 +108,7 @@ public class TinderActivity extends AppCompatActivity
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    this.data = data.getParcelableArrayListExtra("gohead");
+                    this.likedData = data.getParcelableArrayListExtra("gohead");
                 }
                 break;
             }
@@ -522,7 +506,7 @@ public class TinderActivity extends AppCompatActivity
                     // if we haven't moved to LikedList yet
                     if (getIntent().hasExtra("gohead"))
                     {
-                        data = getIntent().getParcelableArrayListExtra("gohead");
+                        likedData = getIntent().getParcelableArrayListExtra("gohead");
                         Log.d("hello", "i'm getting here");
                     }
 
@@ -535,7 +519,7 @@ public class TinderActivity extends AppCompatActivity
                             setDirectoryName("images").
                             save(toSend);
 
-                    data.add(toAdd);
+                    likedData.add(toAdd);
                     ++cnt;
 
                     // Send like to database
@@ -642,7 +626,7 @@ public class TinderActivity extends AppCompatActivity
         cnt = 1;
 
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
-        intent.putParcelableArrayListExtra("key", data);
+        intent.putParcelableArrayListExtra("key", likedData);
         startActivityForResult(intent, 1);
 
         /* Heart is empty again */
