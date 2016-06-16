@@ -1,9 +1,16 @@
 package com.platepicks;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import com.platepicks.BlurImageTool;
 
 import com.platepicks.support.SquareImageButton;
 
@@ -23,7 +31,9 @@ public class SwipeImageFragment extends Fragment {
     public static String PAGE_POSITION = "Page position", PIC_INDEX = "Pic index";
 
     private SquareImageButton foodPicture = null;
+    private SquareImageButton bg = null;
     private LinearLayout placeholder = null; // Only shown when out of images
+    private ImageView yelp_logo = null;
     private Bitmap image;
     private ListItemClass item;
 
@@ -36,6 +46,8 @@ public class SwipeImageFragment extends Fragment {
             // Put placeholder indicating that more images are loading
             if (image == null) {
                 foodPicture.setImageDrawable(null);
+                bg.setImageDrawable(null);
+                yelp_logo.setVisibility(View.GONE);
                 placeholder.setVisibility(View.VISIBLE);
             }
             // Change picture
@@ -46,6 +58,13 @@ public class SwipeImageFragment extends Fragment {
                 }
 
                 foodPicture.setImageBitmap(image);
+                yelp_logo.setVisibility(View.VISIBLE);
+                if(Build.VERSION.SDK_INT >= 17) {
+                    bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
+                }
+                else {
+                    foodPicture.setBackgroundColor(Color.WHITE);
+                }
             }
 
             this.image = image;
@@ -63,6 +82,8 @@ public class SwipeImageFragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
         foodPicture = (SquareImageButton) fragmentView.findViewById(R.id.imagebutton_tinder);
+        bg = (SquareImageButton) fragmentView.findViewById(R.id.blurred_image);
+        yelp_logo = (ImageView) fragmentView.findViewById(R.id.required_yelp);
         placeholder = (LinearLayout) fragmentView.findViewById(R.id.placeholder_container);
         RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
@@ -98,4 +119,5 @@ public class SwipeImageFragment extends Fragment {
         
         return fragmentView;
     }
+
 }

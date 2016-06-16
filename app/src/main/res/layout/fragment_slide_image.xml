@@ -16,6 +16,15 @@
         <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/blurred_image"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="false"
+            android:adjustViewBounds="true"
+            android:background="#ffffff" />
+
+        <com.platepicks.support.SquareImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
             android:id="@+id/imagebutton_tinder"
             android:contentDescription="@string/contentDescription_tinder"
@@ -23,7 +32,19 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
             android:adjustViewBounds="true"
-            android:background="#ffffff" />
+            android:background="@android:color/transparent" />
+
+        <ImageView
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:id="@+id/required_yelp"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentRight="false"
+            android:src="@drawable/yelp_logo"
+            android:layout_alignBottom="@+id/imagebutton_tinder"
+            android:layout_alignRight="@+id/imagebutton_tinder"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"

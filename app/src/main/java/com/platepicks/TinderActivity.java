@@ -1,13 +1,17 @@
 package com.platepicks;
 
 import android.Manifest;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +21,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -32,6 +39,7 @@ import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.vision.Frame;
 import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.FoodRequest;
@@ -113,6 +121,7 @@ public class TinderActivity extends AppCompatActivity
 
     /* Drawer declaration */
     public android.support.v4.widget.DrawerLayout my_drawer = null;
+    public FrameLayout drawer_space = null;
 
     /* onActivityResult() */
     @Override
@@ -193,8 +202,11 @@ public class TinderActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if (imagePager.getCurrentItem() == 1
-                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE)
+                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
                     imagePager.setCurrentItem(2);
+                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                    //mp.start();
+                }
             }
         });
 
@@ -204,6 +216,8 @@ public class TinderActivity extends AppCompatActivity
                 if (imagePager.getCurrentItem() == 1
                         && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
                     imagePager.setCurrentItem(0);
+                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                    //mp.start();
                 }
             }
         });
@@ -218,6 +232,16 @@ public class TinderActivity extends AppCompatActivity
          * calling networks requests in this activity (vs. a splash screen activity) */
         splashScreen = (RelativeLayout) findViewById(R.id.framelayout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
+
+        my_drawer= (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
+        GestureDetector gd;
+        gd = new GestureDetector(my_drawer.getContext(), new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                closeDrawer(my_drawer);
+                return true;
+            }
+        });
     }
     /* end onCreate() */
 
@@ -654,13 +678,64 @@ public class TinderActivity extends AppCompatActivity
     /* Opens main drawer */
     public void openDrawer(View view) {
         my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
-        my_drawer.setVisibility(View.VISIBLE);
+        final FrameLayout dim_overlay = (FrameLayout) findViewById(R.id.DimOverlay);
+        
+        /* Fade in a dim overlay on top of the main interface */
+        ObjectAnimator fade_in = ObjectAnimator.ofFloat(dim_overlay, "alpha", 0f, 0.25f);
+        fade_in.setDuration(150);
+
+        /* Move drawer out of sight */
+        ObjectAnimator anim = ObjectAnimator.ofFloat(my_drawer, "translationX", -1 * my_drawer.getWidth());
+        anim.setDuration(1);
+
+        /* Actual sliding out animation */
+        final ObjectAnimator openDrawerAnim = ObjectAnimator.ofFloat(my_drawer, "translationX", 0f);
+        openDrawerAnim.setDuration(200);
+        openDrawerAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                dim_overlay.setVisibility(View.VISIBLE);
+            }
+        });
+
+        /* Move THEN slide out */
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                openDrawerAnim.start();
+                my_drawer.setVisibility(View.VISIBLE);
+            }
+        });
+        anim.start();
+        dim_overlay.setVisibility(View.VISIBLE);
     }
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
         my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
-        my_drawer.setVisibility(View.GONE);
+        final FrameLayout dim_overlay = (FrameLayout) findViewById(R.id.DimOverlay);
+
+        /* fade out the dim overlay */
+        ObjectAnimator fade_out = ObjectAnimator.ofFloat(dim_overlay, "alpha", 0.25f, 0f);
+        fade_out.setDuration(150);
+        fade_out.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                dim_overlay.setVisibility(View.GONE);
+            }
+        });
+
+        /* sliding in animation */
+        ObjectAnimator closeDrawerAnim = ObjectAnimator.ofFloat(my_drawer, "translationX", -1 * my_drawer.getWidth());
+        closeDrawerAnim.setDuration(200);
+        closeDrawerAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                my_drawer.setVisibility(View.GONE);
+            }
+        });
+        closeDrawerAnim.start();
+        dim_overlay.setVisibility(View.GONE);
     }
 
     public void viewFoodTypeList(View view) {
@@ -698,16 +773,16 @@ public class TinderActivity extends AppCompatActivity
             notification_number.setVisibility(View.VISIBLE);
             notification_number.setText(String.valueOf(cnt));
             if (cnt <= 9) {
-                notification_number.setTextSize(17);
+                notification_number.setTextSize(14);
                 notification_number.setPadding(0, 0, 0, 0);
             } else {
-                notification_number.setTextSize(12);
+                notification_number.setTextSize(11);
                 notification_number.setPadding(0, 0, 0, 3);
             }
         } else {
             notification_number.setVisibility(View.VISIBLE);
             notification_number.setText("+99");
-            notification_number.setTextSize(10);
+            notification_number.setTextSize(8);
             notification_number.setPadding(0, 0, 0, 4);
         }
         return;

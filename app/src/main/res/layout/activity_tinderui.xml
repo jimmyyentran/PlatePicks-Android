@@ -27,8 +27,8 @@
             android:background="#ffffff">
 
             <ImageView
-                android:layout_width="108dp"
-                android:layout_height="108dp"
+                android:layout_width="102dp"
+                android:layout_height="102dp"
                 android:id="@+id/circle_checkers"
                 android:layout_gravity="center_horizontal|top"
                 android:background="@color/main_red"
@@ -44,44 +44,46 @@
                 <RelativeLayout
                     android:id="@+id/top_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="72dp"
+                    android:layout_height="60dp"
                     android:background="@color/main_red"
-                    android:layout_gravity="top"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp">
+                    android:layout_gravity="top">
 
                     <!--Drawer Icon-->
-                    <ImageButton
-                        android:id="@+id/droor_icon"
-                        android:contentDescription="@string/contentDescription_tinder"
-                        android:layout_width="30dp"
-                        android:layout_height="25dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/settings_icon_3"
-                        android:background="@android:color/transparent"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:onClick="openDrawer"/>
+                    <FrameLayout
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/droor_button_frame"
+                        android:padding="17dp">
+
+                        <ImageButton
+                            android:id="@+id/droor_icon"
+                            android:contentDescription="@string/contentDescription_tinder"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/settings_icon_3"
+                            android:background="@android:color/transparent"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:onClick="openDrawer"/>
+                    </FrameLayout>
 
                     <!--Fancy Button-->
 
                     <!--List Button-->
                     <FrameLayout
                         android:id="@+id/list_button_frame"
-                        android:layout_width="wrap_content"
+                        android:layout_width="60dp"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="false"
-                        android:layout_centerVertical="true">
+                        android:layout_centerVertical="true"
+                        android:padding="16dp">
 
                         <ImageButton
                             android:id="@+id/list_button"
-                            android:layout_width="35dp"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerInside"
                             android:src="@drawable/list_icon_3"
@@ -117,8 +119,8 @@
             </LinearLayout>
 
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="93dp"
+                android:layout_height="93dp"
                 android:id="@+id/red_circle"
                 android:background="@drawable/red_circle"
                 android:layout_gravity="center_horizontal|top" />
@@ -132,18 +134,18 @@
                 android:layout_marginTop="6dp">
 
                 <ImageView
-                    android:layout_width="68dp"
-                    android:layout_height="75dp"
+                    android:layout_width="64dp"
+                    android:layout_height="60dp"
                     android:id="@+id/fancy_button_image"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginBottom="3dp"
                     android:scaleType="centerCrop"
                     android:layout_gravity="center_horizontal" />
 
                 <ImageButton
                     android:id="@+id/fancy_button"
-                    android:layout_width="70dp"
-                    android:layout_height="75dp"
+                    android:layout_width="64dp"
+                    android:layout_height="72dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/fancy_button"
                     android:background="@android:color/transparent"
@@ -169,7 +171,7 @@
             <ImageView
                 android:id="@+id/faded_logo"
                 android:src="@drawable/alternate_logo"
-                android:layout_width="100dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:alpha="0.2"
@@ -268,6 +270,14 @@
     </LinearLayout>
 
     <!--Drawer-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/DimOverlay"
+        android:visibility="gone"
+        android:background="#000000"
+        android:alpha="0.25"></FrameLayout>
+
     <android.support.v4.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -301,11 +311,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="15dp"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
                         android:paddingRight="15dp"
                         android:id="@+id/exit_icon"
-                        android:onClick="closeDrawer">
+                        android:onClick="closeDrawer"
+                        android:layout_marginLeft="5dp">
 
                         <!--Exit Icon's BG-->
                         <LinearLayout
@@ -448,7 +459,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Food Types"
+                                android:text="Categories"
                                 android:id="@+id/type_text"
                                 android:layout_centerVertical="true" />
 
@@ -612,7 +623,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="170dp"
+                    android:layout_marginTop="160dp"
                     android:visibility="gone"
                     android:id="@+id/types_list"
                     android:background="#ffffff">
@@ -625,7 +636,8 @@
                         <ScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/scrollView" >
+                            android:id="@+id/scrollView"
+                            android:layout_marginBottom="20dp">
 
                             <LinearLayout
                                 android:orientation="horizontal"
@@ -816,7 +828,7 @@
                         </ScrollView>
 
                         <LinearLayout
-                            android:orientation="horizontal"
+                            android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:paddingLeft="30dp"
@@ -838,6 +850,24 @@
                                 android:onClick="viewFoodTypeList"
                                 android:paddingTop="8dp"
                                 android:paddingBottom="8dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Clear All"
+                                android:id="@+id/types_clear_button"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textColor="#ffffff"
+                                android:background="@color/main_red"
+                                android:textStyle="bold"
+                                android:textSize="20dp"
+                                android:paddingLeft="60dp"
+                                android:paddingRight="60dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+                                android:layout_marginTop="5dp" />
+
                         </LinearLayout>
                     </LinearLayout>
 
@@ -854,8 +884,10 @@
                 android:id="@+id/drawer_right_space"
                 android:layout_alignParentRight="false"
                 android:layout_toRightOf="@+id/drawer_block"
-                android:background="#000000"
-                android:alpha="0.25">
+                android:background="@android:color/transparent"
+                android:alpha="1"
+                android:onClick="closeDrawer"
+                android:visibility="visible">
             </FrameLayout>
 
         </RelativeLayout>
@@ -869,20 +901,45 @@
         android:background="@color/main_red"
         android:id="@+id/framelayout_splashScreen"
         android:layout_gravity="center"
-        android:visibility="visible">
-        <ImageView
-            android:layout_width="140dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="140dp"
-            android:layout_centerInParent="true"
-            android:id="@+id/imageView_splash"
-            android:src="@drawable/main_logo"
-            android:contentDescription="@string/contentDescription_logo"/>
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:id="@+id/splash_logo_container">
+
+            <ImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_centerInParent="true"
+                android:id="@+id/main_logo_half"
+                android:src="@drawable/main_logo"
+                android:contentDescription="@string/contentDescription_logo"/>
+
+            <ImageView
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:id="@+id/white_divider"
+                android:background="#ffffff"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <ImageView
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/yelp_half"
+                android:src="@drawable/powered_by_yelp" />
+        </LinearLayout>
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/imageView_splash"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/splash_logo_container">
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
