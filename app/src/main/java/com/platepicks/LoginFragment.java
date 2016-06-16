@@ -85,18 +85,16 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.login_button, container, false);
-    }
+        View layoutView =  inflater.inflate(R.layout.login_button, container, false);
 
-    @Override
-    public  void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
-        textView = (TextView) view.findViewById(R.id.loginTextView);
+        LoginButton loginButton = (LoginButton) layoutView.findViewById(R.id.login_button);
+        textView = (TextView) layoutView.findViewById(R.id.loginTextView);
 
         loginButton.setReadPermissions("email");
         loginButton.setFragment(this);
         loginButton.registerCallback(callbackManager, callback);
+
+        return layoutView;
     }
 
     @Override

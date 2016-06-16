@@ -364,7 +364,7 @@ public class TinderActivity extends AppCompatActivity
     public void onConnected(Bundle bundle) {
         // If permission not granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TinderActivity", "Not allowed...");
+            Log.d("TinderActivity", "Not allowed to retrieve location.");
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
         } else {
             getLocation();
@@ -374,7 +374,7 @@ public class TinderActivity extends AppCompatActivity
     void getLocation() {
         // If permission not granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TinderActivity", "Not allowed...");
+            Log.d("TinderActivity", "Not allowed to retrieve location.");
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
         }
 
@@ -401,7 +401,7 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e("TinderActivity", connectionResult.getErrorMessage());
+        Log.e("TinderActivity", "Error on connecting for location");
     }
 
     @Override
