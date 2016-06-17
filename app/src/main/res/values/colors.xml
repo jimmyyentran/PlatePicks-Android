@@ -3,6 +3,7 @@
     <color name="tomato_red">#FF9F0000</color>
     <color name="background_gray">#c8000000</color>
     <color name="main_red">#bf3b3b</color>
+    <color name="light_red">#d15a5a</color>
     <color name="light_grey">#e1e1e1</color>
 
     <!--Amazon colors-->

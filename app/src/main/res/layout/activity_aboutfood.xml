@@ -131,7 +131,7 @@
                 android:layout_marginTop="8dp" />
 
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -139,10 +139,14 @@
 
                     <LinearLayout
                         android:orientation="vertical"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/address"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="0dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="0dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -171,13 +175,29 @@
                             android:textColor="@color/material_grey_800" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/map_button" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="DIRECTIONS"
+                        android:id="@+id/textView3"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/directions_button"
+                        android:textStyle="bold"
+                        android:textColor="#ffffff"
+                        android:onClick="goToMaps"
+                        android:textSize="10dp"
+                        android:gravity="center"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:layout_alignWithParentIfMissing="false"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="false"
+                        android:layout_alignTop="@+id/address"
+                        android:layout_alignBottom="@+id/address" />
 
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="match_parent"

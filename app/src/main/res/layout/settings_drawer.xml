@@ -194,7 +194,11 @@
                                 android:layout_height="wrap_content"
                                 android:text="Categories"
                                 android:id="@+id/type_text"
-                                android:layout_centerVertical="true" />
+                                android:layout_centerVertical="true"
+                                android:onClick="viewFoodTypeList"
+                                android:layout_alignTop="@+id/dropdown_container"
+                                android:layout_alignBottom="@+id/dropdown_container"
+                                android:gravity="center_vertical" />
 
                             <LinearLayout
                                 android:orientation="horizontal"
@@ -210,7 +214,8 @@
                                 android:layout_height="30dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:onClick="viewFoodTypeList">
+                                android:onClick="viewFoodTypeList"
+                                android:id="@+id/dropdown_container">
 
                                 <ImageView
                                     android:layout_width="12dp"
@@ -318,10 +323,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Clear Favorites"
-                                android:id="@+id/reset_text"
+                                android:id="@+id/reset_list"
                                 android:layout_centerHorizontal="true"
                                 android:textColor="#ffffff"
-                                android:background="@color/main_red"
+                                android:background="@drawable/red_button_handler"
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:textSize="20dp"
@@ -331,7 +336,8 @@
                                 android:layout_marginLeft="30dp"
                                 android:layout_marginRight="30dp"
                                 android:gravity="center_horizontal"
-                                android:layout_marginBottom="3dp" />
+                                android:layout_marginBottom="3dp"
+                                android:clickable="true" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -375,7 +381,8 @@
                             <LinearLayout
                                 android:orientation="horizontal"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="24dp">
 
                                 <!--left checkboxes-->
                                 <LinearLayout
@@ -384,7 +391,7 @@
                                     android:layout_height="wrap_content"
                                     android:id="@+id/food_types_left"
                                     android:paddingTop="15dp"
-                                    android:paddingLeft="12dp"
+                                    android:paddingLeft="0dp"
                                     android:paddingRight="15dp">
 
                                     <CheckBox
@@ -392,7 +399,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="American"
                                         android:id="@+id/checkBox"
-                                        android:checked="true"
+                                        android:checked="false"
                                         android:layout_gravity="center_horizontal|left" />
 
                                     <CheckBox
@@ -401,7 +408,7 @@
                                         android:text="Chinese"
                                         android:id="@+id/checkBox2"
                                         android:layout_gravity="center_horizontal|left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -409,7 +416,7 @@
                                         android:text="Mexican"
                                         android:id="@+id/checkBox3"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -417,7 +424,7 @@
                                         android:text="Japanese"
                                         android:id="@+id/checkBox4"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -425,7 +432,7 @@
                                         android:text="Italian"
                                         android:id="@+id/checkBox5"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -433,7 +440,7 @@
                                         android:text="Vietnamese"
                                         android:id="@+id/checkBox6"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -441,7 +448,7 @@
                                         android:text="Thai"
                                         android:id="@+id/checkBox7"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -449,7 +456,7 @@
                                         android:text="Indian"
                                         android:id="@+id/checkBox8"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -457,7 +464,7 @@
                                         android:text="Mediterranean"
                                         android:id="@+id/checkBox9"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -465,7 +472,7 @@
                                         android:text="Korean"
                                         android:id="@+id/checkBox10"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
                                 </LinearLayout>
 
                                 <!--right checkboxes-->
@@ -483,7 +490,7 @@
                                         android:text="French"
                                         android:id="@+id/checkBox11"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -491,7 +498,7 @@
                                         android:text="Pizza"
                                         android:id="@+id/checkBox12"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -499,7 +506,7 @@
                                         android:text="Seafood"
                                         android:id="@+id/checkBox13"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -507,7 +514,7 @@
                                         android:text="Dim Sum"
                                         android:id="@+id/checkBox14"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -515,7 +522,7 @@
                                         android:text="Asian Fusion"
                                         android:id="@+id/checkBox15"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -523,7 +530,7 @@
                                         android:text="Sandwiches"
                                         android:id="@+id/checkBox16"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -531,7 +538,7 @@
                                         android:text="Burgers"
                                         android:id="@+id/checkBox17"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -539,7 +546,7 @@
                                         android:text="Fast Food"
                                         android:id="@+id/checkBox18"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -547,7 +554,7 @@
                                         android:text="Coffee &amp; Tea"
                                         android:id="@+id/checkBox19"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -555,7 +562,7 @@
                                         android:text="Breakfast"
                                         android:id="@+id/checkBox20"
                                         android:layout_gravity="left"
-                                        android:checked="true" />
+                                        android:checked="false" />
                                 </LinearLayout>
                             </LinearLayout>
                         </ScrollView>
@@ -575,14 +582,15 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textColor="#ffffff"
-                                android:background="@color/main_red"
+                                android:background="@drawable/red_button_handler"
                                 android:textStyle="bold"
                                 android:textSize="20dp"
                                 android:paddingLeft="60dp"
                                 android:paddingRight="60dp"
                                 android:onClick="viewFoodTypeList"
                                 android:paddingTop="8dp"
-                                android:paddingBottom="8dp" />
+                                android:paddingBottom="8dp"
+                                android:clickable="true" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -592,14 +600,15 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textColor="#ffffff"
-                                android:background="@color/main_red"
+                                android:background="@drawable/red_button_handler"
                                 android:textStyle="bold"
                                 android:textSize="20dp"
                                 android:paddingLeft="60dp"
                                 android:paddingRight="60dp"
                                 android:paddingTop="8dp"
                                 android:paddingBottom="8dp"
-                                android:layout_marginTop="5dp" />
+                                android:layout_marginTop="5dp"
+                                android:clickable="true" />
 
                         </LinearLayout>
                     </LinearLayout>

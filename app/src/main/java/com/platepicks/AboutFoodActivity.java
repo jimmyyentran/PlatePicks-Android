@@ -2,15 +2,18 @@ package com.platepicks;
 
 import android.content.Context;
 import android.app.LauncherActivity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -72,11 +75,11 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         food.setText(item.getFoodName());
 
         TextView street = (TextView) findViewById(R.id.street);
-        street.setTypeface(quicksand);
+        //street.setTypeface(quicksand);
         TextView city = (TextView) findViewById(R.id.city_state);
-        city.setTypeface(quicksand);
+        //city.setTypeface(quicksand);
         TextView zip = (TextView) findViewById(R.id.zip_code);
-        zip.setTypeface(quicksand);
+        //zip.setTypeface(quicksand);
 
         String whole_address = item.getRestaurantAddress();
 
@@ -238,7 +241,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
 
         s.measure(View.MeasureSpec.UNSPECIFIED, s.getWidth());
 
-        while(s.getMeasuredWidth() < width){
+        while(s.getMeasuredWidth() < width && s.getMeasuredHeight() < dipToPixels(s.getContext(), 50)){
             ++i;
             s.setTextSize(i);
             s.measure(View.MeasureSpec.UNSPECIFIED, s.getWidth());
@@ -248,6 +251,19 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
 
         System.out.println("TextSize = " + Integer.toString(i));
         System.out.println("TextView width = " + Integer.toString(s.getMeasuredWidth()));
+    }
+
+    public static float dipToPixels(Context context, float dipValue) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
+    }
+
+    public void goToMaps (View view){
+        String address = item.getRestaurantAddress();
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + address);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 }
 

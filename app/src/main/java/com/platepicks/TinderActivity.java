@@ -12,6 +12,7 @@ import android.animation.Animator;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -215,6 +216,7 @@ public class TinderActivity extends AppCompatActivity
         splashScreen = (RelativeLayout) findViewById(R.id.layout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
 
+        /* Drawer gesture detector */
         my_drawer= (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
         GestureDetector gd;
         gd = new GestureDetector(my_drawer.getContext(), new GestureDetector.OnGestureListener() {
@@ -249,6 +251,13 @@ public class TinderActivity extends AppCompatActivity
 
             }
         });
+
+        /* NavDrawer onClick listeners */
+        TextView okBtn = (TextView) findViewById(R.id.types_ok_button);
+        TextView clearFavBtn = (TextView) findViewById(R.id.reset_list);
+        TextView clearTypesBtn = (TextView) findViewById(R.id.types_clear_button);
+
+
     }
     /* end onCreate() */
 
@@ -275,41 +284,46 @@ public class TinderActivity extends AppCompatActivity
 
     String getAllFoodTypes() {
         StringBuilder appender = new StringBuilder();
+        StringBuilder default_appender = new StringBuilder();
+
+        /* check for default search */
+        boolean nothing_checked = true;
 
         // Check left food type categories
-        for (int i = 0; i < leftFoodTypes.getChildCount(); i++)
+        for (int i = 0; i < leftFoodTypes.getChildCount(); i++) {
+            default_appender.append(FoodTypes.left[i]);
+            default_appender.append(",");
             if (((CheckBox) leftFoodTypes.getChildAt(i)).isChecked()) {
                 appender.append(FoodTypes.left[i]);
                 appender.append(",");
+                nothing_checked = false;
             }
+        }
 
         // Check right food type categories
-        for (int i = 0; i < rightFoodTypes.getChildCount(); i++)
+        for (int i = 0; i < rightFoodTypes.getChildCount(); i++) {
+            default_appender.append(FoodTypes.right[i]);
+            default_appender.append(",");
             if (((CheckBox) rightFoodTypes.getChildAt(i)).isChecked()) {
                 appender.append(FoodTypes.right[i]);
                 appender.append(",");
+                nothing_checked = false;
             }
+        }
 
-        String categoryFilter = appender.toString();
+        /* determine which appender to use */
+        String categoryFilter;
+
+        if(nothing_checked)
+            categoryFilter = default_appender.toString();
+        else
+            categoryFilter = appender.toString();
 
         // truncate the last extra comma
         if (!categoryFilter.isEmpty())
             categoryFilter = categoryFilter.substring(0, categoryFilter.length() - 1);
 
         Log.d("TinderActivity", categoryFilter);
-
-//        return "tradamerican," +
-//                "chinese";
-//                "mexican," +
-//                "japanese,jpsweets";
-//                "italian",
-//                "vietnamese",
-//                "thai",
-//                "indpak",
-//                "mediterranean",
-//                "korean"
-
-//        return "japanese,chinese";
 
         return categoryFilter;
     }
@@ -698,12 +712,6 @@ public class TinderActivity extends AppCompatActivity
         /* Actual sliding out animation */
         final ObjectAnimator openDrawerAnim = ObjectAnimator.ofFloat(my_drawer, "translationX", 0f);
         openDrawerAnim.setDuration(200);
-        openDrawerAnim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                dim_overlay.setVisibility(View.VISIBLE);
-            }
-        });
 
         /* Move THEN slide out */
         anim.addListener(new AnimatorListenerAdapter() {
@@ -713,6 +721,7 @@ public class TinderActivity extends AppCompatActivity
                 my_drawer.setVisibility(View.VISIBLE);
             }
         });
+        my_drawer.setVisibility(View.INVISIBLE);
         anim.start();
         dim_overlay.setVisibility(View.VISIBLE);
     }
