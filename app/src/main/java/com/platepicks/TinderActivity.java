@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
@@ -22,7 +21,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +38,6 @@ import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.vision.Frame;
 import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.FoodRequest;
@@ -73,7 +70,7 @@ public class TinderActivity extends AppCompatActivity
     GoogleApiClient mGoogleApiClient; // Google location client
 
     SwipeImageFragment mainPageFragment = null; // Picture of food fragment
-    FrameLayout splashScreen = null;            // Splash screen
+    RelativeLayout splashScreen = null;         // Splash screen
     SeekBar rad_seekBar = null;                 // local seekBar variable
     TextView notification_number = null;        // list notification number
     LinearLayout leftFoodTypes, rightFoodTypes; // 2 columns of food types
@@ -150,6 +147,7 @@ public class TinderActivity extends AppCompatActivity
 
         /* Ensure that we start on page 1, the middle page with the image. */
         imagePager.setCurrentItem(1, false);
+        imagePager.getCurrentItem();            // Ensure item is defined
 
         /* Listen for change in swipe animation's current state */
         final ImageChangeListener changeListener = new ImageChangeListener();
@@ -214,7 +212,7 @@ public class TinderActivity extends AppCompatActivity
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
-        splashScreen = (FrameLayout) findViewById(R.id.framelayout_splashScreen);
+        splashScreen = (RelativeLayout) findViewById(R.id.layout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
 
         my_drawer= (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
@@ -456,7 +454,7 @@ public class TinderActivity extends AppCompatActivity
     }
 
     /* ImagePagerAdapter:
-         * Feeds ViewPager the imageViews for its pages */
+     * Feeds ViewPager the imageViews for its pages */
     class ImagePagerAdapter extends FragmentStatePagerAdapter {
         public ImagePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -645,7 +643,7 @@ public class TinderActivity extends AppCompatActivity
 
     /* Class to listen to the state of splash screen animation. Only uses onAnimationEnd() to know
      * when the animation is finished. */
-    class mAnimatorListener implements Animator.AnimatorListener {
+    class SplashAnimatorListener implements Animator.AnimatorListener {
         @Override
         public void onAnimationStart(Animator animation) {
         }
@@ -864,7 +862,7 @@ public class TinderActivity extends AppCompatActivity
             // Fade, then set to gone through listener
             splashScreen.animate()
                     .alpha(0f)
-                    .setListener(new mAnimatorListener()); /* Listener to remove view once finished */
+                    .setListener(new SplashAnimatorListener()); /* Listener to remove view once finished */
         }
     }
 

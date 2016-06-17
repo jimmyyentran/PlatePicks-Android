@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_red"
-    android:id="@+id/framelayout_splashScreen"
+    android:id="@+id/layout_splashScreen"
     android:layout_gravity="center"
-    android:visibility="gone">
+    android:visibility="invisible">
 
     <LinearLayout
         android:orientation="horizontal"
