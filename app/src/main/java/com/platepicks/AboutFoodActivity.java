@@ -1,18 +1,12 @@
 package com.platepicks;
 
 import android.content.Context;
-import android.app.LauncherActivity;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,13 +22,12 @@ import android.widget.TextView;
 
 import com.platepicks.dynamoDB.TableComment;
 import com.platepicks.dynamoDB.nosql.CommentDO;
+import com.platepicks.util.ListItemClass;
 
 import java.io.File;
 import java.util.List;
-import static com.platepicks.dynamoDB.TableComment.insertComment;
 
 import static com.platepicks.dynamoDB.TableComment.getCommentsFromFoodID;
-import org.w3c.dom.Text;
 
 /**
  * Created by pokeforce on 4/24/16.
