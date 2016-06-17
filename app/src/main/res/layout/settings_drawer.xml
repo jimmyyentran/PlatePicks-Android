@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer1"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <!--Drawer Frame-->
         <RelativeLayout
@@ -363,7 +363,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="160dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:id="@+id/types_list"
                     android:background="#ffffff">
 
@@ -608,7 +608,8 @@
                                 android:paddingTop="8dp"
                                 android:paddingBottom="8dp"
                                 android:layout_marginTop="5dp"
-                                android:clickable="true" />
+                                android:clickable="true"
+                                android:onClick="clearTypes" />
 
                         </LinearLayout>
                     </LinearLayout>

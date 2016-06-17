@@ -767,16 +767,18 @@ public class TinderActivity extends AppCompatActivity
         }
     }
 
-    public void removeCheckers (View view) {
-        ImageView tmp = (ImageView) findViewById(R.id.top_checkers);
-        ImageView tmp2 = (ImageView)findViewById(R.id.bot_checkers);
-        if(tmp.getVisibility() == (View.INVISIBLE)) {
-            tmp.setVisibility(View.VISIBLE);
-            tmp2.setVisibility(View.VISIBLE);
+    public void newFilterSearch (View view){
+        new RequestFromDatabase().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void clearTypes (View view) {
+        for (int i = 0; i < leftFoodTypes.getChildCount(); i++){
+            if(((CheckBox) leftFoodTypes.getChildAt(i)).isChecked())
+                ((CheckBox) leftFoodTypes.getChildAt(i)).toggle();
         }
-        else{
-            tmp.setVisibility(View.INVISIBLE);
-            tmp2.setVisibility(View.INVISIBLE);
+        for (int i = 0; i < rightFoodTypes.getChildCount(); i++){
+            if(((CheckBox) rightFoodTypes.getChildAt(i)).isChecked())
+                ((CheckBox) rightFoodTypes.getChildAt(i)).toggle();
         }
     }
 
