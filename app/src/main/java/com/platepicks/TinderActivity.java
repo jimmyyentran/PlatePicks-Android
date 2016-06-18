@@ -39,6 +39,7 @@ import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.vision.Frame;
 import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.FoodRequest;
@@ -256,6 +257,20 @@ public class TinderActivity extends AppCompatActivity
         TextView okBtn = (TextView) findViewById(R.id.types_ok_button);
         TextView clearFavBtn = (TextView) findViewById(R.id.reset_list);
         TextView clearTypesBtn = (TextView) findViewById(R.id.types_clear_button);
+
+        clearTypesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < leftFoodTypes.getChildCount(); i++){
+                    if(((CheckBox) leftFoodTypes.getChildAt(i)).isChecked())
+                        ((CheckBox) leftFoodTypes.getChildAt(i)).toggle();
+                }
+                for (int i = 0; i < rightFoodTypes.getChildCount(); i++){
+                    if(((CheckBox) rightFoodTypes.getChildAt(i)).isChecked())
+                        ((CheckBox) rightFoodTypes.getChildAt(i)).toggle();
+                }
+            }
+        });
 
 
     }
@@ -698,6 +713,8 @@ public class TinderActivity extends AppCompatActivity
 
     /* Opens main drawer */
     public void openDrawer(View view) {
+        toggleViews("open");
+
         my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
         final FrameLayout dim_overlay = (FrameLayout) findViewById(R.id.DimOverlay);
         
@@ -728,6 +745,8 @@ public class TinderActivity extends AppCompatActivity
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
+        toggleViews("close");
+
         my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
         final FrameLayout dim_overlay = (FrameLayout) findViewById(R.id.DimOverlay);
 
@@ -752,6 +771,38 @@ public class TinderActivity extends AppCompatActivity
         });
         closeDrawerAnim.start();
         dim_overlay.setVisibility(View.GONE);
+
+        FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
+        typesList.setVisibility(View.GONE);
+    }
+
+    public void toggleViews (String s){
+        ImageView drawerIcon = (ImageView) findViewById(R.id.droor_icon);
+        FrameLayout fancyButton = (FrameLayout) findViewById(R.id.fancy_button_frame);
+        FrameLayout heartIcon = (FrameLayout) findViewById(R.id.list_button_frame);
+        ViewPager foodPic = (ViewPager) findViewById (R.id.viewPager_images);
+        ImageView fadedLogo = (ImageView) findViewById(R.id.faded_logo);
+        Button yesbutton = (Button) findViewById(R.id.button_yes);
+        Button noButton = (Button) findViewById(R.id.button_no);
+        
+        if(s == "close"){
+            drawerIcon.setVisibility(View.VISIBLE);
+            fancyButton.setVisibility(View.VISIBLE);
+            heartIcon.setVisibility(View.VISIBLE);
+            foodPic.setVisibility(View.VISIBLE);
+            fadedLogo.setVisibility(View.VISIBLE);
+            yesbutton.setVisibility(View.VISIBLE);
+            noButton.setVisibility(View.VISIBLE);
+        }
+        else{
+            drawerIcon.setVisibility(View.GONE);
+            fancyButton.setVisibility(View.GONE);
+            heartIcon.setVisibility(View.GONE);
+            foodPic.setVisibility(View.GONE);
+            fadedLogo.setVisibility(View.GONE);
+            yesbutton.setVisibility(View.GONE);
+            noButton.setVisibility(View.GONE);
+        }
     }
 
     public void viewFoodTypeList(View view) {
@@ -769,17 +820,6 @@ public class TinderActivity extends AppCompatActivity
 
     public void newFilterSearch (View view){
         new RequestFromDatabase().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public void clearTypes (View view) {
-        for (int i = 0; i < leftFoodTypes.getChildCount(); i++){
-            if(((CheckBox) leftFoodTypes.getChildAt(i)).isChecked())
-                ((CheckBox) leftFoodTypes.getChildAt(i)).toggle();
-        }
-        for (int i = 0; i < rightFoodTypes.getChildCount(); i++){
-            if(((CheckBox) rightFoodTypes.getChildAt(i)).isChecked())
-                ((CheckBox) rightFoodTypes.getChildAt(i)).toggle();
-        }
     }
 
     void update_list_number (int cnt) {

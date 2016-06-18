@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer1"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!--Drawer Frame-->
         <RelativeLayout
@@ -160,7 +160,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Radius (mi.)"
-                                android:id="@+id/radius_text" />
+                                android:id="@+id/radius_text"
+                                android:textSize="14dp" />
 
                             <SeekBar
                                 android:layout_width="wrap_content"
@@ -176,7 +177,8 @@
                                 android:id="@+id/radius_number"
                                 android:layout_alignParentEnd="true"
                                 android:textAlignment="viewEnd"
-                                android:text="15" />
+                                android:text="15"
+                                android:textSize="14dp" />
                         </RelativeLayout>
                         <!--end radius parameter container-->
 
@@ -198,7 +200,8 @@
                                 android:onClick="viewFoodTypeList"
                                 android:layout_alignTop="@+id/dropdown_container"
                                 android:layout_alignBottom="@+id/dropdown_container"
-                                android:gravity="center_vertical" />
+                                android:gravity="center_vertical"
+                                android:textSize="14dp" />
 
                             <LinearLayout
                                 android:orientation="horizontal"
@@ -229,6 +232,26 @@
                             </FrameLayout>
 
                         </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Search with these parameters"
+                            android:id="@+id/new_search_button"
+                            android:layout_centerHorizontal="true"
+                            android:textColor="#ffffff"
+                            android:background="@drawable/red_button_handler"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="14dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="45dp"
+                            android:layout_marginRight="25dp"
+                            android:gravity="center_horizontal"
+                            android:clickable="true"
+                            android:layout_marginTop="8dp" />
                         <!--end food types parameter container-->
 
                     </LinearLayout>
@@ -363,7 +386,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="160dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:id="@+id/types_list"
                     android:background="#ffffff">
 
@@ -400,7 +423,8 @@
                                         android:text="American"
                                         android:id="@+id/checkBox"
                                         android:checked="false"
-                                        android:layout_gravity="center_horizontal|left" />
+                                        android:layout_gravity="center_horizontal|left"
+                                        android:soundEffectsEnabled="false" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -608,8 +632,7 @@
                                 android:paddingTop="8dp"
                                 android:paddingBottom="8dp"
                                 android:layout_marginTop="5dp"
-                                android:clickable="true"
-                                android:onClick="clearTypes" />
+                                android:clickable="true" />
 
                         </LinearLayout>
                     </LinearLayout>

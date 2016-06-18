@@ -18,7 +18,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/main_ui">
 
         <!--Top Bar-->
         <RelativeLayout
@@ -166,10 +167,9 @@
                 android:id="@+id/faded_logo"
                 android:src="@drawable/alternate_logo"
                 android:layout_width="130dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:alpha="0.2"
-                android:layout_alignTop="@+id/viewPager_images"
                 android:layout_above="@+id/bot_checkers"
                 android:contentDescription="@string/contentDescription_fadedLogo"/>
 
@@ -183,7 +183,8 @@
                 android:layout_below="@+id/top_checkers"
                 android:layout_above="@+id/bot_checkers"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp" />
+                android:layout_marginBottom="5dp"
+                android:visibility="visible" />
 
 
             <!--Bottom Checker Border-->

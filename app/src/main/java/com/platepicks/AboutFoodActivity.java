@@ -24,8 +24,10 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -101,6 +103,10 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
             zip.setText(whole_address.split("\\, ")[3]);
         }
 
+        /* "Let's Eat!" text handling */
+        final TextView eatBtn = (TextView) findViewById(R.id.eat_button);
+        eatBtn.setTypeface(ham_heaven);
+
         // Food image
         ImageView img = (ImageView) findViewById(R.id.about_image);
         new ImageSaver(AboutFoodActivity.this).
@@ -122,9 +128,23 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                     float width = ll.getWidth() - ll.getPaddingRight() - ll.getPaddingLeft();
                     scaleText(restaurant, width);
                     isScaled = true;
+
+                    eatBtn.setWidth(eatBtn.getHeight() + (int) dipToPixels(getBaseContext(), 2));
+
+                    RelativeLayout aboutImage = (RelativeLayout) findViewById(R.id.about_image_frame);
+
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(aboutImage.getWidth(),
+                            aboutImage.getWidth() * 5 / 8);
+
+                    aboutImage.setLayoutParams(lp);
+
+                    ImageView foodImage = (ImageView) findViewById(R.id.about_image);
+                    foodImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
             }
         });
+
+
 
 
         // Execute the AsyncTask by passing in foodId
