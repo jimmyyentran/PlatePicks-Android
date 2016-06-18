@@ -1,6 +1,5 @@
 package com.platepicks;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -13,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.platepicks.util.ListItemClass;
 
 import java.util.ArrayList;
 

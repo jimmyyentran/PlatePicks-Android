@@ -4,7 +4,6 @@ import android.content.Context;
 import android.app.LauncherActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,13 +30,12 @@ import android.widget.TextView;
 
 import com.platepicks.dynamoDB.TableComment;
 import com.platepicks.dynamoDB.nosql.CommentDO;
+import com.platepicks.util.ListItemClass;
 
 import java.io.File;
 import java.util.List;
-import static com.platepicks.dynamoDB.TableComment.insertComment;
 
 import static com.platepicks.dynamoDB.TableComment.getCommentsFromFoodID;
-import org.w3c.dom.Text;
 
 /**
  * Created by pokeforce on 4/24/16.

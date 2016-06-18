@@ -14,8 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
 
-import com.platepicks.ListItemClass;
-
 /**
  * Created by pokeforce on 5/6/16.
  */

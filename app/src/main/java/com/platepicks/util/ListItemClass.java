@@ -2,22 +2,31 @@ package com.platepicks.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.TableLayout;
+
+import com.platepicks.objects.FoodReceive;
 
 /**
  * Created by elizamae on 4/29/16.
  */
 public class ListItemClass implements Parcelable {
+
+    // members
+    private String foodId;
     private String foodName;
     private String restaurantName;
     private String restaurantAddress;
+    private String imageUrl;
+    private TableLayout pageComments;
+    private FoodReceive original;
     private int clicked = 0;
+    private boolean downloaded = false; // Daniel: don't need to save this in parcelable
 
-    public String getFoodName() {
-        return foodName;
-    }
-    public void setFoodName(String foodName) {
-        this.foodName = foodName;
-    }
+    // member functions
+    public String getFoodId() {return foodId;}
+    public void setFoodId(String foodId) {this.foodId = foodId;}
+    public String getFoodName() {return foodName;}
+    public void setFoodName(String foodName) {this.foodName = foodName;}
     public String getRestaurantName() {
         return restaurantName;
     }
@@ -28,25 +37,32 @@ public class ListItemClass implements Parcelable {
     {
         return restaurantAddress;
     }
-    public void setRestaurantAddress(String restaurantAddress) {
-        this.restaurantAddress = restaurantAddress;
-    }
+    public void setRestaurantAddress(String restaurantAddress) {this.restaurantAddress = restaurantAddress;}
+    public String getImageUrl() {return imageUrl;}
+    public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
+
     public boolean isClicked() {
-        if (clicked == 1)
+        if (clicked == 1) // true
             return true;
         else return false;
     }
     public void setClicked(int n) {
         this.clicked = n;
     }
+    public boolean isDownloaded() {return downloaded;}
+    public void setDownloaded(boolean downloaded) {this.downloaded = downloaded;}
+    public FoodReceive getOriginal() {return original;}
+    public void setOriginal(FoodReceive original) {this.original = original;}
 
     public static final Parcelable.Creator<ListItemClass> CREATOR = new Parcelable.Creator<ListItemClass>() {
         public ListItemClass createFromParcel(Parcel source) {
             ListItemClass mItem = new ListItemClass();
-            mItem.foodName = source.readString();
-            mItem.restaurantName = source.readString();
-            mItem.restaurantAddress = source.readString();
-            mItem.clicked = source.readInt();
+            mItem.setFoodId(source.readString());
+            mItem.setFoodName(source.readString());
+            mItem.setRestaurantName(source.readString());
+            mItem.setRestaurantAddress(source.readString());
+            mItem.setImageUrl(source.readString());
+            mItem.setClicked(source.readInt());
             return mItem;
         }
         public ListItemClass[] newArray(int size) {
@@ -57,10 +73,14 @@ public class ListItemClass implements Parcelable {
     public int describeContents() {
         return 0;
     }
+
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(foodName);
-        parcel.writeString(restaurantName);
-        parcel.writeString(restaurantAddress);
+        parcel.writeString(this.getFoodId());
+        parcel.writeString(this.getFoodName());
+        parcel.writeString(this.getRestaurantName());
+        parcel.writeString(this.getRestaurantAddress());
+        parcel.writeString(this.getImageUrl());
         parcel.writeInt(clicked);
+
     }
 }
