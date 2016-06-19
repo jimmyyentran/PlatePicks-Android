@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.platepicks.support.SquareImageButton;
 import com.platepicks.util.ListItemClass;
@@ -31,6 +32,15 @@ public class SwipeImageFragment extends Fragment {
     private ListItemClass item;
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
+
+    public void setOffline(boolean offline) {
+        TextView placeholderText = (TextView) placeholder.findViewById(R.id.textView_placeholder);
+
+        if (offline)
+            placeholderText.setText(getResources().getText(R.string.placeholder_offline));
+        else
+            placeholderText.setText(getResources().getText(R.string.placeholder_1));
+    }
 
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
      * when image page is out of sight. */

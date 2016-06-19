@@ -12,7 +12,7 @@ import com.platepicks.TinderActivity;
  * Created by pokeforce on 6/16/16.
  */
 /* ImagePagerAdapter:
-     * Feeds ViewPager the imageViews for its pages */
+ * Feeds ViewPager the imageViews for its pages */
 public class ImagePagerAdapter extends FragmentStatePagerAdapter {
     TinderActivity caller;
 
@@ -33,7 +33,8 @@ public class ImagePagerAdapter extends FragmentStatePagerAdapter {
         arguments.putInt(SwipeImageFragment.PAGE_POSITION, position);
         imageFragment.setArguments(arguments);
 
-        if (position == 1) caller.setMainPageFragment(imageFragment);
+        if (position == 1 && !caller.isMainPageFragmentSet())
+            caller.setMainPageFragment(imageFragment);
 
         return imageFragment;
     }

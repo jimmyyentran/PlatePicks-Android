@@ -6,7 +6,7 @@
 //
 // Source code generated from template: aws-my-sample-app-android v0.7
 //
-package com.platepicks;
+package com.platepicks.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,8 +25,8 @@ import android.widget.ListView;
 
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
-import com.platepicks.demo.DemoConfiguration;
-import com.platepicks.demo.HomeDemoFragment;
+import com.platepicks.R;
+import com.platepicks.SignInActivity;
 import com.platepicks.navigation.NavigationDrawer;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {

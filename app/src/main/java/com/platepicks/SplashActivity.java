@@ -19,6 +19,7 @@ import com.amazonaws.mobile.user.signin.SignInManager;
 import com.amazonaws.mobile.user.signin.SignInProvider;
 import com.amazonaws.mobile.user.IdentityManager;
 import com.amazonaws.mobile.user.IdentityProvider;
+import com.platepicks.demo.MainActivity;
 
 import java.util.concurrent.CountDownLatch;
 

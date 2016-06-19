@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -75,7 +76,8 @@ public class TinderActivity extends AppCompatActivity
     SeekBar rad_seekBar = null;                 // local seekBar variable
     TextView notification_number = null;        // list notification number
     LinearLayout leftFoodTypes, rightFoodTypes; // 2 columns of food types
-    CustomViewPager imagePager;                 // View Pager for swiping
+    CustomViewPager imagePager;                 // View pager for swiping
+    ImagePagerAdapter imageAdapter;             // List adapter for view pager images
     DrawerLayout my_drawer = null;              // Drawer layout
     FrameLayout drawer_space = null;
     ImageView fancy_image;
@@ -108,6 +110,10 @@ public class TinderActivity extends AppCompatActivity
 
     public void setMainPageFragment(SwipeImageFragment f) {
         mainPageFragment = f;
+    }
+
+    public boolean isMainPageFragmentSet() {
+        return mainPageFragment != null;
     }
 
     public boolean isRequestMade() {
@@ -194,15 +200,16 @@ public class TinderActivity extends AppCompatActivity
         /* ViewPager: A view that enables swiping images left and right
          * Has 3 pages, 0-2 (reason is explained in class definition below). */
         imagePager = (CustomViewPager) findViewById(R.id.viewPager_images);
-        imagePager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager(), this));
+        imageAdapter = new ImagePagerAdapter(getSupportFragmentManager(), this);
+        imagePager.setAdapter(imageAdapter);
 
         /* Ensure that we start on page 1, the middle page with the image. */
         imagePager.setCurrentItem(1, false);
-        imagePager.getCurrentItem();            // Ensure item is defined
+//        imagePager.getCurrentItem();            // Ensure item is defined
 
         /* Listen for change in swipe animation's current state */
-        changeListener = new ImageChangeListener(this, imagePager);
-        imagePager.addOnPageChangeListener(changeListener);
+//        changeListener = new ImageChangeListener(this, imagePager);
+//        imagePager.addOnPageChangeListener(changeListener);
 
         /* initialize radius seekBar and link it to a listener*/
         rad_seekBar = (SeekBar) findViewById(R.id.radius_seekBar);
@@ -530,6 +537,13 @@ public class TinderActivity extends AppCompatActivity
         }
     }
 
+    public void onClickTest(View view) {
+        CheckBox testBox = (CheckBox) view;
+        Log.d("TinderActivity", "Click successful and box is " + String.valueOf(testBox.isChecked()));
+
+        mainPageFragment.setOffline(testBox.isChecked());
+    }
+
     // Called by AWSIntegratorTask to return json
     @Override
     public void doSomethingWithResults(String ob) {
@@ -542,6 +556,16 @@ public class TinderActivity extends AppCompatActivity
         listItems.addAll(ConvertToObject.toListItemClassList(foodReceives));
         requestImages();
         accessList.unlock();
+    }
+
+    @Override
+    public void doSomethingOnError() {
+        // FIXME: Figure out algorithm after putting offline error message here instead of onClickTest
+
+        // Fade, then set to gone through listener
+        splashScreen.animate()
+                .alpha(0f)
+                .setListener(new SplashAnimatorListener()); /* Listener to remove view once finished */
     }
 
     // Called by GetImagesAsyncTask to return list of bitmaps
@@ -566,9 +590,7 @@ public class TinderActivity extends AppCompatActivity
             placeholderIsPresent = false;
         }
 
-        Log.d("TinderActivity", "1. Setting request made to false: " + String.valueOf(requestMade));
         requestMade = false;
-        Log.d("TinderActivity", "2. Setting request made to false: " + String.valueOf(requestMade));
         accessList.unlock();
 
         // Remove splash] screen and post first pic
