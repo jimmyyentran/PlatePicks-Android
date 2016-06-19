@@ -12,31 +12,23 @@
 <!--remainder of the screen.                                                         -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/main_grey">
 
     <!--Main UI-->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/main_ui">
+        android:id="@+id/main_ui"
+        android:background="@color/main_grey">
 
         <!--Top Bar-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/top_bar_section"
-            android:background="#ffffff">
-
-            <ImageView
-                android:layout_width="101dp"
-                android:layout_height="101dp"
-                android:id="@+id/circle_checkers"
-                android:background="@color/main_red"
-                android:alpha="0.3"
-                android:src="@drawable/checker_circle_2"
-                android:layout_centerHorizontal="true"
-                android:contentDescription="@string/contentDescription_circleCheckers"/>
+            android:background="@color/main_grey">
 
             <ImageView
                 android:id="@+id/red_bar"
@@ -97,19 +89,6 @@
             </FrameLayout>
 
             <ImageView
-                android:id="@+id/top_checkers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/red_bar"
-                android:src="@drawable/checker_border_4"
-                android:rotation="180"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:background="@color/main_red"
-                android:alpha="0.3"
-                android:contentDescription="@string/contentDescription_checkerTop"/>
-
-            <ImageView
                 android:layout_width="93dp"
                 android:layout_height="93dp"
                 android:id="@+id/red_circle"
@@ -145,7 +124,7 @@
             android:id="@+id/pictures_section"
             android:layout_gravity="center"
             android:layout_weight="4"
-            android:background="#ffffff">
+            android:background="main_grey">
 
             <!--Top Checker Border-->
 
@@ -159,24 +138,12 @@
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/viewPager_images"
                 android:layout_below="@+id/top_checkers"
-                android:layout_above="@+id/bot_checkers"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:visibility="visible" />
 
 
             <!--Bottom Checker Border-->
-            <ImageView
-                android:id="@+id/bot_checkers"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/checker_border_4"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:layout_alignParentBottom="true"
-                android:background="@color/main_red"
-                android:alpha="0.3"
-                android:contentDescription="@string/contentDescription_checkerBottom"/>
         </RelativeLayout>
 
         <!--Bottom Bar-->

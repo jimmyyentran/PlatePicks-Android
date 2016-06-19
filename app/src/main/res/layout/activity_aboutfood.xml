@@ -81,14 +81,13 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="#ffffff">
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:id="@+id/about_image"
-                            android:scaleType="centerCrop" />
+                            android:id="@+id/about_image" />
 
                         <TextView
                             android:layout_width="match_parent"

@@ -31,7 +31,8 @@
                 android:id="@+id/drawer_block"
                 android:background="#ffffff"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true">
+                android:layout_alignParentLeft="true"
+                android:visibility="visible">
 
                 <!--drawer's top Bar-->
                 <FrameLayout

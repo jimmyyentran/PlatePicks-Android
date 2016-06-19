@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -21,10 +22,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -105,6 +110,8 @@ public class TinderActivity extends AppCompatActivity
         newItem.setRestaurantAddress("test_address");
         return newItem;
     }
+
+    boolean drawerOpened = false;
 
     /* onActivityResult() */
     @Override
@@ -272,6 +279,7 @@ public class TinderActivity extends AppCompatActivity
             }
         });
 
+        //my_drawer.setTranslationX(-1 * my_drawer.getWidth());
 
     }
     /* end onCreate() */
@@ -541,7 +549,7 @@ public class TinderActivity extends AppCompatActivity
         HashMap<FoodReceive, Boolean> cacheForDatabase; // Accumulate 6 likes/dislikes before request
 
         public ImageChangeListener() {
-            this.fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
+            //this.fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
             this.cacheForDatabase = new HashMap<>(6);
         }
 
@@ -714,65 +722,20 @@ public class TinderActivity extends AppCompatActivity
     /* Opens main drawer */
     public void openDrawer(View view) {
         toggleViews("open");
+        final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
 
-        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
-        final FrameLayout dim_overlay = (FrameLayout) findViewById(R.id.DimOverlay);
-        
-        /* Fade in a dim overlay on top of the main interface */
-        ObjectAnimator fade_in = ObjectAnimator.ofFloat(dim_overlay, "alpha", 0f, 0.25f);
-        fade_in.setDuration(150);
-
-        /* Move drawer out of sight */
-        ObjectAnimator anim = ObjectAnimator.ofFloat(my_drawer, "translationX", -1 * my_drawer.getWidth());
-        anim.setDuration(1);
-
-        /* Actual sliding out animation */
-        final ObjectAnimator openDrawerAnim = ObjectAnimator.ofFloat(my_drawer, "translationX", 0f);
-        openDrawerAnim.setDuration(200);
-
-        /* Move THEN slide out */
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                openDrawerAnim.start();
-                my_drawer.setVisibility(View.VISIBLE);
-            }
-        });
-        my_drawer.setVisibility(View.INVISIBLE);
-        anim.start();
-        dim_overlay.setVisibility(View.VISIBLE);
+        dimOverlay.setVisibility(View.VISIBLE);
+        my_drawer.setVisibility(View.VISIBLE);
     }
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
         toggleViews("close");
-
-        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
-        final FrameLayout dim_overlay = (FrameLayout) findViewById(R.id.DimOverlay);
-
-        /* fade out the dim overlay */
-        ObjectAnimator fade_out = ObjectAnimator.ofFloat(dim_overlay, "alpha", 0.25f, 0f);
-        fade_out.setDuration(150);
-        fade_out.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                dim_overlay.setVisibility(View.GONE);
-            }
-        });
-
-        /* sliding in animation */
-        ObjectAnimator closeDrawerAnim = ObjectAnimator.ofFloat(my_drawer, "translationX", -1 * my_drawer.getWidth());
-        closeDrawerAnim.setDuration(200);
-        closeDrawerAnim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                my_drawer.setVisibility(View.GONE);
-            }
-        });
-        closeDrawerAnim.start();
-        dim_overlay.setVisibility(View.GONE);
-
+        final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
         FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
+
+        dimOverlay.setVisibility(View.GONE);
+        my_drawer.setVisibility(View.GONE);
         typesList.setVisibility(View.GONE);
     }
 
@@ -781,7 +744,7 @@ public class TinderActivity extends AppCompatActivity
         FrameLayout fancyButton = (FrameLayout) findViewById(R.id.fancy_button_frame);
         FrameLayout heartIcon = (FrameLayout) findViewById(R.id.list_button_frame);
         ViewPager foodPic = (ViewPager) findViewById (R.id.viewPager_images);
-        ImageView fadedLogo = (ImageView) findViewById(R.id.faded_logo);
+        ImageView topLogo = (ImageView) findViewById(R.id.top_logo);
         Button yesbutton = (Button) findViewById(R.id.button_yes);
         Button noButton = (Button) findViewById(R.id.button_no);
         
@@ -790,7 +753,7 @@ public class TinderActivity extends AppCompatActivity
             fancyButton.setVisibility(View.VISIBLE);
             heartIcon.setVisibility(View.VISIBLE);
             foodPic.setVisibility(View.VISIBLE);
-            fadedLogo.setVisibility(View.VISIBLE);
+            topLogo.setVisibility(View.VISIBLE);
             yesbutton.setVisibility(View.VISIBLE);
             noButton.setVisibility(View.VISIBLE);
         }
@@ -799,7 +762,7 @@ public class TinderActivity extends AppCompatActivity
             fancyButton.setVisibility(View.GONE);
             heartIcon.setVisibility(View.GONE);
             foodPic.setVisibility(View.GONE);
-            fadedLogo.setVisibility(View.GONE);
+            topLogo.setVisibility(View.GONE);
             yesbutton.setVisibility(View.GONE);
             noButton.setVisibility(View.GONE);
         }
@@ -944,6 +907,7 @@ public class TinderActivity extends AppCompatActivity
                 "breakfast_brunch"
         };
     }
+
 }
 
     /* end Tinder Activity */

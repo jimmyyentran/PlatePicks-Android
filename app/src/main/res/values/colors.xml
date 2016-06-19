@@ -5,6 +5,7 @@
     <color name="main_red">#bf3b3b</color>
     <color name="light_red">#d15a5a</color>
     <color name="light_grey">#e1e1e1</color>
+    <color name="main_grey">#2e2e2e</color>
 
     <!--Amazon colors-->
     <color name="top_bar_background">#F58535</color>
