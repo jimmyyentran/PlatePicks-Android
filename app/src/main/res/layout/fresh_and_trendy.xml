@@ -12,8 +12,7 @@
 <!--remainder of the screen.                                                         -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/main_grey">
+    android:layout_height="match_parent">
 
     <!--Main UI-->
     <LinearLayout
@@ -27,8 +26,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/top_bar_section"
-            android:background="@color/main_grey">
+            android:id="@+id/top_bar_section">
 
             <ImageView
                 android:id="@+id/red_bar"
@@ -95,7 +93,8 @@
                 android:background="@drawable/red_circle"
                 android:layout_gravity="center_horizontal|top"
                 android:layout_centerHorizontal="true"
-                android:contentDescription="@string/contentDescription_redCircle"/>
+                android:contentDescription="@string/contentDescription_redCircle"
+                android:visibility="gone" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -113,7 +112,8 @@
                 android:id="@+id/top_logo"
                 android:src="@drawable/main_logo"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -123,8 +123,7 @@
             android:layout_height="0dp"
             android:id="@+id/pictures_section"
             android:layout_gravity="center"
-            android:layout_weight="4"
-            android:background="main_grey">
+            android:layout_weight="4">
 
             <!--Top Checker Border-->
 
@@ -150,10 +149,11 @@
         <RelativeLayout
             android:id="@+id/buttons_section"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:background="@color/main_red">
+            android:paddingBottom="15dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp">
 
             <!--A "nothing" view. Useful for layout tricks-->
             <Space
@@ -167,46 +167,64 @@
                 android:layout_alignParentRight="false"
                 android:layout_alignParentEnd="false" />
 
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/no_frame"
+                android:layout_toLeftOf="@+id/space_middle"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_no"
+                    android:layout_alignParentBottom="false"
+                    android:alpha="0.05"
+                    android:layout_toLeftOf="@+id/space_middle"
+                    android:scaleType="center"
+                    android:src="@drawable/white_circle"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/imageView5"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/ic_delete" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/yes_frame"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/space_middle">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_yes"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentEnd="true"
+                    android:alpha="0.05"
+                    android:layout_toRightOf="@+id/space_middle"
+                    android:adjustViewBounds="false"
+                    android:src="@drawable/white_circle"
+                    android:layout_gravity="center" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/imageView4"
+                    android:src="@mipmap/icon_check"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+
 
             <!--No Button-->
-            <Button
-                android:background="@drawable/white_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/button_no"
-                android:text="@string/no_button"
-                android:textAllCaps="false"
-                android:textSize="58sp"
-                android:textColor="@color/main_red"
-                android:layout_alignRight="@id/space_middle"
-                android:layout_alignEnd="@id/space_middle"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="false"
-                android:layout_alignParentTop="false"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
 
             <!--Yes Button-->
-            <Button
-                android:background="@drawable/white_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/button_yes"
-                android:text="@string/yes_button"
-                android:textAllCaps="false"
-                android:textSize="58sp"
-                android:textColor="@color/main_red"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignLeft="@id/space_middle"
-                android:layout_alignStart="@id/space_middle"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="5dp" />
         </RelativeLayout>
     </LinearLayout>
 
