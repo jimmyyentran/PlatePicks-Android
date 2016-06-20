@@ -20,29 +20,50 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/main_ui"
-        android:background="@color/main_grey">
+        android:background="@color/dark_red">
 
         <!--Top Bar-->
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:id="@+id/top_bar_section"
             android:layout_height="wrap_content"
-            android:id="@+id/top_bar_section">
+            android:layout_width="match_parent">
 
             <ImageView
-                android:id="@+id/red_bar"
+                android:layout_alignParentStart="false"
+                android:id="@+id/grey_bar"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@color/main_red"
+                android:layout_height="50dp"
                 android:layout_gravity="top"
-                android:contentDescription="@string/contentDescription_redBG"/>
+                android:contentDescription="@string/contentDescription_redBG"
+                android:src="@drawable/two_shaded_bar"
+                android:scaleType="fitXY" /><ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1.5dp"
+                android:id="@+id/white_line"
+                android:background="@color/white"
+                android:layout_below="@+id/grey_bar"
+            android:visibility="gone" />
 
-            <!--Drawer Icon-->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/app_name"
+                android:src="@drawable/app_title"
+                android:layout_toLeftOf="@+id/list_button_frame"
+                android:layout_toRightOf="@+id/droor_icon"
+                android:layout_alignBottom="@+id/grey_bar"
+                android:layout_alignTop="@+id/grey_bar"
+                android:layout_marginLeft="55dp"
+                android:layout_marginRight="55dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
+
             <ImageButton
                 android:id="@+id/droor_icon"
                 android:contentDescription="@string/contentDescription_tinder"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:padding="17dp"
+                android:padding="15dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/settings_icon_3"
                 android:background="@android:color/transparent"
@@ -50,8 +71,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignTop="@id/red_bar"
-                android:layout_alignBottom="@id/red_bar"
+                android:layout_alignTop="@id/grey_bar"
+                android:layout_alignBottom="@id/grey_bar"
                 android:onClick="openDrawer"/>
 
             <!--List Button-->
@@ -59,13 +80,13 @@
                 android:id="@+id/list_button_frame"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:padding="16dp"
+                android:padding="15dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignTop="@id/red_bar"
-                android:layout_alignBottom="@id/red_bar">
+                android:layout_alignTop="@id/grey_bar"
+                android:layout_alignBottom="@id/grey_bar">
 
                 <ImageButton
                     android:id="@+id/list_button"
@@ -85,35 +106,6 @@
                     android:typeface="sans"
                     android:layout_gravity="center"/>
             </FrameLayout>
-
-            <ImageView
-                android:layout_width="93dp"
-                android:layout_height="93dp"
-                android:id="@+id/red_circle"
-                android:background="@drawable/red_circle"
-                android:layout_gravity="center_horizontal|top"
-                android:layout_centerHorizontal="true"
-                android:contentDescription="@string/contentDescription_redCircle"
-                android:visibility="gone" />
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/fancy_button_frame"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp">
-
-            </FrameLayout>
-
-            <ImageView
-                android:layout_width="78dp"
-                android:layout_height="78dp"
-                android:id="@+id/top_logo"
-                android:src="@drawable/main_logo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -136,7 +128,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/viewPager_images"
-                android:layout_below="@+id/top_checkers"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:visibility="visible" />
@@ -156,8 +147,62 @@
             android:paddingLeft="20dp">
 
             <!--A "nothing" view. Useful for layout tricks-->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/no_frame"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/space_middle">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView5"
+                    android:background="@drawable/white_round_square" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NO"
+                    android:id="@+id/button_no"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:background="@drawable/dark_red_button_handler"
+                    android:layout_margin="2dp"
+                    android:textSize="15dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/yes_frame"
+                android:layout_toRightOf="@+id/space_middle"
+                android:layout_alignParentEnd="true">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView4"
+                    android:background="@drawable/white_round_square" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="YES"
+                    android:id="@+id/button_yes"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toRightOf="@+id/space_middle"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:background="@drawable/dark_red_button_handler"
+                    android:layout_margin="2dp"
+                    android:textSize="15dp" />
+            </FrameLayout>
+
             <Space
-                android:layout_width="0dp"
+                android:layout_width="15dp"
                 android:layout_height="0dp"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
@@ -166,60 +211,6 @@
                 android:layout_alignParentStart="false"
                 android:layout_alignParentRight="false"
                 android:layout_alignParentEnd="false" />
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/no_frame"
-                android:layout_toLeftOf="@+id/space_middle"
-                android:layout_alignParentStart="true">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button_no"
-                    android:layout_alignParentBottom="false"
-                    android:alpha="0.05"
-                    android:layout_toLeftOf="@+id/space_middle"
-                    android:scaleType="center"
-                    android:src="@drawable/white_circle"
-                    android:layout_alignParentStart="true"
-                    android:layout_gravity="center" />
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:id="@+id/imageView5"
-                    android:layout_gravity="center"
-                    android:src="@android:drawable/ic_delete" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/yes_frame"
-                android:layout_alignParentEnd="true"
-                android:layout_toRightOf="@+id/space_middle">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button_yes"
-                    android:layout_alignParentBottom="false"
-                    android:layout_alignParentEnd="true"
-                    android:alpha="0.05"
-                    android:layout_toRightOf="@+id/space_middle"
-                    android:adjustViewBounds="false"
-                    android:src="@drawable/white_circle"
-                    android:layout_gravity="center" />
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:id="@+id/imageView4"
-                    android:src="@mipmap/icon_check"
-                    android:layout_gravity="center" />
-            </FrameLayout>
 
 
             <!--No Button-->

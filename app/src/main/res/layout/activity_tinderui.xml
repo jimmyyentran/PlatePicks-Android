@@ -113,7 +113,6 @@
                 android:layout_width="93dp"
                 android:layout_height="93dp"
                 android:id="@+id/red_circle"
-                android:background="@drawable/red_circle"
                 android:layout_gravity="center_horizontal|top"
                 android:layout_centerHorizontal="true"
                 android:contentDescription="@string/contentDescription_redCircle"/>

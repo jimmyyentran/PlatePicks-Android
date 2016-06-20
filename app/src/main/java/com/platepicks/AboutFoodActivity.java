@@ -63,25 +63,30 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
         Typeface archistico_bold = Typeface.createFromAsset(getAssets(), "fonts/Archistico_Bold.ttf");
         Typeface ham_heaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
+        Typeface source_black_it = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-BlackIt.otf");
+
+        Typeface source_bold = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Bold.otf");
 
         TextView bar_name = (TextView) findViewById(R.id.bar_title);
-        bar_name.setTypeface(ham_heaven);
+        bar_name.setTypeface(source_bold);
 
         final TextView restaurant = (TextView) findViewById(R.id.restaurant_name);
 
-        restaurant.setTypeface(archistico_bold);
+        restaurant.setTypeface(source_black_it);
         restaurant.setText(item.getRestaurantName());
         restaurant.setTextSize(0);
 
         TextView food = (TextView) findViewById(R.id.food_name);
         food.setText(item.getFoodName());
 
+        Typeface source_reg = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Regular.otf");
+
         TextView street = (TextView) findViewById(R.id.street);
-        //street.setTypeface(quicksand);
+        street.setTypeface(source_reg);
         TextView city = (TextView) findViewById(R.id.city_state);
-        //city.setTypeface(quicksand);
+        city.setTypeface(source_reg);
         TextView zip = (TextView) findViewById(R.id.zip_code);
-        //zip.setTypeface(quicksand);
+        zip.setTypeface(source_reg);
 
         String whole_address = item.getRestaurantAddress();
 
@@ -105,7 +110,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
 
         /* "Let's Eat!" text handling */
         final TextView eatBtn = (TextView) findViewById(R.id.eat_button);
-        eatBtn.setTypeface(ham_heaven);
+        eatBtn.setTypeface(source_bold);
 
         // Food image
         ImageView img = (ImageView) findViewById(R.id.about_image);
@@ -134,7 +139,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                     RelativeLayout aboutImage = (RelativeLayout) findViewById(R.id.about_image_frame);
 
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(aboutImage.getWidth(),
-                            aboutImage.getWidth() * 5 / 8);
+                            aboutImage.getWidth() * 6 / 8);
 
                     aboutImage.setLayoutParams(lp);
 
@@ -196,63 +201,9 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         tmp1.setText("");
     }
 
-    public void submitComment(View view) {
-        TableLayout tabel = (TableLayout) findViewById(R.id.comment_list);
-        TextView comment_input = (TextView) findViewById(R.id.input_box);
-
-        LinearLayout ll = new LinearLayout(this);
-
-        LayoutInflater inflater1 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ll = (LinearLayout) inflater1.inflate(R.layout.comment_item, null);
-
-        TextView x = (TextView) ll.findViewById(R.id.item_comment);
-        x.setText(comment_input.getText().toString());
-
-        TextView y = (TextView) ll.findViewById(R.id.item_username);
-        //y.setText();
-
-        tabel.addView(ll);
-
-        /* hide the comment input field */
-        LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
-        if (tmp.getVisibility() == view.VISIBLE)
-            tmp.setVisibility(view.GONE);
-
-        /* Hide the soft keyboard if necessary */
-        EditText edit = (EditText) findViewById((R.id.input_box));
-        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(edit.getWindowToken(), 0);
-
-        /* empty the EditText view */
-        TextView tmp1 = (TextView) findViewById(R.id.input_box);
-        tmp1.setText("");
-
-        new TableComment().execute("Foodie_93", item.getFoodId(), x.getText().toString());
-    }
-
     @Override
     public void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId) {
         imageView.setImageBitmap(b);
-    }
-
-    public void loadComments(String comment, String userID, long date) {
-        System.out.println("Loading the comments");
-        //String final_date = getLocalTime (date)
-        LinearLayout ll = new LinearLayout(this);
-
-        LayoutInflater lf = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ll = (LinearLayout) lf.inflate(R.layout.comment_item, null);
-
-        TextView x = (TextView) ll.findViewById(R.id.item_comment);
-        TextView y = (TextView) ll.findViewById(R.id.item_username);
-//        TextView z = (TextView) ll.findViewById(R.id.item_date);
-
-        x.setText(comment);
-        y.setText(userID);
-//        z.setText(final_date);
-
-        TableLayout tl = (TableLayout) findViewById(R.id.comment_list);
-        tl.addView(ll);
     }
 
     private void scaleText (TextView s, float width) {
@@ -302,8 +253,10 @@ class QueryCommentsTask extends AsyncTask<String, Void, List<CommentDO>> {
     /** The system calls this to perform work in the UI thread and delivers
      * the result from doInBackground() */
     protected void onPostExecute(List<CommentDO> result) {
+        /*
         for (CommentDO comment : result) {
             activity.loadComments(comment.getContent(), comment.getUserId(), comment.getTime());
         }
+        */
     }
 }

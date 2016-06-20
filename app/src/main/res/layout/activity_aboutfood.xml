@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/dark_red">
 
     <!--Top bar-->
     <FrameLayout
@@ -13,7 +14,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/main_red"
+            android:background="@drawable/two_shaded_bar"
             android:id="@+id/toolbar_tinder">
 
             <ImageView
@@ -44,7 +45,7 @@
             android:id="@+id/bar_title"
             android:layout_gravity="center"
             android:textColor="#ffffff"
-            android:textSize="28dp" />
+            android:textSize="20dp" />
     </FrameLayout>
 
     <!--page content-->
@@ -75,51 +76,71 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/food_border"
-                    android:padding="5dp"
-                    android:id="@+id/about_image_frame">
+                    android:id="@+id/about_image_frame"
+                    android:background="@drawable/white_round_square_2">
 
-                    <FrameLayout
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#ffffff">
+                        android:id="@+id/about_image"
+                        android:scaleType="centerCrop"
+                        android:layout_margin="2dp" />
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/about_image" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView3"
+                        android:src="@drawable/white_round_square_2"
+                        android:layout_alignLeft="@+id/food_name_frame"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignBottom="@+id/food_name_frame"
+                        android:layout_alignTop="@+id/food_name_frame"
+                        android:layout_alignRight="@+id/food_name_frame"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="-2dp"
+                        android:layout_marginTop="-2dp" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/main_grey"
+                        android:layout_alignParentEnd="true"
+                        android:id="@+id/food_name_frame"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="The &quot;World 3-8&quot; Pizza"
                             android:id="@+id/food_name"
                             android:maxLines="1"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginBottom="8dp"
                             android:layout_gravity="center_horizontal|bottom"
                             android:gravity="center_horizontal"
-                            android:background="#ffffff"
-                            android:paddingTop="3dp"
+                            android:background="@color/dark_red"
+                            android:paddingTop="4dp"
                             android:paddingBottom="3dp"
-                            android:textColor="#000000"
+                            android:textColor="@color/white"
                             android:allowUndo="false"
-                            android:alpha="0.7"
                             android:textSize="15sp"
-                            android:ellipsize="end" />
+                            android:ellipsize="end"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true" />
                     </FrameLayout>
             </RelativeLayout>
 
-            <TextView
+                <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Mario's Adventurous Pi Pi"
                 android:id="@+id/restaurant_name"
                 android:textIsSelectable="false"
                 android:textSize="26dp"
-                android:textColor="#000000"
+                android:textColor="@color/white"
                 android:gravity="center_horizontal"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="20dp" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -127,7 +148,7 @@
                 android:id="@+id/imageView"
                 android:background="@color/light_grey"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="2dp" />
 
 
                 <RelativeLayout
@@ -153,7 +174,7 @@
                             android:text="334 Maple Ave."
                             android:id="@+id/street"
                             android:textSize="15sp"
-                            android:textColor="@color/material_grey_800" />
+                            android:textColor="@color/white" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -162,7 +183,7 @@
                             android:id="@+id/city_state"
                             android:textSize="15sp"
                             android:layout_marginTop="2dp"
-                            android:textColor="@color/material_grey_800" />
+                            android:textColor="@color/white" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -171,7 +192,7 @@
                             android:id="@+id/zip_code"
                             android:textSize="15sp"
                             android:layout_marginTop="2dp"
-                            android:textColor="@color/material_grey_800" />
+                            android:textColor="@color/white" />
                     </LinearLayout>
 
                     <TextView
@@ -181,7 +202,7 @@
                         android:id="@+id/eat_button"
                         android:layout_alignParentLeft="false"
                         android:layout_alignParentRight="true"
-                        android:background="@drawable/green_button_handler"
+                        android:background="@drawable/red_button_handler"
                         android:textColor="#ffffff"
                         android:onClick="goToMaps"
                         android:textSize="22dp"
@@ -203,43 +224,6 @@
                     android:layout_marginTop="8dp"
                     android:background="@color/light_grey"
                     android:layout_marginBottom="8dp" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/comment_list_container">
-
-                    <Button
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="120dp"
-                        android:layout_height="25dp"
-                        android:text="Leave a comment"
-                        android:id="@+id/button"
-                        android:textSize="10dp"
-                        android:textColor="#ffffff"
-                        android:background="@color/main_red"
-                        android:onClick="openCommentInput"/>
-
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="40dp"
-                        android:layout_marginTop="20dp"
-                        android:id="@+id/comment_list"></TableLayout>
-
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="70dp"
-                    android:id="@+id/imageView3"
-                    android:src="@drawable/alternate_logo"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:alpha="0.4" />
 
             </LinearLayout>
         </ScrollView>

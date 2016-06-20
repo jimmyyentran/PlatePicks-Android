@@ -147,7 +147,7 @@ public class TinderActivity extends AppCompatActivity
                 .build();
 
         /* XML Layout: selecting which file to set as layout */
-        setContentView(R.layout.activity_tinderui);
+        setContentView(R.layout.fresh_and_trendy);
 
         /* ViewPager: A view that enables swiping images left and right
          * Has 3 pages, 0-2 (reason is explained in class definition below). */
@@ -179,13 +179,13 @@ public class TinderActivity extends AppCompatActivity
 
         // Load custom YES/NO button text
 
-        Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
-        noButton.setTypeface(Typeface_HamHeaven);
-        yesButton.setTypeface(Typeface_HamHeaven);
+        Typeface source_regular = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Regular.otf");
+        noButton.setTypeface(source_regular);
+        yesButton.setTypeface(source_regular);
 
         /* Custom font for Drawer's Header */
         TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
-        drawer_header.setTypeface(Typeface_HamHeaven);
+        drawer_header.setTypeface(source_regular);
 
         /* On Click Listeners:
          * Functions that are called whenever the user clicks on the buttons or image */
@@ -583,7 +583,7 @@ public class TinderActivity extends AppCompatActivity
                     update_list_number(cnt);
 
                     /* move liked image into fancy button */
-                    fancy_image.setImageDrawable(mainPageFragment.getFoodPicture().getDrawable());
+                    //fancy_image.setImageDrawable(mainPageFragment.getFoodPicture().getDrawable());
 
                     /* create ListItemClass object passed into LikedListActivity */
 
@@ -740,31 +740,13 @@ public class TinderActivity extends AppCompatActivity
     }
 
     public void toggleViews (String s){
-        ImageView drawerIcon = (ImageView) findViewById(R.id.droor_icon);
-        FrameLayout fancyButton = (FrameLayout) findViewById(R.id.fancy_button_frame);
-        FrameLayout heartIcon = (FrameLayout) findViewById(R.id.list_button_frame);
         ViewPager foodPic = (ViewPager) findViewById (R.id.viewPager_images);
-        ImageView topLogo = (ImageView) findViewById(R.id.top_logo);
-        Button yesbutton = (Button) findViewById(R.id.button_yes);
-        Button noButton = (Button) findViewById(R.id.button_no);
-        
+
         if(s == "close"){
-            drawerIcon.setVisibility(View.VISIBLE);
-            fancyButton.setVisibility(View.VISIBLE);
-            heartIcon.setVisibility(View.VISIBLE);
             foodPic.setVisibility(View.VISIBLE);
-            topLogo.setVisibility(View.VISIBLE);
-            yesbutton.setVisibility(View.VISIBLE);
-            noButton.setVisibility(View.VISIBLE);
         }
         else{
-            drawerIcon.setVisibility(View.GONE);
-            fancyButton.setVisibility(View.GONE);
-            heartIcon.setVisibility(View.GONE);
             foodPic.setVisibility(View.GONE);
-            topLogo.setVisibility(View.GONE);
-            yesbutton.setVisibility(View.GONE);
-            noButton.setVisibility(View.GONE);
         }
     }
 
@@ -794,16 +776,16 @@ public class TinderActivity extends AppCompatActivity
             notification_number.setVisibility(View.VISIBLE);
             notification_number.setText(String.valueOf(cnt));
             if (cnt <= 9) {
-                notification_number.setTextSize(14);
+                notification_number.setTextSize(13);
                 notification_number.setPadding(0, 0, 0, 0);
             } else {
-                notification_number.setTextSize(11);
-                notification_number.setPadding(0, 0, 0, 3);
+                notification_number.setTextSize(10);
+                notification_number.setPadding(0, 0, 0, 5);
             }
         } else {
             notification_number.setVisibility(View.VISIBLE);
             notification_number.setText("+99");
-            notification_number.setTextSize(8);
+            notification_number.setTextSize(7);
             notification_number.setPadding(0, 0, 0, 4);
         }
         return;
