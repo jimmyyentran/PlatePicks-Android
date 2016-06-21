@@ -32,9 +32,17 @@ public class SwipeImageFragment extends Fragment {
     private Bitmap image;
     private ListItemClass item;
 
+    private boolean offlineFlag = false;
+
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
     public void setOffline(boolean offline) {
+        // View does not exist yet, so set boolean to call this function in onCreateView
+        if (placeholder == null) {
+            offline = true;
+            return;
+        }
+
         TextView placeholderText = (TextView) placeholder.findViewById(R.id.textView_placeholder);
         ProgressBar placeholderProgress =
                 (ProgressBar) placeholder.findViewById(R.id.progressBar_placeholder);
@@ -97,10 +105,15 @@ public class SwipeImageFragment extends Fragment {
         placeholder = (LinearLayout) fragmentView.findViewById(R.id.placeholder_container);
         RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
-        /* Set the image resource here */
-        if (pagePosition != 1) {
-            foodBorder.setVisibility(View.GONE);
+        /* Put offline text in placeholder here */
+        if (offlineFlag) {
+            setOffline(true);
+            offlineFlag = false;
         }
+        
+        /* Set the image resource here */
+        if (pagePosition != 1)
+            foodBorder.setVisibility(View.GONE);
 
         /* Open the about food activity here */
         foodPicture.setOnClickListener(new View.OnClickListener() {

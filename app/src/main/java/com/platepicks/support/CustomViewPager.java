@@ -13,7 +13,7 @@ import android.view.MotionEvent;
  * Useful: http://developer.android.com/training/gestures/viewgroup.html */
 public class CustomViewPager extends ViewPager {
     AnimationStateListener listener;
-    boolean canSwipe = true;
+    boolean canSwipe = false;
 
     public CustomViewPager(Context context) {
         super(context);

@@ -1,5 +1,6 @@
 package com.platepicks.util;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -47,6 +48,14 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
             String json = new Gson().toJson(params[1]); //added convert to json string
 //            System.out.println(json);
             callerActivity = (AWSIntegratorInterface) params[2];
+
+            if (!ConnectionCheck.isConnected((Context) params[2])) {
+                final InvokeResult result = new InvokeResult();
+                result.setStatusCode(500);
+                result.setFunctionError("Internet check: no connection");
+                return result;
+            }
+
             final ByteBuffer payload =
 //                    ENCODER.encode(CharBuffer.wrap((String) params[1]));
                     ENCODER.encode(CharBuffer.wrap(json)); //added send json string
@@ -106,6 +115,5 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
 //                    throw new Exception(e.getMessage());
         }
     }
-
 }
 

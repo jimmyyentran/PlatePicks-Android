@@ -1,5 +1,6 @@
 package com.platepicks.dynamoDB;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.amazonaws.AmazonClientException;
@@ -9,6 +10,7 @@ import com.platepicks.dynamoDB.nosql.FoodDO;
 import com.platepicks.dynamoDB.nosql.RestaurantDO;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.Location;
+import com.platepicks.util.ConnectionCheck;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -107,6 +109,11 @@ public final class TableFood {
             //TODO
         }
 
+        if (foodToGet == null) {
+            Log.e("TableFood", "Exception occurred during disliking food request");
+            return;
+        }
+
         double likes = foodToGet.getLike();
         likes += 1.0;
         foodToGet.setLike(likes);
@@ -119,8 +126,10 @@ public final class TableFood {
         }
 
         if (lastException != null) {
-//            // Re-throw the last exception encountered to alert the user.
-            throw lastException;
+            // Re-throw the last exception encountered to alert the user.
+            //throw lastException;
+            Log.e("TableFood", lastException.getMessage());
+            return;
         }
 
         Log.d(LOG_TAG,"Insert like successful");
@@ -138,32 +147,36 @@ public final class TableFood {
         FoodDO foodToGet = null;
         try {
             foodToGet = mapper.load(FoodDO.class, food.getFood_id());
+
             if(foodToGet == null){
                 Log.d(LOG_TAG, "The foodId does not exist, attempting to add to database");
-                System.out.println("The foodId does not exist, attempting to add to database");
+//                System.out.println("The foodId does not exist, attempting to add to database");
                 try {
                     // Food doesn't exist, so upload then exit
                     insertFood(food);
                     insertRestaurant(food.getLocation());
-                    Log.d(LOG_TAG, "Upload to database successful");
-                    return;
+                    Log.d(LOG_TAG, "Upload to database called");
                 } catch (final AmazonClientException ex2){
                     lastException = ex2;
                 }
             }
         } catch (final AmazonClientException ex) {
             Log.d(LOG_TAG, "The foodId does not exist, attempting to add to database");
-            System.out.println("The foodId does not exist, attempting to add to database");
+//            System.out.println("The foodId does not exist, attempting to add to database");
             try {
                 // Food doesn't exist, so upload then exit
                 insertFood(food);
                 insertRestaurant(food.getLocation());
-                Log.d(LOG_TAG, "Upload to database successful");
-                return;
+                Log.d(LOG_TAG, "Upload to database called");
             } catch (final AmazonClientException ex2){
                 lastException = ex2;
             }
             //TODO
+        }
+
+        if (foodToGet == null) {
+            Log.e("TableFood", "Exception occurred during liking food request");
+            return;
         }
 
         double likes = foodToGet.getDislike();
@@ -178,11 +191,33 @@ public final class TableFood {
         }
 
         if (lastException != null) {
-//            // Re-throw the last exception encountered to alert the user.
-            throw lastException;
+            // Re-throw the last exception encountered to alert the user.
+            //throw lastException;
+            Log.e("TableFood", lastException.getMessage());
+            return;
         }
 
         Log.d(LOG_TAG,"Insert like successful");
+    }
+
+    /**
+     * Wrapper function for app that takes context in order to check internet connection
+     * @param food FoodReceive object that is liked.
+     * @param context Context to check for internet connection
+     */
+    public static void likeFoodC(FoodReceive food, Context context) {
+        if (ConnectionCheck.isConnected(context))
+            likeFood(food);
+    }
+
+    /**
+     * Wrapper function for app that takes context in order to check internet connection
+     * @param food FoodReceive object that is disliked.
+     * @param context Context to check for internet connection
+     */
+    public static void dislikeFoodC(FoodReceive food, Context context) {
+        if (ConnectionCheck.isConnected(context))
+            dislikeFood(food);
     }
 
     /**

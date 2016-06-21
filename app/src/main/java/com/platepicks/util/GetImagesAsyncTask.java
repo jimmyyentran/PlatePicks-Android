@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
+import com.platepicks.TinderActivity;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,7 +24,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
     final int limitMemory = maxMemory / 8;                           // Use 1/8 of max memory
 
     int maxHeight, maxWidth;
-    boolean internetError = false;
+    boolean internetErrorFlag = false;
     BitmapFactory.Options options;
 
     ImageLoaderInterface caller;
@@ -63,7 +65,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
                 Log.d("GetImagesAsyncTask", "Bytes: " + bytes + " " + ref.getFoodName());
             }
 
-            if (currentMemUsed >= limitMemory || internetError) break;
+            if (currentMemUsed >= limitMemory || internetErrorFlag) break;
         }
 
         return images;
@@ -71,16 +73,22 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
     @Override
     protected void onPostExecute(LinkedList<Bitmap> images) {
-        if (!images.isEmpty())
+        if (images != null && !images.isEmpty())
             caller.doSomethingWithDownloadedImages(images);
 
-        if (internetError)
+        if (internetErrorFlag)
             caller.doSomethingOnImageError();
     }
 
     // Takes in url and downloads webpage, decoding it into a bitmap
     Bitmap downloadImage(String url) {
         Log.d("GetImagesAsyncTask", url);
+
+        if (!ConnectionCheck.isConnected((TinderActivity) caller)) {
+            Log.d("GetImagesAsyncTask", "Successful cast");
+            internetErrorFlag = true;
+            return null;
+        }
 
         InputStream is = null;
         Bitmap image = null;
@@ -143,7 +151,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
             imageIn.close();
         } catch (IOException e) {
             e.printStackTrace();
-            internetError = true;
+            internetErrorFlag = true;
         } finally {
             if (is != null) try {
                 is.close();

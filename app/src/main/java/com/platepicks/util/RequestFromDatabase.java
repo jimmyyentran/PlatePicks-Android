@@ -23,10 +23,8 @@ public class RequestFromDatabase extends AsyncTask<Void, Void, Void> {
     // Pass in: search radius, number of food items
     @Override
     protected Void doInBackground(Void... params) {
-        Log.d("TinderActivity", "1. Start request");
         caller.waitForGPSLock.lock();
         caller.waitForGPSLock.unlock();
-        Log.d("TinderActivity", "2. Start request");
 
         return null;
     }
@@ -34,6 +32,12 @@ public class RequestFromDatabase extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         int radius = convertMilesToMeters(Math.min(caller.getRadius(), caller.MAX_RADIUS));
+        if (ConnectionCheck.isWifi(caller))
+            caller.businessLimit = caller.LIMIT_WITH_WIFI;
+        else
+            caller.businessLimit = caller.LIMIT_WITHOUT_WIFI;
+
+        Log.d("RequestFromDatabase", "businessLimit: " + String.valueOf(caller.businessLimit));
 
         FoodRequest req = new FoodRequest("", caller.foodLimit, caller.gpsLocation,
                 caller.businessLimit, radius, caller.getAllFoodTypes(), 1, caller.offset);

@@ -43,6 +43,7 @@ import com.platepicks.objects.FoodReceive;
 import com.platepicks.support.ConnectivityReceiver;
 import com.platepicks.support.CustomViewPager;
 import com.platepicks.util.AWSIntegratorInterface;
+import com.platepicks.util.ConnectionCheck;
 import com.platepicks.util.ConvertToObject;
 import com.platepicks.util.FoodTypes;
 import com.platepicks.util.GetImagesAsyncTask;
@@ -67,6 +68,7 @@ public class TinderActivity extends AppCompatActivity
             GoogleApiClient.ConnectionCallbacks,
             GoogleApiClient.OnConnectionFailedListener {
     public final int MAX_RADIUS = 40000;    // meters
+    public final int LIMIT_WITH_WIFI = 20, LIMIT_WITHOUT_WIFI = 5;
 
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
     final int REQUEST_LOCATION = 1;
@@ -97,11 +99,11 @@ public class TinderActivity extends AppCompatActivity
     boolean firstRequest;                               // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
 
-    int cnt = 1;                    // used for notification count of new liked foods
-    public int businessLimit = 20;     // Number of businesses returned per request
-    public int foodLimit = 3;          // Number of food per business
-    public int offset = 0;             // Number of businesses to offset by in yelp request
-    public String gpsLocation;         // "Latitude, Longitude"
+    int cnt = 1;                                    // used for notification count of new liked foods
+    public int businessLimit = LIMIT_WITHOUT_WIFI;  // Number of businesses returned per request
+    public int foodLimit = 3;                       // Number of food per business
+    public int offset = 0;                          // Number of businesses to offset by in yelp request
+    public String gpsLocation;                      // "Latitude, Longitude"
 
     // Function: creates list item
     public ListItemClass createListItem(String foodName) {
@@ -313,6 +315,14 @@ public class TinderActivity extends AppCompatActivity
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d("TinderActivity", "Here in restart");
+        if (placeholderIsPresent && !ConnectionCheck.isConnected(this) && connectionRx == null)
+            handleNoInternet(ConnectivityReceiver.REQUEST_FROM_DATABASE);
+        super.onRestart();
     }
 
     public String getAllFoodTypes() {

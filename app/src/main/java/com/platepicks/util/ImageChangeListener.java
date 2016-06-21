@@ -118,8 +118,8 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
                 new RequestFromDatabase(caller).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
-                /* After certain number of requests are accumulated, they are all sent to database
-                   in one thread. */
+            /* After certain number of requests are accumulated, they are all sent to database
+               in one thread. */
             if (cacheForDatabase.size() >= 6)
                 uploadLikesData();
 
@@ -132,17 +132,22 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         }
     }
 
+    // Send like/dislike data to amazon database
     private void uploadLikesData() {
         final HashMap<FoodReceive, Boolean> copyCache = new HashMap<>(cacheForDatabase);
         cacheForDatabase.clear();
+
+        // If no internet, abort trying to send data
+        if (!ConnectionCheck.isConnected(caller))
+            return;
 
         new Thread(new Runnable() {
             public void run() {
                 for (FoodReceive fr : copyCache.keySet()) {
                     if (copyCache.get(fr))
-                        TableFood.likeFood(fr);
+                        TableFood.likeFoodC(fr, caller);
                     else
-                        TableFood.dislikeFood(fr);
+                        TableFood.dislikeFoodC(fr, caller);
                 }
 
                 copyCache.clear();
