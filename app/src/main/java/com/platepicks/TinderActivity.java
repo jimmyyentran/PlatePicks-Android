@@ -5,12 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.animation.Animator;
 import android.location.Location;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.platepicks.objects.FoodReceive;
+import com.platepicks.support.ConnectivityReceiver;
 import com.platepicks.support.CustomViewPager;
 import com.platepicks.util.AWSIntegratorInterface;
 import com.platepicks.util.ConvertToObject;
@@ -70,6 +73,8 @@ public class TinderActivity extends AppCompatActivity
 
     GoogleApiClient mGoogleApiClient;   // Google location client
     ImageChangeListener changeListener; // Listens to changes in image swiping from viewpager
+    ImagePagerAdapter imageAdapter;     // List adapter for view pager images
+    ConnectivityReceiver connectionRx;  // Listens to changes in internet connection
 
     SwipeImageFragment mainPageFragment = null; // Picture of food fragment
     RelativeLayout splashScreen = null;         // Splash screen
@@ -77,7 +82,6 @@ public class TinderActivity extends AppCompatActivity
     TextView notification_number = null;        // list notification number
     LinearLayout leftFoodTypes, rightFoodTypes; // 2 columns of food types
     CustomViewPager imagePager;                 // View pager for swiping
-    ImagePagerAdapter imageAdapter;             // List adapter for view pager images
     DrawerLayout my_drawer = null;              // Drawer layout
     FrameLayout drawer_space = null;
     ImageView fancy_image;
@@ -108,12 +112,8 @@ public class TinderActivity extends AppCompatActivity
         return newItem;
     }
 
-    public void setMainPageFragment(SwipeImageFragment f) {
-        mainPageFragment = f;
-    }
-
-    public boolean isMainPageFragmentSet() {
-        return mainPageFragment != null;
+    public SwipeImageFragment getMainPageFragment() {
+        return mainPageFragment;
     }
 
     public boolean isRequestMade() {
@@ -200,6 +200,7 @@ public class TinderActivity extends AppCompatActivity
         /* ViewPager: A view that enables swiping images left and right
          * Has 3 pages, 0-2 (reason is explained in class definition below). */
         imagePager = (CustomViewPager) findViewById(R.id.viewPager_images);
+        mainPageFragment = new SwipeImageFragment();
         imageAdapter = new ImagePagerAdapter(getSupportFragmentManager(), this);
         imagePager.setAdapter(imageAdapter);
 
@@ -208,8 +209,8 @@ public class TinderActivity extends AppCompatActivity
 //        imagePager.getCurrentItem();            // Ensure item is defined
 
         /* Listen for change in swipe animation's current state */
-//        changeListener = new ImageChangeListener(this, imagePager);
-//        imagePager.addOnPageChangeListener(changeListener);
+        changeListener = new ImageChangeListener(this, imagePager);
+        imagePager.addOnPageChangeListener(changeListener);
 
         /* initialize radius seekBar and link it to a listener*/
         rad_seekBar = (SeekBar) findViewById(R.id.radius_seekBar);
@@ -282,21 +283,30 @@ public class TinderActivity extends AppCompatActivity
 
 
     }
-    /* end onCreate() */
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Release lock once UI is visible to let splash screen be removed and show first pic
-        if (waitForUILock.isHeldByCurrentThread())
-            waitForUILock.unlock();
-    }
 
     @Override
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        if (connectionRx != null)
+            registerReceiver(connectionRx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        // Release lock once UI is visible to let splash screen be removed and show first pic
+        if (waitForUILock.isHeldByCurrentThread())
+            waitForUILock.unlock();
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if (connectionRx != null)
+            unregisterReceiver(connectionRx);
+        super.onPause();
     }
 
     @Override
@@ -435,6 +445,18 @@ public class TinderActivity extends AppCompatActivity
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, requestedImages.toArray());
     }
 
+    // Called by connectionRx when back online
+    public void requestImagesReceiver() {
+        Log.d("TinderActivity", "Receiver called");
+
+        unregisterReceiver(connectionRx);
+        if (connectionRx != null && !isRequestMade()) {
+            new RequestFromDatabase(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            requestMade = true;
+        }
+        connectionRx = null;
+    }
+
     /* Opens main drawer */
     public void openDrawer(View view) {
         my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
@@ -537,13 +559,6 @@ public class TinderActivity extends AppCompatActivity
         }
     }
 
-    public void onClickTest(View view) {
-        CheckBox testBox = (CheckBox) view;
-        Log.d("TinderActivity", "Click successful and box is " + String.valueOf(testBox.isChecked()));
-
-        mainPageFragment.setOffline(testBox.isChecked());
-    }
-
     // Called by AWSIntegratorTask to return json
     @Override
     public void doSomethingWithResults(String ob) {
@@ -560,12 +575,20 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void doSomethingOnError() {
-        // FIXME: Figure out algorithm after putting offline error message here instead of onClickTest
+        mainPageFragment.setOffline(true);
+        imagePager.setSwiping(false);
+
+        Log.d("TinderActivity", "RequestMade? : " + String.valueOf(requestMade));
+        requestMade = false;
+        connectionRx = new ConnectivityReceiver(this);
+        registerReceiver(connectionRx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         // Fade, then set to gone through listener
-        splashScreen.animate()
-                .alpha(0f)
-                .setListener(new SplashAnimatorListener()); /* Listener to remove view once finished */
+        if (splashScreen.getVisibility() != View.GONE) {
+            splashScreen.animate()
+                    .alpha(0f)
+                    .setListener(new SplashAnimatorListener()); /* Listener to remove view once finished */
+        }
     }
 
     // Called by GetImagesAsyncTask to return list of bitmaps
@@ -590,7 +613,10 @@ public class TinderActivity extends AppCompatActivity
             placeholderIsPresent = false;
         }
 
+        // Reset various variables
         requestMade = false;
+        mainPageFragment.setOffline(false);
+        imagePager.setSwiping(true);
         accessList.unlock();
 
         // Remove splash] screen and post first pic

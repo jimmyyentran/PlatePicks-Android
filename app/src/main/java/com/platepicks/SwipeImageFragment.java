@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,11 +36,17 @@ public class SwipeImageFragment extends Fragment {
 
     public void setOffline(boolean offline) {
         TextView placeholderText = (TextView) placeholder.findViewById(R.id.textView_placeholder);
+        ProgressBar placeholderProgress =
+                (ProgressBar) placeholder.findViewById(R.id.progressBar_placeholder);
 
-        if (offline)
+        if (offline) {
             placeholderText.setText(getResources().getText(R.string.placeholder_offline));
-        else
+            placeholderProgress.setVisibility(View.GONE);
+        }
+        else {
             placeholderText.setText(getResources().getText(R.string.placeholder_1));
+            placeholderProgress.setVisibility(View.VISIBLE);
+        }
     }
 
     /* Changes image in imagebutton from ImageChangeListner in TinderActivity, should only be called
@@ -52,6 +59,7 @@ public class SwipeImageFragment extends Fragment {
                 bg.setImageDrawable(null);
                 yelp_logo.setVisibility(View.GONE);
                 placeholder.setVisibility(View.VISIBLE);
+                setOffline(false);
             }
             // Change picture
             else {

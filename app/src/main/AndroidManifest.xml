@@ -43,14 +43,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity android:name="com.platepicks.LikedListActivity"
             android:label="@string/liked_list"/>
         <activity android:name="com.platepicks.AboutFoodActivity"
             android:label="@string/about_food" />
-
-
 
         <activity
             android:name="com.platepicks.SplashActivity"

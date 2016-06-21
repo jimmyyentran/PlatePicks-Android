@@ -27,14 +27,20 @@ public class ImagePagerAdapter extends FragmentStatePagerAdapter {
      * from the internet. */
     @Override
     public Fragment getItem(int position) {
-        SwipeImageFragment imageFragment = new SwipeImageFragment();
-        Bundle arguments = new Bundle();
+        SwipeImageFragment imageFragment;
 
+        if (position != 1) {
+            imageFragment = new SwipeImageFragment();
+        } else {
+            imageFragment = caller.getMainPageFragment();
+        }
+
+        Bundle arguments = new Bundle();
         arguments.putInt(SwipeImageFragment.PAGE_POSITION, position);
         imageFragment.setArguments(arguments);
 
-        if (position == 1 && !caller.isMainPageFragmentSet())
-            caller.setMainPageFragment(imageFragment);
+//        if (position == 1 && !caller.isMainPageFragmentSet())
+//            caller.setMainPageFragment(imageFragment);
 
         return imageFragment;
     }

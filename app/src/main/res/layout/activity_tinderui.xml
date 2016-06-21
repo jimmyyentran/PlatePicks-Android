@@ -187,13 +187,6 @@
 
 
             <!--Bottom Checker Border-->
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Switch to 1 state"
-                android:id="@+id/checkBox_test"
-                android:layout_centerHorizontal="true"
-                android:onClick="onClickTest" />
 
             <ImageView
                 android:id="@+id/bot_checkers"
