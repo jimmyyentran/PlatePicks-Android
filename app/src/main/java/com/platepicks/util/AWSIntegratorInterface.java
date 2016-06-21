@@ -5,6 +5,6 @@ package com.platepicks.util;
  */
 public interface AWSIntegratorInterface {
     void doSomethingWithResults(String ob);
-    void doSomethingOnError();
+    void doSomethingOnAWSError();
 //    public String returnResults(); //used for testing
 }

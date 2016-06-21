@@ -20,7 +20,9 @@ import java.util.LinkedList;
 public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitmap>> {
     final int maxMemory = (int) (Runtime.getRuntime().maxMemory());  // In bytes
     final int limitMemory = maxMemory / 8;                           // Use 1/8 of max memory
+
     int maxHeight, maxWidth;
+    boolean internetError = false;
     BitmapFactory.Options options;
 
     ImageLoaderInterface caller;
@@ -42,23 +44,26 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
         for (Object item : params) {
 //        for (Object url : testArray) {
             ListItemClass ref = (ListItemClass) item;
-
             Bitmap b = downloadImage(ref.getImageUrl());
-            images.add(b);
-            ref.setDownloaded(true);
 
-            // Size in terms of memory
-            int bytes;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                bytes = b.getAllocationByteCount();
-            else
-                bytes = b.getByteCount();
+            if (b != null) {
+                // Add image to list of successful downloads
+                images.add(b);
+                ref.setDownloaded(true);
 
-            // Add to total amount
-            currentMemUsed += bytes;
-            Log.d("GetImagesAsyncTask", "Bytes: " + bytes + " " + ref.getFoodName());
+                // Size in terms of memory
+                int bytes;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                    bytes = b.getAllocationByteCount();
+                else
+                    bytes = b.getByteCount();
 
-            if (currentMemUsed >= limitMemory) break;
+                // Add to total amount
+                currentMemUsed += bytes;
+                Log.d("GetImagesAsyncTask", "Bytes: " + bytes + " " + ref.getFoodName());
+            }
+
+            if (currentMemUsed >= limitMemory || internetError) break;
         }
 
         return images;
@@ -66,8 +71,11 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
     @Override
     protected void onPostExecute(LinkedList<Bitmap> images) {
-//        test.setImageBitmap(images.get(0));
-        caller.doSomethingWithDownloadedImages(images);
+        if (!images.isEmpty())
+            caller.doSomethingWithDownloadedImages(images);
+
+        if (internetError)
+            caller.doSomethingOnImageError();
     }
 
     // Takes in url and downloads webpage, decoding it into a bitmap
@@ -135,6 +143,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
             imageIn.close();
         } catch (IOException e) {
             e.printStackTrace();
+            internetError = true;
         } finally {
             if (is != null) try {
                 is.close();

@@ -59,7 +59,6 @@ public class SwipeImageFragment extends Fragment {
                 bg.setImageDrawable(null);
                 yelp_logo.setVisibility(View.GONE);
                 placeholder.setVisibility(View.VISIBLE);
-                setOffline(false);
             }
             // Change picture
             else {

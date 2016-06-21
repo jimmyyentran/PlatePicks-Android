@@ -97,7 +97,7 @@ public class TinderActivity extends AppCompatActivity
     boolean firstRequest;                               // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
 
-    int cnt = 1;                // used for notification count of new liked foods
+    int cnt = 1;                    // used for notification count of new liked foods
     public int businessLimit = 20;     // Number of businesses returned per request
     public int foodLimit = 3;          // Number of food per business
     public int offset = 0;             // Number of businesses to offset by in yelp request
@@ -445,14 +445,41 @@ public class TinderActivity extends AppCompatActivity
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, requestedImages.toArray());
     }
 
-    // Called by connectionRx when back online
-    public void requestImagesReceiver() {
-        Log.d("TinderActivity", "Receiver called");
+    void handleNoInternet(int task) {
+        Log.d("TinderActivity", "Internet error, task " + String.valueOf(task));
 
+        mainPageFragment.setOffline(true);
+        connectionRx = new ConnectivityReceiver(this, task);
+        registerReceiver(connectionRx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        // Fade, then set to gone through listener
+        if (splashScreen.getVisibility() != View.GONE) {
+            splashScreen.animate()
+                    .alpha(0f)
+                    .setListener(new SplashAnimatorListener()); /* Listener to remove view once finished */
+        }
+    }
+
+    /* Called by connectionRx when back online if crash happened in database asynctask */
+    public void requestFromDatabaseReceiver() {
+        Log.d("TinderActivity", "Receiver called for database request");
+
+        mainPageFragment.setOffline(false);
         unregisterReceiver(connectionRx);
-        if (connectionRx != null && !isRequestMade()) {
+        if (connectionRx != null) {
             new RequestFromDatabase(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            requestMade = true;
+        }
+        connectionRx = null;
+    }
+
+    /* Called by connectionRx when back online if crash happened in images asynctask */
+    public void requestImagesReceiver() {
+        Log.d("TinderActivity", "Receiver called for images");
+
+        mainPageFragment.setOffline(false);
+        unregisterReceiver(connectionRx);
+        if (connectionRx != null) {
+            requestImages();
         }
         connectionRx = null;
     }
@@ -543,7 +570,8 @@ public class TinderActivity extends AppCompatActivity
 
     public void onClickNo(View view) {
         if (imagePager.getCurrentItem() == 1
-                && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                && changeListener.state == ViewPager.SCROLL_STATE_IDLE
+                && imagePager.getSwiping()) {
             imagePager.setCurrentItem(2);
             MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
             //mp.start();
@@ -552,7 +580,8 @@ public class TinderActivity extends AppCompatActivity
 
     public void onClickYes(View view) {
         if (imagePager.getCurrentItem() == 1
-                && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                && changeListener.state == ViewPager.SCROLL_STATE_IDLE
+                && imagePager.getSwiping()) {
             imagePager.setCurrentItem(0);
             MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
             //mp.start();
@@ -573,22 +602,10 @@ public class TinderActivity extends AppCompatActivity
         accessList.unlock();
     }
 
+    // Called by AWSIntegratorTask if internet request fails
     @Override
-    public void doSomethingOnError() {
-        mainPageFragment.setOffline(true);
-        imagePager.setSwiping(false);
-
-        Log.d("TinderActivity", "RequestMade? : " + String.valueOf(requestMade));
-        requestMade = false;
-        connectionRx = new ConnectivityReceiver(this);
-        registerReceiver(connectionRx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-        // Fade, then set to gone through listener
-        if (splashScreen.getVisibility() != View.GONE) {
-            splashScreen.animate()
-                    .alpha(0f)
-                    .setListener(new SplashAnimatorListener()); /* Listener to remove view once finished */
-        }
+    public void doSomethingOnAWSError() {
+        handleNoInternet(ConnectivityReceiver.REQUEST_FROM_DATABASE);
     }
 
     // Called by GetImagesAsyncTask to return list of bitmaps
@@ -615,7 +632,6 @@ public class TinderActivity extends AppCompatActivity
 
         // Reset various variables
         requestMade = false;
-        mainPageFragment.setOffline(false);
         imagePager.setSwiping(true);
         accessList.unlock();
 
@@ -624,6 +640,11 @@ public class TinderActivity extends AppCompatActivity
             new PostFirstImageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             firstRequest = false;
         }
+    }
+
+    @Override
+    public void doSomethingOnImageError() {
+        handleNoInternet(ConnectivityReceiver.GET_IMAGES);
     }
 
     @Override

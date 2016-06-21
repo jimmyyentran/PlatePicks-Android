@@ -83,7 +83,7 @@ public class AWSIntegratorAsyncTask extends AsyncTask<Object, Void, InvokeResult
             final String logResult = invokeResult.getLogResult();
 
             if (statusCode != 200) {
-                callerActivity.doSomethingOnError();
+                callerActivity.doSomethingOnAWSError();
                 return;
             } else {
                 final ByteBuffer resultPayloadBuffer = invokeResult.getPayload();
