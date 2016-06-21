@@ -41,7 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Information"
+            android:text="I n f o r m a t i o n"
             android:id="@+id/bar_title"
             android:layout_gravity="center"
             android:textColor="#ffffff"
@@ -53,16 +53,14 @@
     <!--food image-->
 
 
-    <FrameLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
-
-        <!--hidden view for comment input-->
+        android:layout_height="match_parent">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/scrollView2">
 
             <LinearLayout
@@ -89,7 +87,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/imageView3"
+                        android:id="@+id/white_angle"
                         android:src="@drawable/white_round_square_2"
                         android:layout_alignLeft="@+id/food_name_frame"
                         android:layout_alignParentEnd="true"
@@ -99,6 +97,13 @@
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="-2dp"
                         android:layout_marginTop="-2dp" />
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/required_yelp_2"
+                        android:src="@drawable/yelp_logo"
+                        android:layout_alignParentEnd="true" />
 
                     <FrameLayout
                         android:layout_width="wrap_content"
@@ -227,6 +232,53 @@
 
             </LinearLayout>
         </ScrollView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:id="@+id/linearLayout"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:alpha="0.9">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/imageView3"
+                    android:src="@drawable/main_logo"
+                    android:contentDescription="@string/contentDescription_logo" />
+
+                <ImageView
+                    android:layout_width="2dp"
+                    android:layout_height="80dp"
+                    android:id="@+id/imageView6"
+                    android:background="#ffffff"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="10dp" />
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:id="@+id/imageView7"
+                    android:src="@drawable/powered_by_yelp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <!--hidden view for comment input-->
 
         <LinearLayout
             android:orientation="vertical"

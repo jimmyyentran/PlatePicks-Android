@@ -30,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -183,10 +184,6 @@ public class TinderActivity extends AppCompatActivity
         noButton.setTypeface(source_regular);
         yesButton.setTypeface(source_regular);
 
-        /* Custom font for Drawer's Header */
-        TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
-        drawer_header.setTypeface(source_regular);
-
         /* On Click Listeners:
          * Functions that are called whenever the user clicks on the buttons or image */
         noButton.setOnClickListener(new View.OnClickListener() {
@@ -279,7 +276,22 @@ public class TinderActivity extends AppCompatActivity
             }
         });
 
-        //my_drawer.setTranslationX(-1 * my_drawer.getWidth());
+        /* slogan typeface setup */
+        TextView line1 = (TextView) findViewById(R.id.new_food);
+        TextView line2 = (TextView) findViewById(R.id.new_places);
+        TextView line3 = (TextView) findViewById(R.id.you_pick);
+
+        Typeface source_bold = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Bold.otf");
+
+        line1.setTypeface(source_bold);
+        line2.setTypeface(source_bold);
+        line3.setTypeface(source_bold);
+
+                /* Custom font for Drawer's Header */
+        TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
+        drawer_header.setTypeface(source_bold);
+
+
 
     }
     /* end onCreate() */
@@ -716,16 +728,42 @@ public class TinderActivity extends AppCompatActivity
         /* Heart is empty again */
         if (notification_number != null)
             notification_number.setVisibility(View.GONE);
-
     }
 
     /* Opens main drawer */
     public void openDrawer(View view) {
+
+        //my_drawer.setVisibility(View.INVISIBLE);
+        //my_drawer.setTranslationX(-1 * my_drawer.getWidth());
+
+
         toggleViews("open");
         final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
 
-        dimOverlay.setVisibility(View.VISIBLE);
-        my_drawer.setVisibility(View.VISIBLE);
+        my_drawer.animate().translationX(0).setDuration(400)
+                .setInterpolator(new DecelerateInterpolator(3.0f))
+                .setListener(new Animator.AnimatorListener() {
+                                 @Override
+                                 public void onAnimationStart(Animator animation) {
+                                     my_drawer.setVisibility(View.VISIBLE);
+                                     dimOverlay.setVisibility(View.VISIBLE);
+                                 }
+
+                                 @Override
+                                 public void onAnimationEnd(Animator animation) {
+
+                                 }
+
+                                 @Override
+                                 public void onAnimationCancel(Animator animation) {
+
+                                 }
+
+                                 @Override
+                                 public void onAnimationRepeat(Animator animation) {
+
+                                 }
+                             });
     }
 
     /* Closes main drawer */
@@ -734,9 +772,32 @@ public class TinderActivity extends AppCompatActivity
         final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
         FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
 
+        my_drawer.animate().translationX(-1 * my_drawer.getWidth()).setDuration(300)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        dimOverlay.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        my_drawer.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
         dimOverlay.setVisibility(View.GONE);
-        my_drawer.setVisibility(View.GONE);
-        typesList.setVisibility(View.GONE);
+        if(typesList.getVisibility() == View.VISIBLE)
+            viewFoodTypeList(my_drawer);
     }
 
     public void toggleViews (String s){

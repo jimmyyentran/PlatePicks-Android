@@ -28,6 +28,10 @@
   <string name="action_like_list">Like list</string>
   <string name="action_last_liked">Last liked image of food</string>
 
+  <!--Drawer descriptions-->
+  <string name="drawer_open">open the drawer</string>
+  <string name="drawer_close">close the drawer</string>
+
   <!--necessary facebook strings-->
   <!--<string name="facebook_app_id">615719665253279</string>-->
   <string name="facebook_app_id">477586705772225</string>

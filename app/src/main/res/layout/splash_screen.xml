@@ -3,10 +3,57 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_red"
+    android:background="@drawable/bar_wallpaper"
     android:id="@+id/layout_splashScreen"
     android:layout_gravity="center"
-    android:visibility="invisible">
+    android:visibility="gone">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/slogan_frame"
+        android:layout_above="@+id/splash_logo_container">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="N e w   F o o d ."
+                android:id="@+id/new_food"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="N e w   P l a c e s ."
+                android:id="@+id/new_places"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Y o u   P i c k ."
+                android:id="@+id/you_pick"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -14,7 +61,9 @@
         android:layout_height="140dp"
         android:layout_centerVertical="true"
         android:gravity="center"
-        android:id="@+id/splash_logo_container">
+        android:id="@+id/splash_logo_container"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="false">
 
         <ImageView
             android:layout_width="140dp"
@@ -45,6 +94,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/splash_logo_container">
+
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,4 +102,5 @@
             android:indeterminateTint="@android:color/white"
             android:layout_gravity="center"/>
     </FrameLayout>
+
 </RelativeLayout>

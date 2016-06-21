@@ -20,7 +20,7 @@
             android:scaleType="centerCrop"
             android:layout_alignParentRight="false"
             android:adjustViewBounds="true"
-            android:background="@color/main_grey" />
+            android:background="@color/dark_red" />
 
         <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
@@ -32,7 +32,8 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
             android:adjustViewBounds="true"
-            android:background="@android:color/transparent" />
+            android:background="@android:color/transparent"
+            android:focusableInTouchMode="true" />
 
         <ImageView
             android:layout_width="90dp"

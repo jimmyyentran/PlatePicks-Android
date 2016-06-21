@@ -15,7 +15,8 @@
     android:layout_height="match_parent">
 
     <!--Main UI-->
-    <LinearLayout
+
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,10 +24,15 @@
         android:background="@color/dark_red">
 
         <!--Top Bar-->
+
         <RelativeLayout
             android:id="@+id/top_bar_section"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp">
 
             <ImageView
                 android:layout_alignParentStart="false"
@@ -115,7 +121,14 @@
             android:layout_height="0dp"
             android:id="@+id/pictures_section"
             android:layout_gravity="center"
-            android:layout_weight="4">
+            android:layout_weight="4"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentBottom="false"
+            android:layout_above="@+id/buttons_section"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/top_bar_section">
 
             <!--Top Checker Border-->
 
@@ -144,7 +157,11 @@
             android:layout_gravity="center_horizontal"
             android:paddingBottom="15dp"
             android:paddingRight="20dp"
-            android:paddingLeft="20dp">
+            android:paddingLeft="20dp"
+            android:layout_alignParentLeft="false"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentBottom="true">
 
             <!--A "nothing" view. Useful for layout tricks-->
             <FrameLayout
@@ -217,7 +234,7 @@
 
             <!--Yes Button-->
         </RelativeLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <!--Settings Drawer-->
     <include layout="@layout/settings_drawer"/>
