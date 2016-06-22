@@ -70,10 +70,11 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
                 /* create ListItemClass object passed into LikedListActivity */
 
                 // if we haven't moved to LikedList yet
-                if (caller.getIntent().hasExtra("gohead"))
+                if (caller.getIntent().hasExtra(LikedListActivity.LIKED_LIST_TAG))
                 {
-                    caller.setLikedData(
-                            caller.getIntent().<ListItemClass>getParcelableArrayListExtra("gohead"));
+                    caller.setLikedData(caller
+                            .getIntent()
+                            .<ListItemClass>getParcelableArrayListExtra(LikedListActivity.LIKED_LIST_TAG));
                     Log.d("hello", "i'm getting here");
                 }
 

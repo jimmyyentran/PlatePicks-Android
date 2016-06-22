@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -14,15 +15,14 @@ import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -38,7 +38,15 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.support.ConnectivityReceiver;
 import com.platepicks.support.CustomViewPager;
@@ -64,16 +72,18 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class TinderActivity extends AppCompatActivity
         implements AWSIntegratorInterface,
-            ImageLoaderInterface,
-            GoogleApiClient.ConnectionCallbacks,
-            GoogleApiClient.OnConnectionFailedListener {
+        ImageLoaderInterface,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
     public final int MAX_RADIUS = 40000;    // meters
     public final int LIMIT_WITH_WIFI = 20, LIMIT_WITHOUT_WIFI = 5;
 
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
-    final int REQUEST_LOCATION = 1;
+    final int REQUEST_PERMISSION_LOCATION = 1;
+    final int RESULT_LIKED_LIST = 1, RESULT_SETTINGS_LOCATION = 2;
 
     GoogleApiClient mGoogleApiClient;   // Google location client
+    LocationRequest mLocationRequest;   // Google location request
     ImageChangeListener changeListener; // Listens to changes in image swiping from viewpager
     ImagePagerAdapter imageAdapter;     // List adapter for view pager images
     ConnectivityReceiver connectionRx;  // Listens to changes in internet connection
@@ -100,6 +110,8 @@ public class TinderActivity extends AppCompatActivity
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
 
     int cnt = 1;                                    // used for notification count of new liked foods
+    boolean triedLocPermissionFlag = false;         // flag to know if app attempted to get location permission
+    boolean triedLocSettingsFlag = false;           // flag to know if app attempted to get location setting enabled
     public int businessLimit = LIMIT_WITHOUT_WIFI;  // Number of businesses returned per request
     public int foodLimit = 3;                       // Number of food per business
     public int offset = 0;                          // Number of businesses to offset by in yelp request
@@ -127,7 +139,8 @@ public class TinderActivity extends AppCompatActivity
     }
 
     public void setLikedData(ArrayList<ListItemClass> likedData) {
-        this.likedData = likedData;;
+        this.likedData = likedData;
+        ;
     }
 
     public void addToLikedData(ListItemClass toAdd) {
@@ -165,13 +178,19 @@ public class TinderActivity extends AppCompatActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
-            case (1) :
-            {
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    this.likedData = data.getParcelableArrayListExtra("gohead");
+        switch (requestCode) {
+            case (RESULT_LIKED_LIST): {
+                if (resultCode == Activity.RESULT_OK) {
+                    this.likedData = data.getParcelableArrayListExtra(LikedListActivity.LIKED_LIST_TAG);
                 }
+                break;
+            }
+            case (RESULT_SETTINGS_LOCATION): {
+                Log.d("TinderActivity", "Resolution for location");
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d("TinderActivity", "Approved!");
+                }
+                setLocation();
                 break;
             }
         }
@@ -192,6 +211,7 @@ public class TinderActivity extends AppCompatActivity
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        createLocationRequest();
 
         /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.activity_tinderui);
@@ -263,19 +283,27 @@ public class TinderActivity extends AppCompatActivity
             }
 
             @Override
-            public boolean onDown(MotionEvent e) { return false; }
+            public boolean onDown(MotionEvent e) {
+                return false;
+            }
 
             @Override
-            public void onShowPress(MotionEvent e) {}
+            public void onShowPress(MotionEvent e) {
+            }
 
             @Override
-            public boolean onSingleTapUp(MotionEvent e) { return false; }
+            public boolean onSingleTapUp(MotionEvent e) {
+                return false;
+            }
 
             @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) { return false; }
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return false;
+            }
 
             @Override
-            public void onLongPress(MotionEvent e) {}
+            public void onLongPress(MotionEvent e) {
+            }
         });
 
         /* NavDrawer onClick listeners */
@@ -357,7 +385,7 @@ public class TinderActivity extends AppCompatActivity
         /* determine which appender to use */
         String categoryFilter;
 
-        if(nothing_checked)
+        if (nothing_checked)
             categoryFilter = default_appender.toString();
         else
             categoryFilter = appender.toString();
@@ -371,27 +399,117 @@ public class TinderActivity extends AppCompatActivity
         return categoryFilter;
     }
 
-    void getLocation() {
-        // If permission not granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TinderActivity", "Not allowed to retrieve location.");
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
+
+    void setLocation() {
+        // Check if location permission granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // If first time trying to ask for permission
+            // Second or later time, this function asks user for location if no permission
+            if (!triedLocPermissionFlag) {
+                Log.d("TinderActivity", "Not allowed to retrieve location.");
+                triedLocPermissionFlag = true;
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_LOCATION);
+                return;
+            }
         }
 
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            gpsLocation = String.valueOf(mLastLocation.getLatitude()) + ", "
-                    + String.valueOf(mLastLocation.getLongitude());
-        } else {
-            Log.e("TinderActivity", "No location!");
-            gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside. Should ask for permission/ask for place.
-            // Maybe add location services to some settings?
-            // what if locations are off?
-        }
+//        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+//                mGoogleApiClient);
+//        if (mLastLocation != null) {
+//            gpsLocation = String.valueOf(mLastLocation.getLatitude()) + ", "
+//                    + String.valueOf(mLastLocation.getLongitude());
+//            Log.d("TinderActivity", "Location succeeded");
+//        } else {
+//            // FIXME: Ask for location
+//            Log.e("TinderActivity", "Getting location failed somehow.");
+//            gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside
+//        }
+//
+//        if (waitForGPSLock.isHeldByCurrentThread())
+//            waitForGPSLock.unlock();
 
-        if (waitForGPSLock.isHeldByCurrentThread())
-            waitForGPSLock.unlock();
+        // Check location settings
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        PendingResult<LocationSettingsResult> pendingResult = LocationServices
+                .SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        pendingResult.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates settingsStates = result.getLocationSettingsStates();
+
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can
+                        // initialize location requests here.
+                        // Get location coordinates
+                        if (ActivityCompat.checkSelfPermission(TinderActivity.this,
+                                Manifest.permission.ACCESS_COARSE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            // FIXME: Ask for location
+                            Log.e("TinderActivity", "User said no to location");
+                            gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside
+                            break;
+                        }
+
+                        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                                mGoogleApiClient);
+                        if (mLastLocation != null) {
+                            Log.d("TinderActivity", "Location succeeded");
+                            gpsLocation = String.valueOf(mLastLocation.getLatitude()) + ", "
+                                    + String.valueOf(mLastLocation.getLongitude());
+                        } else {
+                            // FIXME: Ask for location
+                            Log.e("TinderActivity", "Getting location failed somehow.");
+                            gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            if (!triedLocSettingsFlag) {
+                                triedLocSettingsFlag = true;
+                                status.startResolutionForResult(
+                                        TinderActivity.this, RESULT_SETTINGS_LOCATION);
+                                return;
+                            } else {
+                                // FIXME: Ask for location
+                                Log.e("TinderActivity", "User said no to location");
+                                gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside
+                                break;
+                            }
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way
+                        // to fix the settings so we won't show the dialog.
+                        // FIXME: Ask for location
+                        Log.e("TinderActivity", "Unable to change location settings.");
+                        gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside
+                        break;
+                }
+
+                Log.d("TinderActivity", "New location");
+                if (waitForGPSLock.isHeldByCurrentThread())
+                    waitForGPSLock.unlock();
+            }
+        });
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setNumUpdates(1);
+        mLocationRequest.setInterval(1);
+        mLocationRequest.setFastestInterval(1);
+        mLocationRequest.setExpirationDuration(5000);   // 5 seconds to get location
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
     public void update_list_number () {
@@ -425,7 +543,7 @@ public class TinderActivity extends AppCompatActivity
 
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", likedData);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, RESULT_LIKED_LIST);
 
         /* Heart is empty again */
         if (notification_number != null)
@@ -659,13 +777,7 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
-        // If permission not granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TinderActivity", "Not allowed to retrieve location.");
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
-        } else {
-            getLocation();
-        }
+        setLocation();
     }
 
     @Override
@@ -679,16 +791,15 @@ public class TinderActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_LOCATION:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation();
-                } else {
-                    gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside. Should ask for permission/ask for place.
+            case REQUEST_PERMISSION_LOCATION:
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)
                     Toast.makeText(this, "Using Riverside for default", Toast.LENGTH_SHORT).show();
-                }
+
+                setLocation();
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);

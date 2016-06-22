@@ -1,7 +1,6 @@
 package com.platepicks;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.platepicks.util.ListItemClass;
 
 import java.util.ArrayList;
@@ -25,13 +23,12 @@ public class LikedListActivity extends AppCompatActivity {
      * Creates a list of all liked foods.
      * Add to list when swiped right.
      */
-    private GoogleApiClient client;
+
+    public static final String LIKED_LIST_TAG = "gohead";
 
     // Construct the data source
-    ArrayList<ListItemClass> data = new ArrayList<ListItemClass>();
+    ArrayList<ListItemClass> data = new ArrayList<>();
     ListItemClass item = new ListItemClass();
-    SharedPreferences myPrefs;
-    SharedPreferences.Editor prefsEditor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,7 +80,7 @@ public class LikedListActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(LikedListActivity.this, TinderActivity.class);
-        intent.putParcelableArrayListExtra("gohead", data);
+        intent.putParcelableArrayListExtra(LIKED_LIST_TAG, data);
         setResult(RESULT_OK, intent);
         finish();
     }
