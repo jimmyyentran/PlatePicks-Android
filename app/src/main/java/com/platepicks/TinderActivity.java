@@ -41,6 +41,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -70,11 +71,11 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by pokeforce on 4/12/16.
  */
-public class TinderActivity extends AppCompatActivity
-        implements AWSIntegratorInterface,
+public class TinderActivity extends AppCompatActivity implements AWSIntegratorInterface,
         ImageLoaderInterface,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
     public final int MAX_RADIUS = 40000;    // meters
     public final int LIMIT_WITH_WIFI = 20, LIMIT_WITHOUT_WIFI = 5;
 
@@ -335,6 +336,7 @@ public class TinderActivity extends AppCompatActivity
     protected void onPause() {
         if (connectionRx != null)
             unregisterReceiver(connectionRx);
+        stopLocationUpdates();
         super.onPause();
     }
 
@@ -399,7 +401,9 @@ public class TinderActivity extends AppCompatActivity
     }
 
     boolean isLocationPermitted() {
-        return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED);
     }
 
@@ -407,7 +411,7 @@ public class TinderActivity extends AppCompatActivity
         Log.d("TinderActivity", "Not allowed to retrieve location.");
         ActivityCompat.requestPermissions(
                 this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                 REQUEST_PERMISSION_LOCATION);
     }
 
@@ -438,10 +442,10 @@ public class TinderActivity extends AppCompatActivity
                                         "permission was given");
                                 askForUserLocation();
                             } else {
-                                Log.d("TinderActivity", "Location not set");
-
+                                Log.d("TinderActivity", "Location not set, waiting for callback");
+                                startLocationUpdates();
                                 // FIXME: Wait for callback
-                                askForUserLocation();
+//                                askForUserLocation();
                             }
                         }
                         break;
@@ -474,10 +478,6 @@ public class TinderActivity extends AppCompatActivity
                         askForUserLocation();
                         break;
                 }
-
-                Log.d("TinderActivity", "New location");
-                if (waitForGPSLock.isHeldByCurrentThread())
-                    waitForGPSLock.unlock();
             }
         });
     }
@@ -489,8 +489,9 @@ public class TinderActivity extends AppCompatActivity
         // All location settings are satisfied. The client can
         // initialize location requests here.
         // Get location coordinates
-        if (ActivityCompat.checkSelfPermission(TinderActivity.this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
@@ -499,7 +500,7 @@ public class TinderActivity extends AppCompatActivity
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
-            Log.d("TinderActivity", "Location succeeded");
+            Log.d("TinderActivity", "Location succeeded (old way)");
             gpsLocation = String.valueOf(mLastLocation.getLatitude()) + ", "
                     + String.valueOf(mLastLocation.getLongitude());
 
@@ -522,7 +523,7 @@ public class TinderActivity extends AppCompatActivity
 
         // FIXME: if getting location fails
 //        if (gpsLocation != null) {
-            // Location succeeded, release lock
+        // Location succeeded, release lock
 //            if (waitForGPSLock.isHeldByCurrentThread())
 //                waitForGPSLock.unlock();
 //        } else {
@@ -540,12 +541,26 @@ public class TinderActivity extends AppCompatActivity
     }
 
     // Creates location request for database request
-    protected void createLocationRequest() {
+    void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setNumUpdates(1);              // Only 1 location update
         mLocationRequest.setInterval(60 * 60 * 1000);   // 60 minutes in milliseconds
         mLocationRequest.setFastestInterval(60 * 1000); // 1 minute
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+    }
+
+    void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED)
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+    }
+
+    void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this);
     }
 
     public void update_list_number () {
@@ -788,20 +803,17 @@ public class TinderActivity extends AppCompatActivity
 
             // Remove placeholder if one is made
             if (placeholderIsPresent) {
-                if (!imageList.isEmpty()) {
-                    mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
-                    imagePager.setSwiping(true);
-                }
-
+                mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
                 placeholderIsPresent = false;
             }
+
+            imagePager.setSwiping(true);
         } else {
             Toast.makeText(this, "Request failed", Toast.LENGTH_SHORT).show();
         }
 
         // Reset various variables
         requestMade = false;
-        imagePager.setSwiping(true);
         accessList.unlock();
 
         // Remove splash] screen and post first pic
@@ -818,11 +830,14 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
-        askForLocationPermission();
-//        if (!isLocationPermitted())
-//            askForLocationPermission();
-//        else
-//            handleLocationSetting();
+        // Currently, just want 1 location. If statement avoids another location on return to
+        // activity and repeat onConnected
+        if (gpsLocation == null) {
+            if (!isLocationPermitted())
+                askForLocationPermission();
+            else
+                handleLocationSetting();
+        }
     }
 
     @Override
@@ -855,8 +870,24 @@ public class TinderActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            Log.d("TinderActivity", "Location succeeded (new way)");
+            gpsLocation = String.valueOf(location.getLatitude()) + ", "
+                    + String.valueOf(location.getLongitude());
+
+            // Location succeeded, release lock
+            if (waitForGPSLock.isHeldByCurrentThread())
+                waitForGPSLock.unlock();
+        } else {
+            Toast.makeText(this, "Could not get location", Toast.LENGTH_SHORT).show();
+            askForUserLocation();
+        }
+    }
+
     /* Class to listen to the state of splash screen animation. Only uses onAnimationEnd() to know
-                     * when the animation is finished. */
+     * when the animation is finished. */
     class SplashAnimatorListener implements Animator.AnimatorListener {
         @Override
         public void onAnimationStart(Animator animation) {

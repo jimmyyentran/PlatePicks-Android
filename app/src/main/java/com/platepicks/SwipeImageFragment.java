@@ -39,7 +39,7 @@ public class SwipeImageFragment extends Fragment {
     public void setOffline(boolean offline) {
         // View does not exist yet, so set boolean to call this function in onCreateView
         if (placeholder == null) {
-            offline = true;
+            offlineFlag = true;
             return;
         }
 
@@ -70,11 +70,7 @@ public class SwipeImageFragment extends Fragment {
             }
             // Change picture
             else {
-                // Remove placeholder if need be
-                if (placeholder.getVisibility() != View.GONE) {
-                    placeholder.setVisibility(View.GONE);
-                }
-
+                placeholder.setVisibility(View.GONE); // Remove placeholder if need be
                 foodPicture.setImageBitmap(image);
                 yelp_logo.setVisibility(View.VISIBLE);
                 if(Build.VERSION.SDK_INT >= 17) {
