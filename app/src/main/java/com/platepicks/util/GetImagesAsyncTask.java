@@ -30,6 +30,8 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
     ImageLoaderInterface caller;
 
     public GetImagesAsyncTask(ImageLoaderInterface caller, int screenHeight, int screenWidth) {
+        Log.d("GetImagesAsyncTask", "Creating task");
+
         this.caller = caller;
 
         // Memory optimization, 3/4 the width/height of the imageView
@@ -39,12 +41,14 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
     @Override
     protected LinkedList<Bitmap> doInBackground(Object... params) {
+        Log.d("GetImagesAsyncTask", "Background");
+
         int currentMemUsed = 0;
         options = new BitmapFactory.Options();
         LinkedList<Bitmap> images = new LinkedList<>();
 
         for (Object item : params) {
-//        for (Object url : testArray) {
+            Log.d("GetImagesAsyncTask", "Background");
             ListItemClass ref = (ListItemClass) item;
             Bitmap b = downloadImage(ref.getImageUrl());
 
@@ -73,11 +77,10 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
     @Override
     protected void onPostExecute(LinkedList<Bitmap> images) {
-        if (images != null && !images.isEmpty())
-            caller.doSomethingWithDownloadedImages(images);
-
         if (internetErrorFlag)
             caller.doSomethingOnImageError();
+
+        caller.doSomethingWithDownloadedImages(images);
     }
 
     // Takes in url and downloads webpage, decoding it into a bitmap
