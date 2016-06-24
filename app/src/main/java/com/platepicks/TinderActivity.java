@@ -400,7 +400,7 @@ public class TinderActivity extends AppCompatActivity
 
     boolean isLocationPermitted() {
         return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED);
+                == PackageManager.PERMISSION_GRANTED);
     }
 
     void askForLocationPermission() {
@@ -429,14 +429,14 @@ public class TinderActivity extends AppCompatActivity
                 final LocationSettingsStates settingsStates = result.getLocationSettingsStates();
 
                 switch (status.getStatusCode()) {
+                    // Location settings are satisfied
                     case LocationSettingsStatusCodes.SUCCESS:
                         if (!setLocation()) {
                             // Permission not given: should not happen
                             if (!isLocationPermitted()) {
                                 Log.e("TinderActivity", "Handling location setting but no " +
-                                        "permission was given.");
+                                        "permission was given");
                                 askForUserLocation();
-                                break;
                             } else {
                                 Log.d("TinderActivity", "Location not set");
 
@@ -445,31 +445,31 @@ public class TinderActivity extends AppCompatActivity
                             }
                         }
                         break;
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied, but this can be fixed
-                        // by showing the user a dialog.
-                        try {
-                            // State 1: Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            if (!triedLocSettingsFlag) {
-                                triedLocSettingsFlag = true;
+                        // State 1: Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        if (!triedLocSettingsFlag) {
+                            triedLocSettingsFlag = true;
+
+                            try {
                                 status.startResolutionForResult(
                                         TinderActivity.this, RESULT_SETTINGS_LOCATION);
-                                return;
+                            } catch (IntentSender.SendIntentException e) {
+                                // Ignore the error.
                             }
-                            // State 2: Can't get location, just ask for location
-                            else {
-                                Log.e("TinderActivity", "User said no to location");
-                                askForUserLocation();
-                                break;
-                            }
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
+                            return;
+                        }
+                        // State 2: Can't get location, just ask for location
+                        else {
+                            Log.e("TinderActivity", "User said no to location");
+                            askForUserLocation();
                         }
                         break;
+                    // Location settings are not satisfied. However, we have no way
+                    // to fix the settings so we won't show the dialog.
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way
-                        // to fix the settings so we won't show the dialog.
                         Log.e("TinderActivity", "Unable to change location settings.");
                         askForUserLocation();
                         break;
@@ -509,6 +509,7 @@ public class TinderActivity extends AppCompatActivity
             return true;
         }
 
+        Log.d("TinderActivity", "last location was null");
         return false;
     }
 
@@ -817,8 +818,7 @@ public class TinderActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
-        askForUserLocation();
-//        askForLocationPermission();
+        askForLocationPermission();
 //        if (!isLocationPermitted())
 //            askForLocationPermission();
 //        else
