@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/main_ui"
-        android:background="@color/dark_red">
+        android:background="@color/jimmys_grey">
 
         <!--Top Bar-->
 
@@ -32,7 +32,29 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="0dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp">
+            android:layout_marginTop="0dp"
+            android:onClick="toggleTitle">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/bar_shadow"
+                android:src="@drawable/bar_shadow" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/circle_shadow"
+                android:src="@drawable/circle_shadow"
+                android:layout_centerHorizontal="true" />
+
+            <ImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:id="@+id/red_circle"
+                android:src="@drawable/red_circle"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY" />
 
             <ImageView
                 android:layout_alignParentStart="false"
@@ -42,27 +64,27 @@
                 android:layout_gravity="top"
                 android:contentDescription="@string/contentDescription_redBG"
                 android:src="@drawable/two_shaded_bar"
-                android:scaleType="fitXY" /><ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1.5dp"
-                android:id="@+id/white_line"
-                android:background="@color/white"
-                android:layout_below="@+id/grey_bar"
-            android:visibility="gone" />
+                android:scaleType="fitXY"/>
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Plate  Picks"
+                android:id="@+id/app_name_2"
+                android:textSize="25dp"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:visibility="gone" />
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/app_name"
-                android:src="@drawable/app_title"
-                android:layout_toLeftOf="@+id/list_button_frame"
-                android:layout_toRightOf="@+id/droor_icon"
-                android:layout_alignBottom="@+id/grey_bar"
+                android:src="@drawable/main_logo_circle"
                 android:layout_alignTop="@+id/grey_bar"
-                android:layout_marginLeft="55dp"
-                android:layout_marginRight="55dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp" />
+                android:layout_alignLeft="@+id/red_circle"
+                android:layout_alignRight="@+id/red_circle" />
 
             <ImageButton
                 android:id="@+id/droor_icon"
@@ -71,7 +93,7 @@
                 android:layout_height="60dp"
                 android:padding="15dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/settings_icon_3"
+                android:src="@drawable/drawer_icon"
                 android:background="@android:color/transparent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="20dp"
@@ -99,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/list_icon_3"
+                    android:src="@drawable/list_icon"
                     android:background="@android:color/transparent"
                     android:onClick="gotoList"
                     android:contentDescription="@string/contentDescription_list"/>
@@ -126,9 +148,9 @@
             android:layout_marginLeft="0dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentBottom="false"
-            android:layout_above="@+id/buttons_section"
             android:layout_centerVertical="true"
-            android:layout_below="@+id/top_bar_section">
+            android:layout_below="@+id/top_bar_section"
+            android:layout_above="@+id/buttons_section">
 
             <!--Top Checker Border-->
 
@@ -136,6 +158,7 @@
 
 
             <!--Container for Tinder Images-->
+
             <com.platepicks.support.CustomViewPager
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -153,9 +176,8 @@
         <RelativeLayout
             android:id="@+id/buttons_section"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="140dp"
             android:layout_gravity="center_horizontal"
-            android:paddingBottom="15dp"
             android:paddingRight="20dp"
             android:paddingLeft="20dp"
             android:layout_alignParentLeft="false"
@@ -164,59 +186,73 @@
             android:layout_alignParentBottom="true">
 
             <!--A "nothing" view. Useful for layout tricks-->
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/no_frame"
+                android:id="@+id/button_no"
                 android:layout_alignParentStart="true"
-                android:layout_toLeftOf="@+id/space_middle">
+                android:layout_toLeftOf="@+id/space_middle"
+                android:layout_alignParentTop="false"
+                android:layout_centerVertical="true">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView5"
-                    android:background="@drawable/white_round_square" />
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/no_shadow"
+                    android:src="@drawable/circle_shadow"
+                    android:layout_alignLeft="@+id/no_circle"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="3dp" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="NO"
-                    android:id="@+id/button_no"
-                    android:layout_alignParentEnd="false"
-                    android:layout_alignParentStart="false"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="@color/white"
-                    android:background="@drawable/dark_red_button_handler"
-                    android:layout_margin="2dp"
-                    android:textSize="15dp" />
-            </FrameLayout>
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/no_circle"
+                    android:src="@drawable/theme_dark_circle_btn_default"
+                    android:layout_centerInParent="true" />
 
-            <FrameLayout
+                <ImageView
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:id="@+id/no_icon"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/red_x" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/yes_frame"
+                android:id="@+id/button_yes"
                 android:layout_toRightOf="@+id/space_middle"
-                android:layout_alignParentEnd="true">
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="false"
+                android:layout_centerVertical="true">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView4"
-                    android:background="@drawable/white_round_square" />
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/yes_shadow"
+                    android:src="@drawable/circle_shadow"
+                    android:layout_marginTop="15dp"
+                    android:layout_alignLeft="@+id/yes_circle"
+                    android:layout_marginLeft="3dp" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="YES"
-                    android:id="@+id/button_yes"
-                    android:layout_alignParentEnd="true"
-                    android:layout_toRightOf="@+id/space_middle"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="@color/white"
-                    android:background="@drawable/dark_red_button_handler"
-                    android:layout_margin="2dp"
-                    android:textSize="15dp" />
-            </FrameLayout>
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/yes_circle"
+                    android:src="@drawable/theme_dark_circle_btn_default"
+                    android:layout_alignParentTop="false"
+                    android:layout_centerInParent="true" />
+
+                <include layout="@layout/green_bell"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/yes_icon" />
+
+            </RelativeLayout>
 
             <Space
                 android:layout_width="15dp"

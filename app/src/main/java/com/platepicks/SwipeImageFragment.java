@@ -1,5 +1,7 @@
 package com.platepicks;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,6 +40,7 @@ public class SwipeImageFragment extends Fragment {
     private ImageView yelp_logo = null;
     private Bitmap image;
     private ListItemClass item;
+    private SquareImageButton flashingBorder;
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
@@ -58,7 +63,6 @@ public class SwipeImageFragment extends Fragment {
                 }
 
                 foodPicture.setImageBitmap(image);
-                yelp_logo.setVisibility(View.VISIBLE);
                 if(Build.VERSION.SDK_INT >= 17) {
                     bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
                 }
@@ -83,9 +87,9 @@ public class SwipeImageFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
         foodPicture = (SquareImageButton) fragmentView.findViewById(R.id.imagebutton_tinder);
         bg = (SquareImageButton) fragmentView.findViewById(R.id.blurred_image);
-        yelp_logo = (ImageView) fragmentView.findViewById(R.id.required_yelp);
         placeholder = (LinearLayout) fragmentView.findViewById(R.id.placeholder_container);
         RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
+        flashingBorder = (SquareImageButton) fragmentView.findViewById(R.id.flashing_border);
 
         /* Set the image resource here */
         if (pagePosition != 1) {

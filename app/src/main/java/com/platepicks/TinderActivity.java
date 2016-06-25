@@ -28,9 +28,14 @@ import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -50,6 +55,7 @@ import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.FoodRequest;
 import com.platepicks.support.CustomViewPager;
+import com.platepicks.support.SquareImageButton;
 import com.platepicks.util.AWSIntegratorAsyncTask;
 import com.platepicks.util.AWSIntegratorInterface;
 import com.platepicks.util.ConvertToObject;
@@ -114,6 +120,23 @@ public class TinderActivity extends AppCompatActivity
 
     boolean drawerOpened = false;
 
+    /* bell ImageViews */
+    ImageView bellShell = null;
+    ImageView bellStand = null;
+    ImageView bellHammer = null;
+
+    /* bell animations */
+    Animation hammer_drop = null;
+    Animation hammer_rise = null;
+
+    /* yes/no onHold constrictors */
+    boolean yesHeld = false;
+    boolean noHeld = false;
+
+    /* grow/shrink scaleAnimation declarations */
+    ScaleAnimation growAnim = null;
+    ScaleAnimation shrinkAnim = null;
+
     /* onActivityResult() */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -173,40 +196,83 @@ public class TinderActivity extends AppCompatActivity
         leftFoodTypes = (LinearLayout) findViewById(R.id.food_types_left);
         rightFoodTypes = (LinearLayout) findViewById(R.id.food_types_right);
 
-        /* Yes and No Buttons:
-         * Finding reference to buttons in xml layout to keep as objects in Java */
-        Button noButton = (Button) findViewById(R.id.button_no);
-        Button yesButton = (Button) findViewById(R.id.button_yes);
+        /* assign bell imageviews */
+        bellShell = (ImageView) findViewById(R.id.bell_shell);
+        bellStand = (ImageView) findViewById(R.id.bell_stand);
+        bellHammer = (ImageView) findViewById(R.id.bell_hammer);
 
-        // Load custom YES/NO button text
+        /* assign bell animations */
+        hammer_drop = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bell_hammer_drop);
+        hammer_rise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bell_hammer_rise);
 
-        Typeface source_regular = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Regular.otf");
-        noButton.setTypeface(source_regular);
-        yesButton.setTypeface(source_regular);
-
-        /* On Click Listeners:
-         * Functions that are called whenever the user clicks on the buttons or image */
-        noButton.setOnClickListener(new View.OnClickListener() {
+        hammer_drop.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onClick(View v) {
-                if (imagePager.getCurrentItem() == 1
-                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
-                    imagePager.setCurrentItem(2);
-                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
-                    //mp.start();
-                }
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                bellHammer.startAnimation(hammer_drop);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
             }
         });
 
-        yesButton.setOnClickListener(new View.OnClickListener() {
+        /* Yes and No Buttons:
+         * Finding reference to buttons in xml layout to keep as objects in Java */
+        RelativeLayout noButton = (RelativeLayout) findViewById(R.id.button_no);
+        final RelativeLayout yesButton = (RelativeLayout) findViewById(R.id.button_yes);
+
+        // Load custom YES/NO button text
+
+        /* On Click Listeners:
+         * Functions that are called whenever the user clicks on the buttons or image */
+
+        noButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                if (imagePager.getCurrentItem() == 1
-                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
-                    imagePager.setCurrentItem(0);
-                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
-                    //mp.start();
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    noHeld();
                 }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                    noReleased();
+                    borderFlash("red");
+                    /*
+                    if (imagePager.getCurrentItem() == 1
+                            && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                        imagePager.setCurrentItem(2);
+                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                        //mp.start();
+                    }
+                    */
+                }
+                return true;
+            }
+        });
+
+        yesButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    yesHold();
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                    yesReleased();
+                    borderFlash("green");
+                    /*
+                    if (imagePager.getCurrentItem() == 1
+                            && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                        imagePager.setCurrentItem(0);
+                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                        //mp.start();
+                    }
+                    */
+                }
+                return true;
             }
         });
 
@@ -291,6 +357,13 @@ public class TinderActivity extends AppCompatActivity
         TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
         drawer_header.setTypeface(source_bold);
 
+
+        Typeface Ham_Heaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
+        TextView appName2 = (TextView) findViewById(R.id.app_name_2);
+        appName2.setTypeface(Ham_Heaven);
+
+
+        /* set shrink/grow animation */
 
 
     }
@@ -732,11 +805,6 @@ public class TinderActivity extends AppCompatActivity
 
     /* Opens main drawer */
     public void openDrawer(View view) {
-
-        //my_drawer.setVisibility(View.INVISIBLE);
-        //my_drawer.setTranslationX(-1 * my_drawer.getWidth());
-
-
         toggleViews("open");
         final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
 
@@ -770,7 +838,7 @@ public class TinderActivity extends AppCompatActivity
     public void closeDrawer(View view) {
         toggleViews("close");
         final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
-        FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
+        final FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
 
         my_drawer.animate().translationX(-1 * my_drawer.getWidth()).setDuration(300)
                 .setInterpolator(new DecelerateInterpolator())
@@ -778,11 +846,14 @@ public class TinderActivity extends AppCompatActivity
                     @Override
                     public void onAnimationStart(Animator animation) {
                         dimOverlay.setVisibility(View.GONE);
+                        dimOverlay.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         my_drawer.setVisibility(View.GONE);
+                        if(typesList.getVisibility() == View.VISIBLE)
+                            viewFoodTypeList(my_drawer);
                     }
 
                     @Override
@@ -795,9 +866,7 @@ public class TinderActivity extends AppCompatActivity
 
                     }
                 });
-        dimOverlay.setVisibility(View.GONE);
-        if(typesList.getVisibility() == View.VISIBLE)
-            viewFoodTypeList(my_drawer);
+
     }
 
     public void toggleViews (String s){
@@ -914,7 +983,7 @@ public class TinderActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             // Set first image
-            mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
+            //mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
 
             // Fade, then set to gone through listener
             splashScreen.animate()
@@ -949,6 +1018,169 @@ public class TinderActivity extends AppCompatActivity
                 "coffee",
                 "breakfast_brunch"
         };
+    }
+
+    public void toggleTitle (View view){
+        ImageView style1 = (ImageView) findViewById(R.id.app_name);
+        TextView style2 = (TextView) findViewById(R.id.app_name_2);
+
+        if(style1.getVisibility() == View.GONE){
+            style1.setVisibility(View.VISIBLE);
+            style2.setVisibility(View.GONE);
+        }
+        else{
+            style1.setVisibility(View.GONE);
+            style2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void toggleTheme (View view){
+        RelativeLayout ui_background = (RelativeLayout) findViewById(R.id.main_ui);
+    }
+
+    public void yesHold () {
+        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
+        final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
+        final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
+
+        yesIcon.animate().scaleX(0.85f).scaleY(0.85f)
+            .setDuration(100)
+            .setInterpolator(new DecelerateInterpolator());
+
+        yesCircle.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesShadow.animate().scaleX(0.0f).scaleY(0.0f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+    }
+
+    public void yesReleased () {
+        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
+        final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
+        final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
+
+        bellHammer.animate().translationY(bellHammer.getHeight() / 19)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        bellHammer.animate().translationY(0)
+                                .setDuration(150)
+                                .setInterpolator(new DecelerateInterpolator());
+                        bellHammer.animate().setListener(null);
+                    }
+                });
+
+        yesCircle.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesShadow.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesIcon.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        bellShell.animate().rotation(10)
+                                .setDuration(150)
+                                .setInterpolator(new DecelerateInterpolator())
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        bellShell.animate().setListener(null);
+                                        bellShell.animate().rotation(-7)
+                                                .setDuration(150)
+                                                .setInterpolator(new DecelerateInterpolator())
+                                                .setListener(new AnimatorListenerAdapter() {
+                                                    @Override
+                                                    public void onAnimationEnd(Animator animation) {
+                                                        bellShell.animate().setListener(null);
+                                                        bellShell.animate().rotation(0)
+                                                                .setDuration(150)
+                                                                .setInterpolator(new DecelerateInterpolator());
+                                                    }
+                                                });
+                                    }
+                                });
+
+                        /* first listener */
+                        yesIcon.animate().setListener(null);
+                    }
+                });
+
+    }
+    
+    public void noHeld () {
+        final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
+        final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
+        final ImageView noShadow = (ImageView) findViewById(R.id.no_shadow);
+
+        noIcon.setRotation(0);
+
+        noIcon.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noCircle.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noShadow.animate().scaleX(0.0f).scaleY(0.0f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+    }
+
+    public void noReleased () {
+
+        Log.d("in noRelease", "IN NO RELEASE!!!");
+
+        final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
+        final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
+        final ImageView noShadow = (ImageView) findViewById(R.id.no_shadow);
+
+
+        noCircle.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noShadow.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        noIcon.animate().scaleX(1f).scaleY(1f)
+                                .rotation(180)
+                                .setDuration(600)
+                                .setInterpolator(new DecelerateInterpolator());
+                        noShadow.animate().setListener(null);
+                    }
+                });
+    }
+
+    public void borderFlash (String color) {
+        final SquareImageButton flashingBorder = (SquareImageButton) findViewById(R.id.flashing_border);
+
+        flashingBorder.animate().alpha(1.0f)
+                .setDuration(100)
+                .setInterpolator(new AccelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        flashingBorder.animate().setListener(null);
+                        flashingBorder.animate().alpha(0.5f)
+                                .setDuration(400)
+                                .setInterpolator(new DecelerateInterpolator())
+                                .setListener(null);
+                    }
+                });
     }
 
 }

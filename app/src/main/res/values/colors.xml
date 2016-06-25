@@ -9,6 +9,9 @@
     <color name="main_grey">#2e2e2e</color>
     <color name="pressed_grey">#474747</color>
     <color name="white">#ffffff</color>
+    <color name="jimmys_grey">#f0f0f0</color>
+    <color name="darker_grey">#a0a0a0</color>
+    <color name="bell_green">#4ad92f</color>
 
     <!--Amazon colors-->
     <color name="top_bar_background">#F58535</color>

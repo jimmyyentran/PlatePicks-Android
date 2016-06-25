@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bar_wallpaper"
+    android:background="@color/main_red"
     android:id="@+id/layout_splashScreen"
     android:layout_gravity="center"
     android:visibility="gone">
@@ -73,19 +73,6 @@
             android:src="@drawable/main_logo"
             android:contentDescription="@string/contentDescription_logo"/>
 
-        <ImageView
-            android:layout_width="3dp"
-            android:layout_height="match_parent"
-            android:id="@+id/white_divider"
-            android:background="#ffffff"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
-
-        <ImageView
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/yelp_half"
-            android:src="@drawable/powered_by_yelp" />
     </LinearLayout>
 
     <FrameLayout

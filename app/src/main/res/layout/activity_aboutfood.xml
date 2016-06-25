@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_red">
+    android:background="@color/dark_red"
+    android:id="@+id/about_page_container">
 
     <!--Top bar-->
     <FrameLayout
@@ -75,35 +76,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/about_image_frame"
-                    android:background="@drawable/white_round_square_2">
+                    android:background="@drawable/theme_dark_image_border">
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/about_image"
                         android:scaleType="centerCrop"
-                        android:layout_margin="2dp" />
+                        android:layout_margin="5px" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/white_angle"
-                        android:src="@drawable/white_round_square_2"
+                        android:src="@drawable/theme_dark_image_border"
                         android:layout_alignLeft="@+id/food_name_frame"
                         android:layout_alignParentEnd="true"
                         android:layout_alignBottom="@+id/food_name_frame"
                         android:layout_alignTop="@+id/food_name_frame"
                         android:layout_alignRight="@+id/food_name_frame"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="-2dp"
-                        android:layout_marginTop="-2dp" />
+                        android:layout_marginLeft="-5px"
+                        android:layout_marginTop="-5px" />
 
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="50dp"
                         android:id="@+id/required_yelp_2"
                         android:src="@drawable/yelp_logo"
-                        android:layout_alignParentEnd="true" />
+                        android:layout_alignParentEnd="true"
+                        android:visibility="gone" />
 
                     <FrameLayout
                         android:layout_width="wrap_content"
@@ -256,19 +258,6 @@
                     android:src="@drawable/main_logo"
                     android:contentDescription="@string/contentDescription_logo" />
 
-                <ImageView
-                    android:layout_width="2dp"
-                    android:layout_height="80dp"
-                    android:id="@+id/imageView6"
-                    android:background="#ffffff"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="10dp" />
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:id="@+id/imageView7"
-                    android:src="@drawable/powered_by_yelp" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
