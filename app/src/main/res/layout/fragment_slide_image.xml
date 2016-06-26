@@ -29,7 +29,8 @@
             android:id="@+id/flashing_border"
             android:alpha="1.0"
             android:layout_centerVertical="true"
-            android:adjustViewBounds="false" />
+            android:adjustViewBounds="false"
+            android:visibility="gone" />
 
         <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
