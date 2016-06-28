@@ -1,5 +1,8 @@
 package com.platepicks;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -32,6 +37,7 @@ public class SwipeImageFragment extends Fragment {
     private ImageView yelp_logo = null;
     private Bitmap image;
     private ListItemClass item;
+    public SquareImageButton flashingBorder;
 
     private int statusOfFragment = -1;
 
@@ -79,9 +85,13 @@ public class SwipeImageFragment extends Fragment {
             }
             // Change picture
             else {
-                placeholder.setVisibility(View.GONE); // Remove placeholder if need be
+                // Remove placeholder if need be
+                if (placeholder.getVisibility() != View.GONE) {
+                    placeholder.setVisibility(View.GONE);
+                }
+
+                flashingBorder.setAlpha(0.0f);
                 foodPicture.setImageBitmap(image);
-                yelp_logo.setVisibility(View.VISIBLE);
                 if(Build.VERSION.SDK_INT >= 17) {
                     bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
                 }
@@ -121,8 +131,8 @@ public class SwipeImageFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
         foodPicture = (SquareImageButton) fragmentView.findViewById(R.id.imagebutton_tinder);
         bg = (SquareImageButton) fragmentView.findViewById(R.id.blurred_image);
-        yelp_logo = (ImageView) fragmentView.findViewById(R.id.required_yelp);
         placeholder = (LinearLayout) fragmentView.findViewById(R.id.placeholder_container);
+        flashingBorder = (SquareImageButton) fragmentView.findViewById(R.id.flashing_border);
 
         /* Put offline text in placeholder here */
         if (statusOfFragment != -1) {
@@ -151,6 +161,27 @@ public class SwipeImageFragment extends Fragment {
         });
         
         return fragmentView;
+    }
+
+    public void borderFlash (String color) {
+        if(color.equals("red"))
+            flashingBorder.setImageResource(R.drawable.flashing_border_red);
+        else if(color.equals("green"))
+            flashingBorder.setImageResource(R.drawable.flashing_border_green);
+
+        flashingBorder.animate().alpha(1.0f)
+                .setDuration(100)
+                .setInterpolator(new AccelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        flashingBorder.animate().setListener(null);
+                        flashingBorder.animate().alpha(0.5f)
+                                .setDuration(300)
+                                .setInterpolator(new DecelerateInterpolator())
+                                .setListener(null);
+                    }
+                });
     }
 
 }

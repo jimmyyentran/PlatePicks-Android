@@ -9,13 +9,16 @@
         android:id="@+id/DimOverlay"
         android:visibility="gone"
         android:background="#000000"
-        android:alpha="0.25"/>
+        android:alpha="0.25"
+        android:onClick="closeDrawer" />
 
     <android.support.v4.widget.DrawerLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:id="@+id/drawer1"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:background="@color/white"
+        android:translationX="-300dp">
 
         <!--Drawer Frame-->
         <RelativeLayout
@@ -29,15 +32,16 @@
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:id="@+id/drawer_block"
-                android:background="#ffffff"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true">
+                android:layout_alignParentLeft="true"
+                android:visibility="visible">
 
                 <!--drawer's top Bar-->
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/drawer_top_bar">
+                    android:id="@+id/drawer_top_bar"
+                    android:background="@color/main_red">
 
                     <!--Exit Button-->
                     <FrameLayout
@@ -57,7 +61,7 @@
                             android:layout_height="20dp"
                             android:orientation="vertical"
                             android:id="@+id/exit_icon_bg"
-                            android:background="@color/main_red"/>
+                            android:background="@color/white"/>
 
                         <!--Exit Icon's Image-->
                         <ImageView
@@ -72,7 +76,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="Menu"
-                        android:textColor="@color/main_red"
+                        android:textColor="@color/white"
                         android:id="@+id/drawer_header_text"
                         android:textSize="27dp"
                         android:layout_gravity="center"
@@ -80,14 +84,6 @@
                 </FrameLayout>
 
                 <!--grey Line between top bar and list-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/light_grey"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_below="@+id/drawer_top_bar">
-                </LinearLayout>
 
                 <!--drawer content-->
                 <LinearLayout
@@ -123,7 +119,7 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:background="@drawable/search_icon"/>
+                                android:background="@drawable/search_icon_light_theme"/>
 
                         </FrameLayout>
 
@@ -135,7 +131,8 @@
                             android:layout_toRightOf="@+id/search_icon"
                             android:layout_marginLeft="10dp"
                             android:textSize="16dp"
-                            android:layout_centerVertical="true" />
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/dark_red" />
                     </RelativeLayout>
                     <!--end search icon/text container-->
 
@@ -160,7 +157,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Radius (mi.)"
-                                android:id="@+id/radius_text" />
+                                android:id="@+id/radius_text"
+                                android:textSize="14dp"
+                                android:textColor="@color/dark_red" />
 
                             <SeekBar
                                 android:layout_width="wrap_content"
@@ -176,7 +175,9 @@
                                 android:id="@+id/radius_number"
                                 android:layout_alignParentEnd="true"
                                 android:textAlignment="viewEnd"
-                                android:text="15" />
+                                android:text="15"
+                                android:textSize="14dp"
+                                android:textColor="@color/dark_red" />
                         </RelativeLayout>
                         <!--end radius parameter container-->
 
@@ -198,7 +199,9 @@
                                 android:onClick="viewFoodTypeList"
                                 android:layout_alignTop="@+id/dropdown_container"
                                 android:layout_alignBottom="@+id/dropdown_container"
-                                android:gravity="center_vertical" />
+                                android:gravity="center_vertical"
+                                android:textSize="14dp"
+                                android:textColor="@color/dark_red" />
 
                             <LinearLayout
                                 android:orientation="horizontal"
@@ -229,6 +232,26 @@
                             </FrameLayout>
 
                         </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Search with these parameters"
+                            android:id="@+id/new_search_button"
+                            android:layout_centerHorizontal="true"
+                            android:textColor="#ffffff"
+                            android:background="@drawable/red_button_handler"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:textSize="14dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="45dp"
+                            android:layout_marginRight="25dp"
+                            android:gravity="center_horizontal"
+                            android:clickable="true"
+                            android:layout_marginTop="8dp" />
                         <!--end food types parameter container-->
 
                     </LinearLayout>
@@ -247,7 +270,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/profile_header"
                         android:layout_marginLeft="15dp"
-                        android:layout_marginTop="20dp">
+                        android:layout_marginTop="20dp"
+                        android:visibility="gone">
 
                         <FrameLayout
                             android:layout_width="wrap_content"
@@ -265,7 +289,7 @@
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:id="@+id/profile_fg"
-                                android:background="@drawable/profile_icon" />
+                                android:background="@drawable/profile_icon_light_theme" />
                         </FrameLayout>
 
                         <TextView
@@ -275,7 +299,8 @@
                             android:layout_toRightOf="@+id/profile_icon"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10dp"
-                            android:textSize="16dp" />
+                            android:textSize="16dp"
+                            android:textColor="@color/dark_red" />
 
                     </RelativeLayout>
 
@@ -284,7 +309,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/profile_container"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:orientation="horizontal"
@@ -345,7 +371,8 @@
                                 android:text="(tap twice)"
                                 android:id="@+id/textView"
                                 android:layout_centerHorizontal="true"
-                                android:textSize="10dp" />
+                                android:textSize="10dp"
+                                android:textColor="@color/dark_red" />
                         </LinearLayout>
 
                         <RelativeLayout
@@ -365,7 +392,7 @@
                     android:layout_marginTop="160dp"
                     android:visibility="gone"
                     android:id="@+id/types_list"
-                    android:background="#ffffff">
+                    android:background="@color/white">
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -400,7 +427,9 @@
                                         android:text="American"
                                         android:id="@+id/checkBox"
                                         android:checked="false"
-                                        android:layout_gravity="center_horizontal|left" />
+                                        android:layout_gravity="center_horizontal|left"
+                                        android:soundEffectsEnabled="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -408,7 +437,8 @@
                                         android:text="Chinese"
                                         android:id="@+id/checkBox2"
                                         android:layout_gravity="center_horizontal|left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -416,7 +446,8 @@
                                         android:text="Mexican"
                                         android:id="@+id/checkBox3"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -424,7 +455,8 @@
                                         android:text="Japanese"
                                         android:id="@+id/checkBox4"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -432,7 +464,8 @@
                                         android:text="Italian"
                                         android:id="@+id/checkBox5"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -440,7 +473,8 @@
                                         android:text="Vietnamese"
                                         android:id="@+id/checkBox6"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -448,7 +482,8 @@
                                         android:text="Thai"
                                         android:id="@+id/checkBox7"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -456,7 +491,8 @@
                                         android:text="Indian"
                                         android:id="@+id/checkBox8"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -464,7 +500,8 @@
                                         android:text="Mediterranean"
                                         android:id="@+id/checkBox9"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -472,7 +509,8 @@
                                         android:text="Korean"
                                         android:id="@+id/checkBox10"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
                                 </LinearLayout>
 
                                 <!--right checkboxes-->
@@ -490,7 +528,8 @@
                                         android:text="French"
                                         android:id="@+id/checkBox11"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -498,7 +537,8 @@
                                         android:text="Pizza"
                                         android:id="@+id/checkBox12"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -506,7 +546,8 @@
                                         android:text="Seafood"
                                         android:id="@+id/checkBox13"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -514,7 +555,8 @@
                                         android:text="Dim Sum"
                                         android:id="@+id/checkBox14"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -522,7 +564,8 @@
                                         android:text="Asian Fusion"
                                         android:id="@+id/checkBox15"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -530,7 +573,8 @@
                                         android:text="Sandwiches"
                                         android:id="@+id/checkBox16"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -538,7 +582,8 @@
                                         android:text="Burgers"
                                         android:id="@+id/checkBox17"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -546,7 +591,8 @@
                                         android:text="Fast Food"
                                         android:id="@+id/checkBox18"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -554,7 +600,8 @@
                                         android:text="Coffee &amp; Tea"
                                         android:id="@+id/checkBox19"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
 
                                     <CheckBox
                                         android:layout_width="wrap_content"
@@ -562,7 +609,8 @@
                                         android:text="Breakfast"
                                         android:id="@+id/checkBox20"
                                         android:layout_gravity="left"
-                                        android:checked="false" />
+                                        android:checked="false"
+                                        android:textColor="@color/dark_red" />
                                 </LinearLayout>
                             </LinearLayout>
                         </ScrollView>
@@ -619,18 +667,6 @@
             </RelativeLayout>
 
             <!--space on block's right-->
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/drawer_right_space"
-                android:layout_alignParentRight="false"
-                android:layout_toRightOf="@+id/drawer_block"
-                android:background="@android:color/transparent"
-                android:alpha="1"
-                android:onClick="closeDrawer"
-                android:visibility="visible">
-            </FrameLayout>
 
         </RelativeLayout>
 

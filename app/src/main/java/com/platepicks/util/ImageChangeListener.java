@@ -64,8 +64,8 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
             if (imagePager.getCurrentItem() == 0) { // Like
                 otherPage = 2;
 
+                caller.heartPulse();
                 caller.update_list_number();
-                caller.makeCurrentImageFancy(); /* move liked image into fancy button */
 
                 /* create ListItemClass object passed into LikedListActivity */
 

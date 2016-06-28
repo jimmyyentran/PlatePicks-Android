@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -21,10 +22,20 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -48,9 +59,13 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.vision.Frame;
+import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.support.ConnectivityReceiver;
 import com.platepicks.support.CustomViewPager;
+import com.platepicks.support.SquareImageButton;
+import com.platepicks.util.AWSIntegratorAsyncTask;
 import com.platepicks.util.AWSIntegratorInterface;
 import com.platepicks.util.ConnectionCheck;
 import com.platepicks.util.ConvertToObject;
@@ -63,6 +78,7 @@ import com.platepicks.util.ListItemClass;
 import com.platepicks.util.RequestFromDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -117,6 +133,25 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public int offset = 0;                          // Number of businesses to offset by in yelp request
     public String gpsLocation;                      // "Latitude, Longitude"
 
+    boolean drawerOpened = false;
+
+    /* yes/no onHold constrictors */
+    boolean yesHeld = false;
+    boolean noHeld = false;
+
+    /* bell ImageViews */
+    ImageView bellShell = null;
+    ImageView bellStand = null;
+    ImageView bellHammer = null;
+
+    /* bell animations */
+    Animation hammer_drop = null;
+    Animation hammer_rise = null;
+
+    /* grow/shrink scaleAnimation declarations */
+    ScaleAnimation growAnim = null;
+    ScaleAnimation shrinkAnim = null;
+
     // Function: creates list item
     public ListItemClass createListItem(String foodName) {
         ListItemClass newItem = new ListItemClass();
@@ -145,10 +180,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     public void addToLikedData(ListItemClass toAdd) {
         this.likedData.add(toAdd);
-    }
-
-    public void makeCurrentImageFancy() {
-        fancy_image.setImageBitmap(imageList.get(0));
     }
 
     public void changeToNextFood() {
@@ -214,10 +245,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         createLocationRequest();
 
         /* XML Layout: selecting which file to set as layout */
-        setContentView(R.layout.activity_tinderui);
-
-        // Logo food imageView
-        fancy_image = (ImageView) findViewById(R.id.fancy_button_image);
+        setContentView(R.layout.fresh_and_trendy);
 
         /* ViewPager: A view that enables swiping images left and right
          * Has 3 pages, 0-2 (reason is explained in class definition below). */
@@ -244,19 +272,82 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         leftFoodTypes = (LinearLayout) findViewById(R.id.food_types_left);
         rightFoodTypes = (LinearLayout) findViewById(R.id.food_types_right);
 
+        /* assign bell imageviews */
+        bellShell = (ImageView) findViewById(R.id.bell_shell);
+        bellStand = (ImageView) findViewById(R.id.bell_stand);
+        bellHammer = (ImageView) findViewById(R.id.bell_hammer);
+
+        /* assign bell animations */
+        hammer_drop = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bell_hammer_drop);
+        hammer_rise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bell_hammer_rise);
+
+        hammer_drop.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                bellHammer.startAnimation(hammer_drop);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         /* Yes and No Buttons:
          * Finding reference to buttons in xml layout to keep as objects in Java */
-        Button noButton = (Button) findViewById(R.id.button_no);
-        Button yesButton = (Button) findViewById(R.id.button_yes);
+        RelativeLayout noButton = (RelativeLayout) findViewById(R.id.button_no);
+        final RelativeLayout yesButton = (RelativeLayout) findViewById(R.id.button_yes);
 
-        // Load custom YES/NO button text
-        Typeface Typeface_HamHeaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
-        noButton.setTypeface(Typeface_HamHeaven);
-        yesButton.setTypeface(Typeface_HamHeaven);
+        /* On Click Listeners:
+         * Functions that are called whenever the user clicks on the buttons or image */
+        noButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    noHeld();
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                    noReleased();
+                    //borderFlash("red");
+                    /*
+                    if (imagePager.getCurrentItem() == 1
+                            && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                        imagePager.setCurrentItem(2);
+                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                        //mp.start();
+                    }
+                    */
+                }
+                return true;
+            }
+        });
 
-        /* Custom font for Drawer's Header */
-        TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
-        drawer_header.setTypeface(Typeface_HamHeaven);
+        yesButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    yesHold();
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                    yesReleased();
+                    //borderFlash("green");
+                    /*
+                    if (imagePager.getCurrentItem() == 1
+                            && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                        imagePager.setCurrentItem(0);
+                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                        //mp.start();
+                    }
+                    */
+                }
+                return true;
+            }
+        });
 
         // First batch of images
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
@@ -310,6 +401,43 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         TextView okBtn = (TextView) findViewById(R.id.types_ok_button);
         TextView clearFavBtn = (TextView) findViewById(R.id.reset_list);
         TextView clearTypesBtn = (TextView) findViewById(R.id.types_clear_button);
+
+        clearTypesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < leftFoodTypes.getChildCount(); i++){
+                    if(((CheckBox) leftFoodTypes.getChildAt(i)).isChecked())
+                        ((CheckBox) leftFoodTypes.getChildAt(i)).toggle();
+                }
+                for (int i = 0; i < rightFoodTypes.getChildCount(); i++){
+                    if(((CheckBox) rightFoodTypes.getChildAt(i)).isChecked())
+                        ((CheckBox) rightFoodTypes.getChildAt(i)).toggle();
+                }
+            }
+        });
+
+        /* slogan typeface setup */
+        TextView line1 = (TextView) findViewById(R.id.new_food);
+        TextView line2 = (TextView) findViewById(R.id.new_places);
+        TextView line3 = (TextView) findViewById(R.id.you_pick);
+
+        Typeface source_bold = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Bold.otf");
+
+        line1.setTypeface(source_bold);
+        line2.setTypeface(source_bold);
+        line3.setTypeface(source_bold);
+
+                /* Custom font for Drawer's Header */
+        TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
+        drawer_header.setTypeface(source_bold);
+
+
+        Typeface Ham_Heaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
+        TextView appName2 = (TextView) findViewById(R.id.app_name_2);
+        appName2.setTypeface(Ham_Heaven);
+
+
+        /* set shrink/grow animation */
 
 
     }
@@ -567,16 +695,16 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             notification_number.setVisibility(View.VISIBLE);
             notification_number.setText(String.valueOf(cnt));
             if (cnt <= 9) {
-                notification_number.setTextSize(14);
+                notification_number.setTextSize(13);
                 notification_number.setPadding(0, 0, 0, 0);
             } else {
-                notification_number.setTextSize(11);
-                notification_number.setPadding(0, 0, 0, 3);
+                notification_number.setTextSize(10);
+                notification_number.setPadding(0, 0, 0, 5);
             }
         } else {
             notification_number.setVisibility(View.VISIBLE);
             notification_number.setText("+99");
-            notification_number.setTextSize(8);
+            notification_number.setTextSize(7);
             notification_number.setPadding(0, 0, 0, 4);
         }
 
@@ -669,60 +797,79 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     /* Opens main drawer */
     public void openDrawer(View view) {
-        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
-        final FrameLayout dim_overlay = (FrameLayout) findViewById(R.id.DimOverlay);
+        toggleViews("open");
+        final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
 
-        /* Fade in a dim overlay on top of the main interface */
-        ObjectAnimator fade_in = ObjectAnimator.ofFloat(dim_overlay, "alpha", 0f, 0.25f);
-        fade_in.setDuration(150);
+        my_drawer.animate().translationX(0).setDuration(400)
+                .setInterpolator(new DecelerateInterpolator(3.0f))
+                .setListener(new Animator.AnimatorListener() {
+                                 @Override
+                                 public void onAnimationStart(Animator animation) {
+                                     my_drawer.setVisibility(View.VISIBLE);
+                                     dimOverlay.setVisibility(View.VISIBLE);
+                                 }
 
-        /* Move drawer out of sight */
-        ObjectAnimator anim = ObjectAnimator.ofFloat(my_drawer, "translationX", -1 * my_drawer.getWidth());
-        anim.setDuration(1);
+                                 @Override
+                                 public void onAnimationEnd(Animator animation) {
 
-        /* Actual sliding out animation */
-        final ObjectAnimator openDrawerAnim = ObjectAnimator.ofFloat(my_drawer, "translationX", 0f);
-        openDrawerAnim.setDuration(200);
+                                 }
 
-        /* Move THEN slide out */
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                openDrawerAnim.start();
-                my_drawer.setVisibility(View.VISIBLE);
-            }
-        });
-        my_drawer.setVisibility(View.INVISIBLE);
-        anim.start();
-        dim_overlay.setVisibility(View.VISIBLE);
+                                 @Override
+                                 public void onAnimationCancel(Animator animation) {
+
+                                 }
+
+                                 @Override
+                                 public void onAnimationRepeat(Animator animation) {
+
+                                 }
+                             });
     }
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
-        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
-        final FrameLayout dim_overlay = (FrameLayout) findViewById(R.id.DimOverlay);
+        toggleViews("close");
+        final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
+        final FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
 
-        /* fade out the dim overlay */
-        ObjectAnimator fade_out = ObjectAnimator.ofFloat(dim_overlay, "alpha", 0.25f, 0f);
-        fade_out.setDuration(150);
-        fade_out.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                dim_overlay.setVisibility(View.GONE);
-            }
-        });
+        my_drawer.animate().translationX(-1 * my_drawer.getWidth()).setDuration(300)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        dimOverlay.setVisibility(View.GONE);
+                        dimOverlay.setVisibility(View.GONE);
+                    }
 
-        /* sliding in animation */
-        ObjectAnimator closeDrawerAnim = ObjectAnimator.ofFloat(my_drawer, "translationX", -1 * my_drawer.getWidth());
-        closeDrawerAnim.setDuration(200);
-        closeDrawerAnim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                my_drawer.setVisibility(View.GONE);
-            }
-        });
-        closeDrawerAnim.start();
-        dim_overlay.setVisibility(View.GONE);
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        my_drawer.setVisibility(View.GONE);
+                        if(typesList.getVisibility() == View.VISIBLE)
+                            viewFoodTypeList(my_drawer);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+    }
+
+    public void toggleViews (String s){
+        ViewPager foodPic = (ViewPager) findViewById (R.id.viewPager_images);
+
+        if (s.equals("close")) {
+            foodPic.setVisibility(View.VISIBLE);
+        }
+        else {
+            foodPic.setVisibility(View.GONE);
+        }
     }
 
     public void viewFoodTypeList(View view) {
@@ -738,17 +885,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         }
     }
 
-    public void removeCheckers (View view) {
-        ImageView tmp = (ImageView) findViewById(R.id.top_checkers);
-        ImageView tmp2 = (ImageView)findViewById(R.id.bot_checkers);
-        if(tmp.getVisibility() == (View.INVISIBLE)) {
-            tmp.setVisibility(View.VISIBLE);
-            tmp2.setVisibility(View.VISIBLE);
-        }
-        else{
-            tmp.setVisibility(View.INVISIBLE);
-            tmp2.setVisibility(View.INVISIBLE);
-        }
+    public void newFilterSearch (View view){
+        new RequestFromDatabase(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void onClickNo(View view) {
@@ -961,5 +1099,200 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     .alpha(0f)
                     .setListener(new SplashAnimatorListener()); /* Listener to remove view once finished */
         }
+    }
+
+    public void toggleTitle (View view){
+        ImageView style1 = (ImageView) findViewById(R.id.app_name);
+        TextView style2 = (TextView) findViewById(R.id.app_name_2);
+
+        if(style1.getVisibility() == View.GONE){
+            style1.setVisibility(View.VISIBLE);
+            style2.setVisibility(View.GONE);
+        }
+        else{
+            style1.setVisibility(View.GONE);
+            style2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void toggleTheme (View view){
+        RelativeLayout ui_background = (RelativeLayout) findViewById(R.id.main_ui);
+    }
+
+    public void yesHold () {
+        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
+        final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
+        final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
+
+        yesIcon.animate().scaleX(0.85f).scaleY(0.85f)
+            .setDuration(100)
+            .setInterpolator(new DecelerateInterpolator());
+
+        yesCircle.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesShadow.animate().scaleX(0.0f).scaleY(0.0f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+    }
+
+    public void yesReleased () {
+        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
+        final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
+        final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
+
+
+        bellHammer.animate().translationY(bellHammer.getHeight() / 19)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        bellHammer.animate().translationY(0)
+                                .setDuration(150)
+                                .setInterpolator(new DecelerateInterpolator());
+                        bellHammer.animate().setListener(null);
+                    }
+                });
+
+        yesCircle.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesShadow.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesIcon.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        yesIcon.animate().scaleX(1f)
+                                .setDuration(400)
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        if (imagePager.getCurrentItem() == 1
+                                                && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                                            imagePager.setCurrentItem(0);
+                                            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                                            //mp.start();
+                                        }
+                                        yesIcon.animate().setListener(null);
+                                    }
+                                });
+                    }
+                });
+
+        borderFlash("green");
+
+        /*
+        if (imagePager.getCurrentItem() == 1
+                && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+            imagePager.setCurrentItem(0);
+            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+            //mp.start();
+        }
+        */
+    }
+    
+    public void noHeld () {
+        final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
+        final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
+        final ImageView noShadow = (ImageView) findViewById(R.id.no_shadow);
+
+        noIcon.setRotation(0);
+
+        noIcon.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noCircle.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noShadow.animate().scaleX(0.0f).scaleY(0.0f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+    }
+
+    public void noReleased () {
+
+        Log.d("in noRelease", "IN NO RELEASE!!!");
+
+        final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
+        final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
+        final ImageView noShadow = (ImageView) findViewById(R.id.no_shadow);
+
+        noCircle.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noShadow.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noIcon.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                       noIcon.animate().scaleX(1f)
+                               .setDuration(400)
+                               .setListener(new AnimatorListenerAdapter() {
+                                   @Override
+                                   public void onAnimationEnd(Animator animation) {
+                                       if (imagePager.getCurrentItem() == 1
+                                               && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                                           imagePager.setCurrentItem(2);
+                                           MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                                           //mp.start();
+                                       }
+                                       noIcon.animate().setListener(null);
+                                   }
+                               });
+                    }
+                });
+
+        borderFlash("red");
+
+        /*
+        if (imagePager.getCurrentItem() == 1
+                && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+            imagePager.setCurrentItem(2);
+            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+            //mp.start();
+        }
+        */
+
+
+    }
+
+    public void borderFlash (String color){
+        mainPageFragment.borderFlash(color);
+    }
+
+    public void heartPulse () {
+        final ImageView heartIcon = (ImageView) findViewById(R.id.heart_icon_green);
+        heartIcon.setScaleX(0.4f);
+        heartIcon.setScaleY(0.4f);
+        heartIcon.setVisibility(View.VISIBLE);
+
+        heartIcon.animate().scaleX(1.0f).scaleY(1.0f)
+                .alpha(0.0f)
+                .setDuration(700)
+                .setInterpolator(new AccelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        heartIcon.setVisibility(View.INVISIBLE);
+                        heartIcon.setAlpha(1.0f);
+                        heartIcon.animate().setListener(null);
+                    }
+                });
     }
 }

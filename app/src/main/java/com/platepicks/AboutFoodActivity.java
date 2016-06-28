@@ -23,8 +23,10 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,25 +63,30 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
         Typeface archistico_bold = Typeface.createFromAsset(getAssets(), "fonts/Archistico_Bold.ttf");
         Typeface ham_heaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
+        Typeface source_black_it = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-BlackIt.otf");
+
+        Typeface source_bold = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Bold.otf");
 
         TextView bar_name = (TextView) findViewById(R.id.bar_title);
-        bar_name.setTypeface(ham_heaven);
+        bar_name.setTypeface(source_bold);
 
         final TextView restaurant = (TextView) findViewById(R.id.restaurant_name);
 
-        restaurant.setTypeface(archistico_bold);
+        restaurant.setTypeface(source_black_it);
         restaurant.setText(item.getRestaurantName());
         restaurant.setTextSize(0);
 
         TextView food = (TextView) findViewById(R.id.food_name);
         food.setText(item.getFoodName());
 
+        Typeface source_reg = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Regular.otf");
+
         TextView street = (TextView) findViewById(R.id.street);
-        //street.setTypeface(quicksand);
+        street.setTypeface(source_reg);
         TextView city = (TextView) findViewById(R.id.city_state);
-        //city.setTypeface(quicksand);
+        city.setTypeface(source_reg);
         TextView zip = (TextView) findViewById(R.id.zip_code);
-        //zip.setTypeface(quicksand);
+        zip.setTypeface(source_reg);
 
         String whole_address = item.getRestaurantAddress();
 
@@ -100,6 +107,10 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
             city.setText(whole_address.split("\\, ")[2]);
             zip.setText(whole_address.split("\\, ")[3]);
         }
+
+        /* "Let's Eat!" text handling */
+        final TextView eatBtn = (TextView) findViewById(R.id.eat_button);
+        eatBtn.setTypeface(source_bold);
 
         // Food image
         ImageView img = (ImageView) findViewById(R.id.about_image);
@@ -122,9 +133,23 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                     float width = ll.getWidth() - ll.getPaddingRight() - ll.getPaddingLeft();
                     scaleText(restaurant, width);
                     isScaled = true;
+
+                    eatBtn.setWidth(eatBtn.getHeight() + (int) dipToPixels(getBaseContext(), 2));
+
+                    RelativeLayout aboutImage = (RelativeLayout) findViewById(R.id.about_image_frame);
+
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(aboutImage.getWidth(),
+                            aboutImage.getWidth() * 6 / 8);
+
+                    aboutImage.setLayoutParams(lp);
+
+                    ImageView foodImage = (ImageView) findViewById(R.id.about_image);
+                    foodImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
             }
         });
+
+
 
 
         // Execute the AsyncTask by passing in foodId
@@ -175,61 +200,9 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         edit.setText("");
     }
 
-    public void submitComment(View view) {
-        TableLayout tabel = (TableLayout) findViewById(R.id.comment_list);
-        EditText comment_input = (EditText) findViewById(R.id.input_box);
-
-        LinearLayout ll = new LinearLayout(this);
-
-        LayoutInflater inflater1 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ll = (LinearLayout) inflater1.inflate(R.layout.comment_item, null);
-
-        TextView x = (TextView) ll.findViewById(R.id.item_comment);
-        x.setText(comment_input.getText().toString());
-
-        TextView y = (TextView) ll.findViewById(R.id.item_username);
-        //y.setText();
-
-        tabel.addView(ll);
-
-        /* hide the comment input field */
-        LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
-        if (tmp.getVisibility() == View.VISIBLE)
-            tmp.setVisibility(View.GONE);
-
-        /* Hide the soft keyboard if necessary */
-        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(comment_input.getWindowToken(), 0);
-
-        /* empty the EditText view */
-        comment_input.setText("");
-
-        new TableComment().execute("Foodie_93", item.getFoodId(), x.getText().toString());
-    }
-
     @Override
     public void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId) {
         imageView.setImageBitmap(b);
-    }
-
-    public void loadComments(String comment, String userID, long date) {
-        System.out.println("Loading the comments");
-        //String final_date = getLocalTime (date)
-        LinearLayout ll = new LinearLayout(this);
-
-        LayoutInflater lf = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ll = (LinearLayout) lf.inflate(R.layout.comment_item, null);
-
-        TextView x = (TextView) ll.findViewById(R.id.item_comment);
-        TextView y = (TextView) ll.findViewById(R.id.item_username);
-//        TextView z = (TextView) ll.findViewById(R.id.item_date);
-
-        x.setText(comment);
-        y.setText(userID);
-//        z.setText(final_date);
-
-        TableLayout tl = (TableLayout) findViewById(R.id.comment_list);
-        tl.addView(ll);
     }
 
     private void scaleText (TextView s, float width) {
@@ -264,6 +237,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
     }
 }
 
+// FIXME: No more comments
 class QueryCommentsTask extends AsyncTask<String, Void, List<CommentDO>> {
     AboutFoodActivity activity;
 
@@ -273,8 +247,10 @@ class QueryCommentsTask extends AsyncTask<String, Void, List<CommentDO>> {
     /** The system calls this to perform work in a worker thread and
      * delivers it the parameters given to AsyncTask.execute() */
     protected List<CommentDO> doInBackground(String... foodId) {
+        /*
         if (ConnectionCheck.isConnected(activity))
             return getCommentsFromFoodID(foodId[0]);
+        */
 
         return null;
     }
@@ -282,16 +258,10 @@ class QueryCommentsTask extends AsyncTask<String, Void, List<CommentDO>> {
     /** The system calls this to perform work in the UI thread and delivers
      * the result from doInBackground() */
     protected void onPostExecute(List<CommentDO> result) {
-        if (result == null) {
-            Toast.makeText(activity,
-                    "Could not load comments. Please check the internet connection",
-                    Toast.LENGTH_SHORT)
-                    .show();
-            return;
-        }
-
+        /*
         for (CommentDO comment : result) {
             activity.loadComments(comment.getContent(), comment.getUserId(), comment.getTime());
         }
+        */
     }
 }
