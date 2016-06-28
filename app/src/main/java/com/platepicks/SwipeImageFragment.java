@@ -40,7 +40,7 @@ public class SwipeImageFragment extends Fragment {
     private ImageView yelp_logo = null;
     private Bitmap image;
     private ListItemClass item;
-    private SquareImageButton flashingBorder;
+    public SquareImageButton flashingBorder;
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
@@ -62,6 +62,7 @@ public class SwipeImageFragment extends Fragment {
                     placeholder.setVisibility(View.GONE);
                 }
 
+                flashingBorder.setAlpha(0.0f);
                 foodPicture.setImageBitmap(image);
                 if(Build.VERSION.SDK_INT >= 17) {
                     bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
@@ -122,6 +123,27 @@ public class SwipeImageFragment extends Fragment {
         // images/comments/food names/food ids for
         
         return fragmentView;
+    }
+
+    public void borderFlash (String color) {
+        if(color == "red")
+            flashingBorder.setImageResource(R.drawable.flashing_border_red);
+        else if(color == "green")
+            flashingBorder.setImageResource(R.drawable.flashing_border_green);
+
+        flashingBorder.animate().alpha(1.0f)
+                .setDuration(100)
+                .setInterpolator(new AccelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        flashingBorder.animate().setListener(null);
+                        flashingBorder.animate().alpha(0.5f)
+                                .setDuration(400)
+                                .setInterpolator(new DecelerateInterpolator())
+                                .setListener(null);
+                    }
+                });
     }
 
 }

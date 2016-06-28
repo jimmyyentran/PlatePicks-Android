@@ -32,8 +32,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="0dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp"
-            android:onClick="toggleTitle">
+            android:layout_marginTop="0dp">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -89,8 +88,8 @@
             <ImageButton
                 android:id="@+id/droor_icon"
                 android:contentDescription="@string/contentDescription_tinder"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:padding="15dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/drawer_icon"
@@ -106,15 +105,21 @@
             <!--List Button-->
             <FrameLayout
                 android:id="@+id/list_button_frame"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:padding="15dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@id/grey_bar"
                 android:layout_alignBottom="@id/grey_bar">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/heart_icon_green"
+                    android:src="@drawable/list_icon"
+                    android:visibility="invisible" />
 
                 <ImageButton
                     android:id="@+id/list_button"
@@ -124,7 +129,8 @@
                     android:src="@drawable/list_icon"
                     android:background="@android:color/transparent"
                     android:onClick="gotoList"
-                    android:contentDescription="@string/contentDescription_list"/>
+                    android:contentDescription="@string/contentDescription_list"
+                    android:layout_margin="15dp" />
 
                 <TextView
                     android:id="@+id/list_notification"
@@ -132,7 +138,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/main_red"
                     android:typeface="sans"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp" />
+
             </FrameLayout>
 
         </RelativeLayout>
@@ -143,7 +151,6 @@
             android:layout_height="0dp"
             android:id="@+id/pictures_section"
             android:layout_gravity="center"
-            android:layout_weight="4"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="0dp"
             android:layout_alignParentTop="false"

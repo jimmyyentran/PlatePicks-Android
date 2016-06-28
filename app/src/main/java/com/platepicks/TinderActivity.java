@@ -118,6 +118,8 @@ public class TinderActivity extends AppCompatActivity
         return newItem;
     }
 
+    ImageChangeListener changeListener = null;
+
     boolean drawerOpened = false;
 
     /* bell ImageViews */
@@ -183,7 +185,7 @@ public class TinderActivity extends AppCompatActivity
         imagePager.getCurrentItem();            // Ensure item is defined
 
         /* Listen for change in swipe animation's current state */
-        final ImageChangeListener changeListener = new ImageChangeListener();
+        changeListener = new ImageChangeListener();
         imagePager.addOnPageChangeListener(changeListener);
 
         /* initialize radius seekBar and link it to a listener*/
@@ -240,7 +242,7 @@ public class TinderActivity extends AppCompatActivity
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                     noReleased();
-                    borderFlash("red");
+                    //borderFlash("red");
                     /*
                     if (imagePager.getCurrentItem() == 1
                             && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
@@ -262,7 +264,7 @@ public class TinderActivity extends AppCompatActivity
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                     yesReleased();
-                    borderFlash("green");
+                    //borderFlash("green");
                     /*
                     if (imagePager.getCurrentItem() == 1
                             && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
@@ -1061,6 +1063,7 @@ public class TinderActivity extends AppCompatActivity
         final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
 
+
         bellHammer.animate().translationY(bellHammer.getHeight() / 19)
                 .setDuration(100)
                 .setInterpolator(new DecelerateInterpolator())
@@ -1081,7 +1084,7 @@ public class TinderActivity extends AppCompatActivity
         yesShadow.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
                 .setInterpolator(new DecelerateInterpolator());
-
+/*
         yesIcon.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
                 .setInterpolator(new DecelerateInterpolator())
@@ -1105,15 +1108,41 @@ public class TinderActivity extends AppCompatActivity
                                                         bellShell.animate().rotation(0)
                                                                 .setDuration(150)
                                                                 .setInterpolator(new DecelerateInterpolator());
+                                                        bellShell.animate().setListener(null);
+                                                        bellShell.animate().setListener(new AnimatorListenerAdapter() {
+                                                            @Override
+                                                            public void onAnimationEnd(Animator animation) {
+                                                                if (imagePager.getCurrentItem() == 1
+                                                                        && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+                                                                    imagePager.setCurrentItem(0);
+                                                                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+                                                                    //mp.start();
+                                                                }
+                                                                heartPulse();
+                                                                bellShell.animate().setListener(null);
+                                                            }
+                                                        });
                                                     }
                                                 });
                                     }
                                 });
 
-                        /* first listener */
                         yesIcon.animate().setListener(null);
                     }
                 });
+                */
+        yesIcon.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        if (imagePager.getCurrentItem() == 1
+                && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+            imagePager.setCurrentItem(0);
+            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+            //mp.start();
+        }
+        heartPulse();
+
 
     }
     
@@ -1152,37 +1181,44 @@ public class TinderActivity extends AppCompatActivity
 
         noShadow.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
-                .setInterpolator(new DecelerateInterpolator())
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        noIcon.animate().scaleX(1f).scaleY(1f)
-                                .rotation(180)
-                                .setDuration(600)
-                                .setInterpolator(new DecelerateInterpolator());
-                        noShadow.animate().setListener(null);
-                    }
-                });
+                .setInterpolator(new DecelerateInterpolator());
+
+        noIcon.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        if (imagePager.getCurrentItem() == 1
+                && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
+            imagePager.setCurrentItem(2);
+            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
+            //mp.start();
+        }
+
     }
 
-    public void borderFlash (String color) {
-        final SquareImageButton flashingBorder = (SquareImageButton) findViewById(R.id.flashing_border);
+    public void borderFlash (String color){
+        mainPageFragment.borderFlash(color);
+    }
 
-        flashingBorder.animate().alpha(1.0f)
-                .setDuration(100)
+    public void heartPulse () {
+        final ImageView heartIcon = (ImageView) findViewById(R.id.heart_icon_green);
+        heartIcon.setScaleX(0.3f);
+        heartIcon.setScaleY(0.3f);
+        heartIcon.setVisibility(View.VISIBLE);
+
+        heartIcon.animate().scaleX(1.0f).scaleY(1.0f)
+                .alpha(0.0f)
+                .setDuration(700)
                 .setInterpolator(new AccelerateInterpolator())
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        flashingBorder.animate().setListener(null);
-                        flashingBorder.animate().alpha(0.5f)
-                                .setDuration(400)
-                                .setInterpolator(new DecelerateInterpolator())
-                                .setListener(null);
+                        heartIcon.setVisibility(View.INVISIBLE);
+                        heartIcon.setAlpha(1.0f);
+                        heartIcon.animate().setListener(null);
                     }
                 });
     }
-
 }
 
     /* end Tinder Activity */
