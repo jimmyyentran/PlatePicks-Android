@@ -130,7 +130,7 @@
                     android:background="@android:color/transparent"
                     android:onClick="gotoList"
                     android:contentDescription="@string/contentDescription_list"
-                    android:layout_margin="15dp" />
+                    android:layout_margin="14dp" />
 
                 <TextView
                     android:id="@+id/list_notification"

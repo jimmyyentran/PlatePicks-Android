@@ -2,21 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_red"
+    android:background="@color/jimmys_grey"
     android:id="@+id/about_page_container">
 
     <!--Top bar-->
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/imageView4"
+            android:src="@drawable/bar_shadow" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/two_shaded_bar"
-            android:id="@+id/toolbar_tinder">
+            android:id="@+id/toolbar_tinder"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp">
 
             <ImageView
                 android:layout_width="50dp"
@@ -42,12 +52,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I n f o r m a t i o n"
+            android:text="Information"
             android:id="@+id/bar_title"
             android:layout_gravity="center"
             android:textColor="#ffffff"
-            android:textSize="20dp" />
-    </FrameLayout>
+            android:textSize="20dp"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/toolbar_tinder"
+            android:layout_alignBottom="@+id/toolbar_tinder"
+            android:gravity="center" />
+    </RelativeLayout>
 
     <!--page content-->
 
@@ -76,7 +92,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/about_image_frame"
-                    android:background="@drawable/theme_dark_image_border">
+                    android:background="@drawable/theme_light_image_border">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -89,7 +105,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/white_angle"
-                        android:src="@drawable/theme_dark_image_border"
+                        android:src="@drawable/theme_light_image_border"
                         android:layout_alignLeft="@+id/food_name_frame"
                         android:layout_alignParentEnd="true"
                         android:layout_alignBottom="@+id/food_name_frame"
@@ -124,10 +140,10 @@
                             android:maxLines="1"
                             android:layout_gravity="center_horizontal|bottom"
                             android:gravity="center_horizontal"
-                            android:background="@color/dark_red"
+                            android:background="@color/jimmys_grey"
                             android:paddingTop="4dp"
                             android:paddingBottom="3dp"
-                            android:textColor="@color/white"
+                            android:textColor="@color/dark_red"
                             android:allowUndo="false"
                             android:textSize="15sp"
                             android:ellipsize="end"
@@ -145,7 +161,7 @@
                 android:id="@+id/restaurant_name"
                 android:textIsSelectable="false"
                 android:textSize="26dp"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_red"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="20dp" />
 
@@ -153,7 +169,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:id="@+id/imageView"
-                android:background="@color/light_grey"
+                android:background="@color/dark_red"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="2dp" />
 
@@ -181,7 +197,7 @@
                             android:text="334 Maple Ave."
                             android:id="@+id/street"
                             android:textSize="15sp"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/dark_red" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -190,7 +206,7 @@
                             android:id="@+id/city_state"
                             android:textSize="15sp"
                             android:layout_marginTop="2dp"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/dark_red" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -199,7 +215,7 @@
                             android:id="@+id/zip_code"
                             android:textSize="15sp"
                             android:layout_marginTop="2dp"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/dark_red" />
                     </LinearLayout>
 
                     <TextView
@@ -229,7 +245,7 @@
                     android:layout_height="1dp"
                     android:id="@+id/imageView2"
                     android:layout_marginTop="8dp"
-                    android:background="@color/light_grey"
+                    android:background="@color/dark_red"
                     android:layout_marginBottom="8dp" />
 
             </LinearLayout>
