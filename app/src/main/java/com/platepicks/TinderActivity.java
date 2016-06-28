@@ -128,6 +128,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     int cnt = 1;                                    // used for notification count of new liked foods
     boolean triedLocSettingsFlag = false;           // flag to know if app attempted to get location setting enabled
+    boolean haveLocationUpdatesFlag = false;        // flag for location updates
     public int businessLimit = LIMIT_WITHOUT_WIFI;  // Number of businesses returned per request
     public int foodLimit = 3;                       // Number of food per business
     public int offset = 0;                          // Number of businesses to offset by in yelp request
@@ -677,14 +678,19 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED)
+                == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, this);
+            haveLocationUpdatesFlag = true;
+        }
     }
 
     void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        if (haveLocationUpdatesFlag) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+            haveLocationUpdatesFlag = false;
+        }
     }
 
     public void update_list_number () {
