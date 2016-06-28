@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.platepicks.util.ListAdapter;
 import com.platepicks.util.ListItemClass;
 
 import java.util.ArrayList;

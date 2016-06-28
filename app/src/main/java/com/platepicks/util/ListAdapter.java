@@ -1,4 +1,4 @@
-package com.platepicks;
+package com.platepicks.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.platepicks.util.ListItemClass;
+import com.platepicks.R;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;

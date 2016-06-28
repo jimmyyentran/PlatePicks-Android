@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.platepicks.support.SquareImageButton;
+import com.platepicks.util.ImageSaver;
 import com.platepicks.util.ListItemClass;
 
 /**

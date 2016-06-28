@@ -1,11 +1,9 @@
-package com.platepicks;
+package com.platepicks.util;
 
 import android.content.Context;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
-        import android.graphics.Color;
-        import android.graphics.Matrix;
-        import android.os.AsyncTask;
+import android.os.AsyncTask;
         import android.os.SystemClock;
         import android.support.annotation.NonNull;
         import android.widget.ImageView;
@@ -138,7 +136,7 @@ public class ImageSaver {
         }
     }
 
-    interface OnCompleteListener {
+    public interface OnCompleteListener {
         void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId);
     }
 }

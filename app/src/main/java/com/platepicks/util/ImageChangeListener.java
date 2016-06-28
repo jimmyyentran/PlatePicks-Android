@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.platepicks.*;
 import com.platepicks.dynamoDB.TableFood;
