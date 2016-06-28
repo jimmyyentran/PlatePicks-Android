@@ -139,7 +139,7 @@ public class SwipeImageFragment extends Fragment {
                     public void onAnimationEnd(Animator animation) {
                         flashingBorder.animate().setListener(null);
                         flashingBorder.animate().alpha(0.5f)
-                                .setDuration(400)
+                                .setDuration(300)
                                 .setInterpolator(new DecelerateInterpolator())
                                 .setListener(null);
                     }
