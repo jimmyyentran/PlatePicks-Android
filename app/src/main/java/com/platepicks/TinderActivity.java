@@ -667,6 +667,7 @@ public class TinderActivity extends AppCompatActivity
                 if (imagePager.getCurrentItem() == 0) { // Like
                     otherPage = 2;
 
+                    heartPulse();
                     update_list_number(cnt);
 
                     /* move liked image into fancy button */
@@ -1141,8 +1142,6 @@ public class TinderActivity extends AppCompatActivity
             MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
             //mp.start();
         }
-        heartPulse();
-
 
     }
     
