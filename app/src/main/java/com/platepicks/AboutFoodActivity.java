@@ -27,9 +27,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.platepicks.dynamoDB.TableComment;
 import com.platepicks.dynamoDB.nosql.CommentDO;
+import com.platepicks.util.ConnectionCheck;
 import com.platepicks.util.ListItemClass;
 
 import java.io.File;
@@ -156,27 +158,26 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
     public void openCommentInput(View view) {
         LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
         EditText edit = (EditText) findViewById((R.id.input_box));
-        if (tmp.getVisibility() == view.GONE) {
+        if (tmp.getVisibility() == View.GONE) {
             edit.setMaxLines(6);
             edit.setVerticalScrollBarEnabled(true);
-            tmp.setVisibility(view.VISIBLE);
+            tmp.setVisibility(View.VISIBLE);
             edit.requestFocus();
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         } else
-            tmp.setVisibility(view.GONE);
+            tmp.setVisibility(View.GONE);
 
         /* Hide the soft keyboard if necessary */
         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow(edit.getWindowToken(), 0);
 
         /* emtpy the EditText view */
-        TextView tmp1 = (TextView) findViewById(R.id.input_box);
-        tmp1.setText("");
+        edit.setText("");
     }
 
     public void submitComment(View view) {
         TableLayout tabel = (TableLayout) findViewById(R.id.comment_list);
-        TextView comment_input = (TextView) findViewById(R.id.input_box);
+        EditText comment_input = (EditText) findViewById(R.id.input_box);
 
         LinearLayout ll = new LinearLayout(this);
 
@@ -193,17 +194,15 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
 
         /* hide the comment input field */
         LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
-        if (tmp.getVisibility() == view.VISIBLE)
-            tmp.setVisibility(view.GONE);
+        if (tmp.getVisibility() == View.VISIBLE)
+            tmp.setVisibility(View.GONE);
 
         /* Hide the soft keyboard if necessary */
-        EditText edit = (EditText) findViewById((R.id.input_box));
         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+        mgr.hideSoftInputFromWindow(comment_input.getWindowToken(), 0);
 
         /* empty the EditText view */
-        TextView tmp1 = (TextView) findViewById(R.id.input_box);
-        tmp1.setText("");
+        comment_input.setText("");
 
         new TableComment().execute("Foodie_93", item.getFoodId(), x.getText().toString());
     }
@@ -274,12 +273,23 @@ class QueryCommentsTask extends AsyncTask<String, Void, List<CommentDO>> {
     /** The system calls this to perform work in a worker thread and
      * delivers it the parameters given to AsyncTask.execute() */
     protected List<CommentDO> doInBackground(String... foodId) {
-        return getCommentsFromFoodID(foodId[0]);
+        if (ConnectionCheck.isConnected(activity))
+            return getCommentsFromFoodID(foodId[0]);
+
+        return null;
     }
 
     /** The system calls this to perform work in the UI thread and delivers
      * the result from doInBackground() */
     protected void onPostExecute(List<CommentDO> result) {
+        if (result == null) {
+            Toast.makeText(activity,
+                    "Could not load comments. Please check the internet connection",
+                    Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+
         for (CommentDO comment : result) {
             activity.loadComments(comment.getContent(), comment.getUserId(), comment.getTime());
         }

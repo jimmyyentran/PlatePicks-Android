@@ -325,10 +325,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         if (connectionRx != null)
             registerReceiver(connectionRx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-        // Release lock once UI is visible to let splash screen be removed and show first pic
-        if (waitForUILock.isHeldByCurrentThread())
-            waitForUILock.unlock();
-
         super.onResume();
     }
 
@@ -629,7 +625,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     void handleNoInternet(int task) {
         Log.d("TinderActivity", "Internet error, task " + String.valueOf(task));
 
-        mainPageFragment.setOffline(true);
+        mainPageFragment.changeText(SwipeImageFragment.OFFLINE);
         connectionRx = new ConnectivityReceiver(this, task);
         registerReceiver(connectionRx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
@@ -645,7 +641,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public void requestFromDatabaseReceiver() {
         Log.d("TinderActivity", "Receiver called for database request");
 
-        mainPageFragment.setOffline(false);
+        mainPageFragment.changeText(SwipeImageFragment.LOADING);
         unregisterReceiver(connectionRx);
         if (connectionRx != null) {
             new RequestFromDatabase(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -657,12 +653,18 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public void requestImagesReceiver() {
         Log.d("TinderActivity", "Receiver called for images");
 
-        mainPageFragment.setOffline(false);
+        mainPageFragment.changeText(SwipeImageFragment.LOADING);
         unregisterReceiver(connectionRx);
         if (connectionRx != null) {
             requestImages();
         }
         connectionRx = null;
+    }
+
+    public void onCreatedUI() {
+        // Release lock once UI is visible to let splash screen be removed and show first pic
+        if (waitForUILock.isHeldByCurrentThread())
+            waitForUILock.unlock();
     }
 
     /* Opens main drawer */
@@ -809,7 +811,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
             imagePager.setSwiping(true);
         } else {
-            Toast.makeText(this, "Request failed", Toast.LENGTH_SHORT).show();
+            Log.e("TinderActivity", "Request failed");
+            mainPageFragment.changeText(SwipeImageFragment.OUT_OF_IMG);
         }
 
         // Reset various variables
@@ -946,9 +949,12 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            Log.d("PostFirstImageTask", "In postExecute");
             // Set first image
-            if (!imageList.isEmpty() && !listItems.isEmpty())
+            if (!imageList.isEmpty() && !listItems.isEmpty()) {
+                Log.d("PostFirstImageTask", "Changing image");
                 mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
+            }
 
             // Fade, then set to gone through listener
             splashScreen.animate()

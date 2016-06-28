@@ -35,6 +35,8 @@
   <string name="placeholder_1">One sec.</string>
   <string name="placeholder_2">In the meantime, why don\'t you check out your other dishes?</string>
   <string name="placeholder_offline">We had trouble connecting to the internet.</string>
+  <string name="placeholder_no_images">There are no more results for this area. Why not try changing
+    your search radius or categories?</string>
 
   <!--google id for using locations (in daniel's dev console)-->
   <string name="google_app_id">plate-picks</string>

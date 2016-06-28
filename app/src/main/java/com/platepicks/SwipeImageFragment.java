@@ -7,13 +7,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.platepicks.support.SquareImageButton;
@@ -23,7 +23,8 @@ import com.platepicks.util.ListItemClass;
  * Created by pokeforce on 4/22/16.
  */
 public class SwipeImageFragment extends Fragment {
-    public static String PAGE_POSITION = "Page position", PIC_INDEX = "Pic index";
+    public static final String PAGE_POSITION = "Page position";
+    public static final int LOADING = 0, OFFLINE = 1, OUT_OF_IMG = 2;
 
     private SquareImageButton foodPicture = null;
     private SquareImageButton bg = null;
@@ -32,14 +33,14 @@ public class SwipeImageFragment extends Fragment {
     private Bitmap image;
     private ListItemClass item;
 
-    private boolean offlineFlag = false;
+    private int statusOfFragment = -1;
 
     public SquareImageButton getFoodPicture() { return foodPicture; }
 
-    public void setOffline(boolean offline) {
+    public void changeText(int statusType) {
         // View does not exist yet, so set boolean to call this function in onCreateView
         if (placeholder == null) {
-            offlineFlag = true;
+            statusOfFragment = statusType;
             return;
         }
 
@@ -47,13 +48,19 @@ public class SwipeImageFragment extends Fragment {
         ProgressBar placeholderProgress =
                 (ProgressBar) placeholder.findViewById(R.id.progressBar_placeholder);
 
-        if (offline) {
-            placeholderText.setText(getResources().getText(R.string.placeholder_offline));
-            placeholderProgress.setVisibility(View.GONE);
-        }
-        else {
-            placeholderText.setText(getResources().getText(R.string.placeholder_1));
-            placeholderProgress.setVisibility(View.VISIBLE);
+        switch (statusType) {
+            case LOADING:
+                placeholderText.setText(getResources().getText(R.string.placeholder_1));
+                placeholderProgress.setVisibility(View.VISIBLE);
+                break;
+            case OFFLINE:
+                placeholderText.setText(getResources().getText(R.string.placeholder_offline));
+                placeholderProgress.setVisibility(View.GONE);
+                break;
+            case OUT_OF_IMG:
+                placeholderText.setText(getResources().getText(R.string.placeholder_no_images));
+                placeholderProgress.setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -67,6 +74,8 @@ public class SwipeImageFragment extends Fragment {
                 bg.setImageDrawable(null);
                 yelp_logo.setVisibility(View.GONE);
                 placeholder.setVisibility(View.VISIBLE);
+
+                Log.d("SwipeImageFragment", "image is null");
             }
             // Change picture
             else {
@@ -79,10 +88,14 @@ public class SwipeImageFragment extends Fragment {
                 else {
                     foodPicture.setBackgroundColor(Color.WHITE);
                 }
+
+                Log.d("SwipeImageFragment", "change image");
             }
 
             this.image = image;
             this.item = item;
+        } else {
+            Log.d("SwipeImageFragment", "FoodPicture is null");
         }
     }
 
@@ -90,26 +103,35 @@ public class SwipeImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int pagePosition = 0;   /* Page position in viewpager */
-        if (getArguments() != null)
-            pagePosition = getArguments().getInt(PAGE_POSITION);
+        int pagePosition = 0;           /* Page position in viewpager */
+        Bundle args = getArguments();   /* Arguments passed in */
+        if (args != null) {
+            // Must have this or null pointer exception
+            if (!args.containsKey(PAGE_POSITION)) {
+                throw new NullPointerException("No page position for SwipeImageFragment");
+            }
+
+            pagePosition = args.getInt(PAGE_POSITION);
+        }
+
+        /* Give empty layout instead if not main page*/
+        if (pagePosition != 1)
+            return inflater.inflate(R.layout.fragment_empty_slide, container, false);
 
         View fragmentView = inflater.inflate(R.layout.fragment_slide_image, container, false);
         foodPicture = (SquareImageButton) fragmentView.findViewById(R.id.imagebutton_tinder);
         bg = (SquareImageButton) fragmentView.findViewById(R.id.blurred_image);
         yelp_logo = (ImageView) fragmentView.findViewById(R.id.required_yelp);
         placeholder = (LinearLayout) fragmentView.findViewById(R.id.placeholder_container);
-        RelativeLayout foodBorder = (RelativeLayout) fragmentView.findViewById(R.id.food_border);
 
         /* Put offline text in placeholder here */
-        if (offlineFlag) {
-            setOffline(true);
-            offlineFlag = false;
+        if (statusOfFragment != -1) {
+            changeText(statusOfFragment);
+            statusOfFragment = -1;
         }
-        
-        /* Set the image resource here */
-        if (pagePosition != 1)
-            foodBorder.setVisibility(View.GONE);
+
+        /* Tell TinderActivity that objects for SwipeImageFragment are ready */
+        ((TinderActivity) getActivity()).onCreatedUI();
 
         /* Open the about food activity here */
         foodPicture.setOnClickListener(new View.OnClickListener() {
@@ -125,16 +147,8 @@ public class SwipeImageFragment extends Fragment {
                     aboutPage.putExtra("key2", item);
                     startActivity(aboutPage);
                 }
-//                Log.d("SwipeImageFragment", item.getFoodId() + "," +
-//                        item.getFoodName() + "," +
-//                        item.getRestaurantName() + "," +
-//                        item.getImageUrl());
             }
         });
-        // lat and longitude could be negative (west/east)
-        // Meters not miles (radius)
-        // Json with these things grab a list of restaurant ids, which divvy's code grabs
-        // images/comments/food names/food ids for
         
         return fragmentView;
     }
