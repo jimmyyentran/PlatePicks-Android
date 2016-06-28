@@ -313,15 +313,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                     noReleased();
-                    //borderFlash("red");
-                    /*
-                    if (imagePager.getCurrentItem() == 1
-                            && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
-                        imagePager.setCurrentItem(2);
-                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
-                        //mp.start();
-                    }
-                    */
                 }
                 return true;
             }
@@ -335,15 +326,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                     yesReleased();
-                    //borderFlash("green");
-                    /*
-                    if (imagePager.getCurrentItem() == 1
-                            && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
-                        imagePager.setCurrentItem(0);
-                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
-                        //mp.start();
-                    }
-                    */
                 }
                 return true;
             }

@@ -1,14 +1,18 @@
 package com.platepicks;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.app.LauncherActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
@@ -17,10 +21,12 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -154,7 +160,49 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
 
         // Execute the AsyncTask by passing in foodId
         new QueryCommentsTask(this).execute(item.getFoodId());
+
+        /* handle like/dislike buttons appearing on page */
+        RelativeLayout aboutButtons = (RelativeLayout) findViewById(R.id.about_buttons_container);
+
+        if(getIntent().getStringExtra("origin").equals("main page")) {
+            aboutButtons.setVisibility(View.VISIBLE);
+        }
+        else if(getIntent().getStringExtra("origin").equals("about page")) {
+            aboutButtons.setVisibility(View.GONE);
+        }
+
+        RelativeLayout yesButton = (RelativeLayout) findViewById(R.id.about_button_yes);
+        RelativeLayout noButton = (RelativeLayout) findViewById(R.id.about_button_no);
+
+        /* On Click Listeners:
+         * Functions that are called whenever the user clicks on the buttons or image */
+        noButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    noHeld();
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                    noReleased();
+                }
+                return true;
+            }
+        });
+
+        yesButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    yesHold();
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                    yesReleased();
+                }
+                return true;
+            }
+        });
     }
+    /* onCreate End */
 
 
     /* OnOptionsItemSelected():
@@ -176,7 +224,8 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         File dir = getFilesDir();
         File file = new File(dir, item.getFoodId());
         boolean deleted = file.delete();
-        super.onBackPressed();
+        finishActivity(0);
+        //super.onBackPressed();
     }
 
 
@@ -234,6 +283,112 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
+    }
+
+    public void yesHold () {
+        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
+        final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
+        final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
+
+        yesIcon.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesCircle.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesShadow.animate().scaleX(0.0f).scaleY(0.0f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+    }
+
+    public void yesReleased () {
+        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
+        final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
+        final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
+
+        yesCircle.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesShadow.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        yesIcon.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        yesIcon.animate().scaleX(1f)
+                                .setDuration(400)
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        yesIcon.animate().setListener(null);
+                                        finishActivity(1);
+                                    }
+                                });
+                    }
+                });
+
+    }
+
+    public void noHeld () {
+        final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
+        final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
+        final ImageView noShadow = (ImageView) findViewById(R.id.no_shadow);
+
+        noIcon.setRotation(0);
+
+        noIcon.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noCircle.animate().scaleX(0.85f).scaleY(0.85f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noShadow.animate().scaleX(0.0f).scaleY(0.0f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+    }
+
+    public void noReleased () {
+
+        Log.d("in noRelease", "IN NO RELEASE!!!");
+
+        final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
+        final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
+        final ImageView noShadow = (ImageView) findViewById(R.id.no_shadow);
+
+        noCircle.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noShadow.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator());
+
+        noIcon.animate().scaleX(1f).scaleY(1f)
+                .setDuration(100)
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        noIcon.animate().scaleX(1f)
+                                .setDuration(400)
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        noIcon.animate().setListener(null);
+                                        finishActivity(2);
+                                    }
+                                });
+                    }
+                });
     }
 }
 

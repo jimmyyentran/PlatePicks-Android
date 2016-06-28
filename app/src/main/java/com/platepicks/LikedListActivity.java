@@ -69,6 +69,7 @@ public class LikedListActivity extends AppCompatActivity {
         item = data.get(index);
         Intent intent = new Intent(LikedListActivity.this, AboutFoodActivity.class);
         intent.putExtra("key2", item);
+        intent.putExtra("origin", "list page");
         LikedListActivity.this.startActivity(intent);
     }
 
