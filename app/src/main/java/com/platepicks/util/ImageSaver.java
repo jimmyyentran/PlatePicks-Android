@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -53,6 +54,10 @@ public class ImageSaver {
 
     public void load(ImageView imageView, OnCompleteListener caller) {
         new LoadImageAsyncTask(imageView, caller).execute();
+    }
+
+    public void delete() {
+        new DeleteImageAsyncTask().execute();
     }
 
     class SaveImageTask extends AsyncTask<Bitmap, Void, Void> {
@@ -137,6 +142,26 @@ public class ImageSaver {
         protected void onPostExecute(Bitmap bitmap) {
             if (callerRef.get() != null)
                 callerRef.get().doSomethingWithBitmap(imageViewRef.get(), bitmap, fileNames[0]);
+        }
+    }
+
+    class DeleteImageAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            accessFiles.lock();
+
+            Log.d("ImageSaver", "In delete");
+            File file = createFile(fileNames[0]);
+            if (file.exists()) {
+                if (!file.delete())
+                    Log.e("ImageSaver", "Failed to delete " + fileNames[0]);
+                else
+                    Log.d("ImageSaver", "Deleted " + fileNames[0]);
+            }
+
+            accessFiles.unlock();
+
+            return null;
         }
     }
 

@@ -90,8 +90,14 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
                 // Send like to database
                 cacheForDatabase.put(caller.getListItems().get(0).getOriginal(), true);
             } else {    // Dislike
+                ListItemClass toAdd = caller.getListItems().get(0);
+
                 otherPage = 0;
                 caller.getImageList().get(0).recycle(); // Clear up data
+                new ImageSaver(caller)
+                        .setFileName(toAdd.getFoodId())
+                        .setDirectoryName("images")
+                        .delete();
 
                 // Send dislike to database
                 cacheForDatabase.put(caller.getListItems().get(0).getOriginal(), false);
