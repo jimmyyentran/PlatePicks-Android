@@ -1,19 +1,21 @@
-package com.platepicks.util;
+package com.platepicks;
 
 import android.content.Context;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
-        import android.os.SystemClock;
-        import android.support.annotation.NonNull;
-        import android.widget.ImageView;
+import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.widget.ImageView;
 
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.FileOutputStream;
-        import java.io.IOException;
-        import java.lang.ref.WeakReference;
-        import java.util.concurrent.locks.ReentrantLock;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by elizamae on 5/12/16.
@@ -22,15 +24,15 @@ public class ImageSaver {
     static private ReentrantLock accessFiles = new ReentrantLock();
 
     private String directoryName = "images";
-    private String fileName = "image.png";
+    private String[] fileNames;
     private Context context;
 
     public ImageSaver(Context context) {
         this.context = context;
     }
 
-    public ImageSaver setFileName(String fileName) {
-        this.fileName = fileName;
+    public ImageSaver setFileName(String... fileNames) {
+        this.fileNames = fileNames;
         return this;
     }
 
@@ -39,14 +41,14 @@ public class ImageSaver {
         return this;
     }
 
-    public void save(Bitmap bitmapImage) {
+    public void save(Bitmap... bitmapImage) {
         new SaveImageTask().execute(bitmapImage);
     }
 
     @NonNull
-    private File createFile() {
+    private File createFile(String file) {
         File directory = context.getDir(directoryName, Context.MODE_PRIVATE);
-        return new File(directory, fileName);
+        return new File(directory, file);
     }
 
     public void load(ImageView imageView, OnCompleteListener caller) {
@@ -62,11 +64,13 @@ public class ImageSaver {
             FileOutputStream fileOutputStream = null;
             try {
                 accessFiles.lock();
-                File newImg = createFile();
+                for (int i = 0; i < params.length; i++) {
+                    File newImg = createFile(fileNames[i]);
 
-                if (!newImg.exists()) {
-                    fileOutputStream = new FileOutputStream(createFile());
-                    params[0].compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                    if (!newImg.exists()) {
+                        fileOutputStream = new FileOutputStream(createFile(fileNames[i]));
+                        params[i].compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                    }
                 }
                 accessFiles.unlock();
             } catch (Exception e) {
@@ -97,7 +101,7 @@ public class ImageSaver {
         protected Bitmap doInBackground(Void... params) {
             FileInputStream inputStream = null;
             try {
-                File imgFile = createFile();
+                File imgFile = createFile(fileNames[0]);
                 accessFiles.lock();
 
                 while (!imgFile.exists()) {
@@ -132,11 +136,11 @@ public class ImageSaver {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (callerRef.get() != null)
-                callerRef.get().doSomethingWithBitmap(imageViewRef.get(), bitmap, fileName);
+                callerRef.get().doSomethingWithBitmap(imageViewRef.get(), bitmap, fileNames[0]);
         }
     }
 
-    public interface OnCompleteListener {
+    interface OnCompleteListener {
         void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId);
     }
 }
