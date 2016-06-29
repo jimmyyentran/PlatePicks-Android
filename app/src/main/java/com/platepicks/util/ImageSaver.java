@@ -140,7 +140,7 @@ public class ImageSaver {
         }
     }
 
-    interface OnCompleteListener {
+    public interface OnCompleteListener {
         void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId);
     }
 }
