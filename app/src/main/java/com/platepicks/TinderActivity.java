@@ -17,6 +17,7 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
@@ -82,7 +83,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
-
 
 /**
  * Created by pokeforce on 4/12/16.
@@ -210,7 +210,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d("onActivityResult", "BEFORE SWITCH CASES");
+        Log.d("onActivityResult", "BEFORE SWITCH CASES: " + requestCode);
 
         switch (requestCode) {
             case (RESULT_LIKED_LIST): {
@@ -233,10 +233,22 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
                 }
                 else if(resultCode == 1){
-                    onClickYes(null);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onClickYes(null);
+                        }
+                    }, 400);
                 }
                 else if(resultCode == 2){
-                    onClickNo(null);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onClickNo(null);
+                        }
+                    }, 400);
                 }
                 break;
             }

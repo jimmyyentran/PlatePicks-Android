@@ -156,9 +156,10 @@ public class SwipeImageFragment extends Fragment {
                     Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
                     aboutPage.putExtra("key2", item);
                     aboutPage.putExtra("origin", "main page");
-                    startActivity(aboutPage);
+                    //startActivity(aboutPage);
                     int request = 99;
-                    startActivityForResult(aboutPage, request);
+                    Log.d("SwipeImageFragment", "Before startActivity " + request);
+                    getActivity().startActivityForResult(aboutPage, request);
                 }
             }
         });

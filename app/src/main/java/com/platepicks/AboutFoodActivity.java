@@ -167,7 +167,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         if(getIntent().getStringExtra("origin").equals("main page")) {
             aboutButtons.setVisibility(View.VISIBLE);
         }
-        else if(getIntent().getStringExtra("origin").equals("about page")) {
+        else if(getIntent().getStringExtra("origin").equals("list page")) {
             aboutButtons.setVisibility(View.GONE);
         }
 
@@ -224,9 +224,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         File dir = getFilesDir();
         File file = new File(dir, item.getFoodId());
         boolean deleted = file.delete();
-        Intent exiting = new Intent();
-        exiting.putExtra("result", 0);
-        setResult(0, exiting);
+        setResult(0);
         finish();
         //super.onBackPressed();
     }
@@ -332,9 +330,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                                     public void onAnimationEnd(Animator animation) {
                                         Log.d("yesReleased", "BEFORE FINISH");
                                         yesIcon.animate().setListener(null);
-                                        Intent exiting = new Intent();
-                                        exiting.putExtra("result", 1);
-                                        setResult(1, exiting);
+                                        setResult(1);
                                         finish();
                                         Log.d("yesReleased", "AFTER FINISH");
 
@@ -396,9 +392,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                                         Log.d("noReleased", "BEFORE FINISH");
 
                                         noIcon.animate().setListener(null);
-                                        Intent exiting = new Intent();
-                                        exiting.putExtra("result", 2);
-                                        setResult(2, exiting);
+                                        setResult(2);
                                         finish();
                                         Log.d("noReleased", "AFTER FINISH");
                                     }
