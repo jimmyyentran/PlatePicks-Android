@@ -210,6 +210,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d("onActivityResult", "BEFORE SWITCH CASES");
+
         switch (requestCode) {
             case (RESULT_LIKED_LIST): {
                 if (resultCode == Activity.RESULT_OK) {
@@ -225,7 +227,23 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 handleLocationSetting();
                 break;
             }
+            case (99): {
+                Log.d("onActivityResult", "INISED CASE #99");
+                if(resultCode == 0){
+
+                }
+                else if(resultCode == 1){
+                    onClickYes(null);
+                }
+                else if(resultCode == 2){
+                    onClickNo(null);
+                }
+                break;
+            }
         }
+
+        Log.d("onActivityResult", "AFTER SWITCH CASES");
+
     }
 
     /* onCreate():

@@ -157,20 +157,8 @@ public class SwipeImageFragment extends Fragment {
                     aboutPage.putExtra("key2", item);
                     aboutPage.putExtra("origin", "main page");
                     startActivity(aboutPage);
-                    int result = 0;
-                    startActivityForResult(aboutPage, result);
-                    /* if not liked or disliked */
-                    if(result == 0){
-
-                    }
-                    /* if liked */
-                    else if(result == 1){
-                        ((TinderActivity) getActivity()).onClickYes(foodPicture);
-                    }
-                    /*if not liked */
-                    else if(result == 2){
-                        ((TinderActivity) getActivity()).onClickNo(foodPicture);
-                    }
+                    int request = 99;
+                    startActivityForResult(aboutPage, request);
                 }
             }
         });

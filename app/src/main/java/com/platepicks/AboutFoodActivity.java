@@ -224,7 +224,10 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         File dir = getFilesDir();
         File file = new File(dir, item.getFoodId());
         boolean deleted = file.delete();
-        finishActivity(0);
+        Intent exiting = new Intent();
+        exiting.putExtra("result", 0);
+        setResult(0, exiting);
+        finish();
         //super.onBackPressed();
     }
 
@@ -327,8 +330,15 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
+                                        Log.d("yesReleased", "BEFORE FINISH");
                                         yesIcon.animate().setListener(null);
-                                        finishActivity(1);
+                                        Intent exiting = new Intent();
+                                        exiting.putExtra("result", 1);
+                                        setResult(1, exiting);
+                                        finish();
+                                        Log.d("yesReleased", "AFTER FINISH");
+
+                                        //finishActivity(1);
                                     }
                                 });
                     }
@@ -383,9 +393,14 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
+                                        Log.d("noReleased", "BEFORE FINISH");
+
                                         noIcon.animate().setListener(null);
-                                        finishActivity(2);
-                                        Log.d("IN ABOUT FOOD", "After finishActivity(2) call");
+                                        Intent exiting = new Intent();
+                                        exiting.putExtra("result", 2);
+                                        setResult(2, exiting);
+                                        finish();
+                                        Log.d("noReleased", "AFTER FINISH");
                                     }
                                 });
                     }
