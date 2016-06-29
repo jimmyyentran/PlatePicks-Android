@@ -87,7 +87,7 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View layoutView =  inflater.inflate(R.layout.login_button, container, false);
 
-        LoginButton loginButton = (LoginButton) layoutView.findViewById(R.id.login_button);
+        LoginButton loginButton = (LoginButton) layoutView.findViewById(R.id.login_button_b);
         textView = (TextView) layoutView.findViewById(R.id.loginTextView);
 
         loginButton.setReadPermissions("email");

@@ -2,9 +2,7 @@ package com.platepicks;
 
 import android.Manifest;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -22,21 +20,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -59,13 +51,9 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.vision.Frame;
-import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.support.ConnectivityReceiver;
 import com.platepicks.support.CustomViewPager;
-import com.platepicks.support.SquareImageButton;
-import com.platepicks.util.AWSIntegratorAsyncTask;
 import com.platepicks.util.AWSIntegratorInterface;
 import com.platepicks.util.ConnectionCheck;
 import com.platepicks.util.ConvertToObject;
@@ -74,11 +62,12 @@ import com.platepicks.util.GetImagesAsyncTask;
 import com.platepicks.util.ImageChangeListener;
 import com.platepicks.util.ImageLoaderInterface;
 import com.platepicks.util.ImagePagerAdapter;
-import com.platepicks.util.ListItemClass;
+import com.platepicks.objects.ListItemClass;
+import com.platepicks.util.ReadLikedFileTask;
 import com.platepicks.util.RequestFromDatabase;
+import com.platepicks.util.WriteToLikedFileTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -98,6 +87,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
     final int REQUEST_PERMISSION_LOCATION = 1;
     final int RESULT_LIKED_LIST = 1, RESULT_SETTINGS_LOCATION = 2;
+    final String SAVED_LIKED_FOODS = "Saved foods";
 
     GoogleApiClient mGoogleApiClient;   // Google location client
     LocationRequest mLocationRequest;   // Google location request
@@ -205,6 +195,10 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         return rad_seekBar.getProgress();
     }
 
+    public String getLikedFileName() {
+        return SAVED_LIKED_FOODS;
+    }
+
     /* onActivityResult() */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -214,6 +208,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             case (RESULT_LIKED_LIST): {
                 if (resultCode == Activity.RESULT_OK) {
                     this.likedData = data.getParcelableArrayListExtra(LikedListActivity.LIKED_LIST_TAG);
+                    new WriteToLikedFileTask(this, WriteToLikedFileTask.SET_ALL_CLICKED).execute();
                 }
                 break;
             }
@@ -269,6 +264,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         TextView radius_value = (TextView) findViewById(R.id.radius_number);
         radius_value.setText(String.valueOf(rad_seekBar.getProgress()));
         rad_seekBar.setOnSeekBarChangeListener(new rad_seekBar_listener());
+
+        notification_number = (TextView) findViewById(R.id.list_notification); // Like Button Text
 
         leftFoodTypes = (LinearLayout) findViewById(R.id.food_types_left);
         rightFoodTypes = (LinearLayout) findViewById(R.id.food_types_right);
@@ -332,6 +329,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             }
         });
 
+        /* Create task to load likedData with persistent data */
+        new ReadLikedFileTask(this).execute();
+
         // First batch of images
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
         waitForUILock.lock();   // Ensure that first network request does not post image before UI is visible
@@ -342,9 +342,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
          * calling networks requests in this activity (vs. a splash screen activity) */
         splashScreen = (RelativeLayout) findViewById(R.id.layout_splashScreen);
         splashScreen.setVisibility(View.VISIBLE);
-
-        // Like Button Text
-        notification_number = (TextView) findViewById(R.id.list_notification);
 
         /* Drawer gesture detector */
         my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
@@ -699,6 +696,11 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         cnt++;  // Increment cnt after call (only called by imageChangeListener
     }
 
+    public void update_list_number(int cnt) {
+        this.cnt = cnt;
+        update_list_number();
+    }
+
     /* Moves to Like-List Activity */
     public void gotoList(View view) {
         /* Count starts over */
@@ -778,6 +780,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     }
 
     public void onCreatedUI() {
+        Log.d("TinderActivity", "in onCreatedUI");
+        
         // Release lock once UI is visible to let splash screen be removed and show first pic
         if (waitForUILock.isHeldByCurrentThread())
             waitForUILock.unlock();
@@ -931,6 +935,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
             // Remove placeholder if one is made
             if (placeholderIsPresent) {
+                Log.d("TinderActivity", "Removing placeholder");
                 mainPageFragment.changeFood(imageList.get(0), listItems.get(0));
                 placeholderIsPresent = false;
             }

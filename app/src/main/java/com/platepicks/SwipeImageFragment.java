@@ -2,7 +2,6 @@ package com.platepicks;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -23,7 +22,7 @@ import android.widget.TextView;
 
 import com.platepicks.support.SquareImageButton;
 import com.platepicks.util.ImageSaver;
-import com.platepicks.util.ListItemClass;
+import com.platepicks.objects.ListItemClass;
 
 /**
  * Created by pokeforce on 4/22/16.
@@ -157,7 +156,6 @@ public class SwipeImageFragment extends Fragment {
                     Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
                     aboutPage.putExtra("key2", item);
                     aboutPage.putExtra("origin", "main page");
-                    startActivity(aboutPage);
                     int result = 0;
                     startActivityForResult(aboutPage, result);
                     /* if not liked or disliked */

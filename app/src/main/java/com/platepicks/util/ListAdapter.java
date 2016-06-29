@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.platepicks.R;
+import com.platepicks.objects.ListItemClass;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;

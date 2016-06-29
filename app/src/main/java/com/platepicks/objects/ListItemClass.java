@@ -1,10 +1,8 @@
-package com.platepicks.util;
+package com.platepicks.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.TableLayout;
-
-import com.platepicks.objects.FoodReceive;
 
 /**
  * Created by elizamae on 4/29/16.
@@ -17,8 +15,7 @@ public class ListItemClass implements Parcelable {
     private String restaurantName;
     private String restaurantAddress;
     private String imageUrl;
-    private TableLayout pageComments;
-    private FoodReceive original;
+    private FoodReceive original;       // Daniel: reference for Liked/Disliked database request
     private int clicked = 0;
     private boolean downloaded = false; // Daniel: don't need to save this in parcelable
 
@@ -42,9 +39,8 @@ public class ListItemClass implements Parcelable {
     public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
 
     public boolean isClicked() {
-        if (clicked == 1) // true
-            return true;
-        else return false;
+        // true if 1
+        return clicked == 1;
     }
     public void setClicked(int n) {
         this.clicked = n;
@@ -81,6 +77,38 @@ public class ListItemClass implements Parcelable {
         parcel.writeString(this.getRestaurantAddress());
         parcel.writeString(this.getImageUrl());
         parcel.writeInt(clicked);
+    }
 
+    public String getFileString() {
+        int isClicked = this.isClicked() ? 1 : 0;
+
+        return this.getFoodId() + "::" +
+                this.getFoodName() + "::" +
+                this.getRestaurantName() + "::" +
+                this.getRestaurantAddress() + "::" +
+                this.getImageUrl() + "::" +
+                String.valueOf(isClicked);
+    }
+
+    static public ListItemClass createFrom(String fileString) {
+        String[] members = fileString.split("::");
+        ListItemClass newItem = new ListItemClass();
+
+        if (members.length == 6) {
+            newItem.setFoodId(members[0]);
+            newItem.setFoodName(members[1]);
+            newItem.setRestaurantName(members[2]);
+            newItem.setRestaurantAddress(members[3]);
+            newItem.setImageUrl(members[4]);
+            newItem.setClicked(Integer.decode(members[5]));
+        } else {
+            try {
+                throw new Exception("Error reading file");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return newItem;
     }
 }

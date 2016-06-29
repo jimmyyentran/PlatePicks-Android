@@ -49,6 +49,10 @@ public class ImageSaver {
     @NonNull
     private File createFile(String file) {
         File directory = context.getDir(directoryName, Context.MODE_PRIVATE);
+
+        for (String s : directory.list())
+            Log.d("ImageSaver", "File: " + s);
+
         return new File(directory, file);
     }
 
@@ -73,7 +77,8 @@ public class ImageSaver {
                     File newImg = createFile(fileNames[i]);
 
                     if (!newImg.exists()) {
-                        fileOutputStream = new FileOutputStream(createFile(fileNames[i]));
+                        newImg.deleteOnExit();
+                        fileOutputStream = new FileOutputStream(newImg);
                         params[i].compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
                     }
                 }

@@ -3,11 +3,11 @@ package com.platepicks.util;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.platepicks.*;
 import com.platepicks.dynamoDB.TableFood;
 import com.platepicks.objects.FoodReceive;
+import com.platepicks.objects.ListItemClass;
 import com.platepicks.support.CustomViewPager;
 
 import java.util.HashMap;
@@ -67,23 +67,16 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
                 caller.update_list_number();
 
                 /* create ListItemClass object passed into LikedListActivity */
-
-                // if we haven't moved to LikedList yet
-                if (caller.getIntent().hasExtra(LikedListActivity.LIKED_LIST_TAG))
-                {
-                    caller.setLikedData(caller
-                            .getIntent()
-                            .<ListItemClass>getParcelableArrayListExtra(LikedListActivity.LIKED_LIST_TAG));
-                    caller.getIntent().removeExtra(LikedListActivity.LIKED_LIST_TAG);
-                    Log.d("hello", "i'm getting here");
-                }
-
                 ListItemClass toAdd = caller.getListItems().get(0);
                 Bitmap toSend = caller.getImageList().get(0);   // store "yes" bitmap in internal storage
                 new ImageSaver(caller).
                         setFileName(toAdd.getFoodId()).
                         setDirectoryName("images").
                         save(toSend);
+
+                /* Save file to internal storage */
+                new WriteToLikedFileTask(caller, WriteToLikedFileTask.ADD_ITEM)
+                        .execute(toAdd.getFileString());
 
                 caller.addToLikedData(toAdd);
 

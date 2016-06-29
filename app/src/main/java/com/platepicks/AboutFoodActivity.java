@@ -6,17 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,20 +27,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.platepicks.dynamoDB.TableComment;
 import com.platepicks.dynamoDB.nosql.CommentDO;
-import com.platepicks.util.ConnectionCheck;
 import com.platepicks.util.ImageSaver;
-import com.platepicks.util.ListItemClass;
+import com.platepicks.objects.ListItemClass;
 
 import java.io.File;
 import java.util.List;
-
-import static com.platepicks.dynamoDB.TableComment.getCommentsFromFoodID;
 
 /**
  * Created by pokeforce on 4/24/16.

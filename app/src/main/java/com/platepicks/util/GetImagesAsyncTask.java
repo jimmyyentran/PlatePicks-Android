@@ -7,6 +7,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.platepicks.TinderActivity;
+import com.platepicks.objects.ListItemClass;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

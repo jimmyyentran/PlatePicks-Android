@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.platepicks.objects.FoodReceive;
+import com.platepicks.objects.ListItemClass;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
