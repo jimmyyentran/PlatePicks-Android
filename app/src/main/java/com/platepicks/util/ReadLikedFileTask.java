@@ -24,6 +24,8 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
+        Log.d("ReadLikedFileTask", "Reading");
+
         FileInputStream fis = null;
         StringBuilder builder = new StringBuilder();
 

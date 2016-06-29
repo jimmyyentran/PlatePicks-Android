@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.platepicks.dynamoDB.nosql.CommentDO;
+import com.platepicks.util.GetImagesAsyncTask;
+import com.platepicks.util.ImageLoaderInterface;
 import com.platepicks.util.ImageSaver;
 import com.platepicks.objects.ListItemClass;
 
@@ -39,8 +39,12 @@ import java.util.List;
 /**
  * Created by pokeforce on 4/24/16.
  */
-public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.OnCompleteListener {
+public class AboutFoodActivity extends AppCompatActivity
+        implements ImageSaver.OnCompleteListener,
+        ImageLoaderInterface {
+    final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
 
+    ImageView img;
     ListItemClass item;
     boolean isScaled;
 
@@ -107,13 +111,6 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         final TextView eatBtn = (TextView) findViewById(R.id.eat_button);
         eatBtn.setTypeface(source_bold);
 
-        // Food image
-        ImageView img = (ImageView) findViewById(R.id.about_image);
-        new ImageSaver(AboutFoodActivity.this).
-                setFileName(item.getFoodId()).
-                setDirectoryName("images").
-                load(img, this);
-
         /* handle font size for restaurant name */
         isScaled = false;
         final ViewTreeObserver vto = restaurant.getViewTreeObserver();
@@ -144,20 +141,25 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
             }
         });
 
-
-
-
-        // Execute the AsyncTask by passing in foodId
-        new QueryCommentsTask(this).execute(item.getFoodId());
+        // Food image
+        img = (ImageView) findViewById(R.id.about_image);
 
         /* handle like/dislike buttons appearing on page */
         RelativeLayout aboutButtons = (RelativeLayout) findViewById(R.id.about_buttons_container);
 
         if(getIntent().getStringExtra("origin").equals("main page")) {
             aboutButtons.setVisibility(View.VISIBLE);
+            new ImageSaver(AboutFoodActivity.this).
+                    setFileName(item.getFoodId()).
+                    setDirectoryName("images").
+                    load(img, this);
+            Log.d("AboutFoodActivity", "From storage");
         }
-        else if(getIntent().getStringExtra("origin").equals("about page")) {
+        else if(getIntent().getStringExtra("origin").equals("list page")) {
             aboutButtons.setVisibility(View.GONE);
+            new GetImagesAsyncTask(this, this, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
+                    .execute(item);
+            Log.d("AboutFoodActivity", "From internet");
         }
 
         RelativeLayout yesButton = (RelativeLayout) findViewById(R.id.about_button_yes);
@@ -238,9 +240,23 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         edit.setText("");
     }
 
+    // ImageSaver.OnCompleteListener
     @Override
     public void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId) {
         imageView.setImageBitmap(b);
+    }
+
+    // ImageLoaderInterface
+    @Override
+    public void doSomethingWithDownloadedImages(List<Bitmap> images) {
+        if (images != null && !images.isEmpty())
+            img.setImageBitmap(images.get(0));
+    }
+
+    @Override
+    public void doSomethingOnImageError() {
+        Log.e("AboutFoodActivity", "Error downloading image");
+        img.setImageResource(R.drawable.no_pix);
     }
 
     private void scaleText (TextView s, float width) {
@@ -379,34 +395,5 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                                 });
                     }
                 });
-    }
-}
-
-// FIXME: No more comments
-class QueryCommentsTask extends AsyncTask<String, Void, List<CommentDO>> {
-    AboutFoodActivity activity;
-
-    public QueryCommentsTask(AboutFoodActivity activity) {
-        this.activity = activity;
-    }
-    /** The system calls this to perform work in a worker thread and
-     * delivers it the parameters given to AsyncTask.execute() */
-    protected List<CommentDO> doInBackground(String... foodId) {
-        /*
-        if (ConnectionCheck.isConnected(activity))
-            return getCommentsFromFoodID(foodId[0]);
-        */
-
-        return null;
-    }
-
-    /** The system calls this to perform work in the UI thread and delivers
-     * the result from doInBackground() */
-    protected void onPostExecute(List<CommentDO> result) {
-        /*
-        for (CommentDO comment : result) {
-            activity.loadComments(comment.getContent(), comment.getUserId(), comment.getTime());
-        }
-        */
     }
 }

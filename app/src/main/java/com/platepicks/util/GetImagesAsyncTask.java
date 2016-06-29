@@ -1,12 +1,12 @@
 package com.platepicks.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
-import com.platepicks.TinderActivity;
 import com.platepicks.objects.ListItemClass;
 
 import java.io.ByteArrayInputStream;
@@ -16,11 +16,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by pokeforce on 5/6/16.
  */
-public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitmap>> {
+public class GetImagesAsyncTask extends AsyncTask<ListItemClass, Void, LinkedList<Bitmap>> {
     final int maxMemory = (int) (Runtime.getRuntime().maxMemory());  // In bytes
     final int limitMemory = maxMemory / 8;                           // Use 1/8 of max memory
 
@@ -29,11 +30,13 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
     BitmapFactory.Options options;
 
     ImageLoaderInterface caller;
+    Context c;
 
-    public GetImagesAsyncTask(ImageLoaderInterface caller, int screenHeight, int screenWidth) {
+    public GetImagesAsyncTask(ImageLoaderInterface caller, Context c, int screenHeight, int screenWidth) {
         Log.d("GetImagesAsyncTask", "Creating task");
 
         this.caller = caller;
+        this.c = c;
 
         // Memory optimization, 3/4 the width/height of the imageView
         maxHeight = (screenHeight * 3) / 4;
@@ -41,22 +44,21 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
     }
 
     @Override
-    protected LinkedList<Bitmap> doInBackground(Object... params) {
+    protected LinkedList<Bitmap> doInBackground(ListItemClass... params) {
         Log.d("GetImagesAsyncTask", "Background");
 
         int currentMemUsed = 0;
         options = new BitmapFactory.Options();
         LinkedList<Bitmap> images = new LinkedList<>();
 
-        for (Object item : params) {
+        for (ListItemClass item : params) {
             Log.d("GetImagesAsyncTask", "Background");
-            ListItemClass ref = (ListItemClass) item;
-            Bitmap b = downloadImage(ref.getImageUrl());
+            Bitmap b = downloadImage(item.getImageUrl());
 
             if (b != null) {
                 // Add image to list of successful downloads
                 images.add(b);
-                ref.setDownloaded(true);
+                item.setDownloaded(true);
 
                 // Size in terms of memory
                 int bytes;
@@ -67,7 +69,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
 
                 // Add to total amount
                 currentMemUsed += bytes;
-                Log.d("GetImagesAsyncTask", "Bytes: " + bytes + " " + ref.getFoodName());
+                Log.d("GetImagesAsyncTask", "Bytes: " + bytes + " " + item.getFoodName());
             }
 
             if (currentMemUsed >= limitMemory || internetErrorFlag) break;
@@ -88,7 +90,7 @@ public class GetImagesAsyncTask extends AsyncTask<Object, Void, LinkedList<Bitma
     Bitmap downloadImage(String url) {
         Log.d("GetImagesAsyncTask", url);
 
-        if (!ConnectionCheck.isConnected((TinderActivity) caller)) {
+        if (!ConnectionCheck.isConnected(c)) {
             Log.d("GetImagesAsyncTask", "Successful cast");
             internetErrorFlag = true;
             return null;

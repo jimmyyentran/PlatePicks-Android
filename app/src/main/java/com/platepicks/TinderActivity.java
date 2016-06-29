@@ -64,7 +64,7 @@ import com.platepicks.util.ImageLoaderInterface;
 import com.platepicks.util.ImagePagerAdapter;
 import com.platepicks.objects.ListItemClass;
 import com.platepicks.util.ReadLikedFileTask;
-import com.platepicks.util.RequestFromDatabase;
+import com.platepicks.util.RequestFromDatabaseTask;
 import com.platepicks.util.WriteToLikedFileTask;
 
 import java.util.ArrayList;
@@ -208,7 +208,10 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             case (RESULT_LIKED_LIST): {
                 if (resultCode == Activity.RESULT_OK) {
                     this.likedData = data.getParcelableArrayListExtra(LikedListActivity.LIKED_LIST_TAG);
-                    new WriteToLikedFileTask(this, WriteToLikedFileTask.SET_ALL_CLICKED).execute();
+                    if (data.getBooleanExtra(LikedListActivity.CHANGE_LIST, false)) {
+                        new WriteToLikedFileTask(this, WriteToLikedFileTask.SET_ALL_CLICKED).execute();
+                        Log.d("TinderActivity", "writing");
+                    }
                 }
                 break;
             }
@@ -336,7 +339,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
         waitForUILock.lock();   // Ensure that first network request does not post image before UI is visible
         firstRequest = true;    // Flag to remove splash screen after first request
-        new RequestFromDatabase(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new RequestFromDatabaseTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
@@ -730,14 +733,24 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         if (maxHeight == 0) maxHeight = DFLT_IMG_MAX_HEIGHT;
         if (maxWidth == 0) maxWidth = DFLT_IMG_MAX_WIDTH;
 
-        ArrayList<ListItemClass> requestedImages = new ArrayList<>();
+        // Run through array twice to get primitive array
+        int cnt = 0;
         for (ListItemClass item : listItems)
             if (!item.isDownloaded())
-                requestedImages.add(item);
+                cnt++;
 
-        Log.d("TinderActivity", "in requestImages before task " + requestedImages.size());
-        new GetImagesAsyncTask(this, maxHeight, maxWidth)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, requestedImages.toArray());
+        ListItemClass[] requestedImages = new ListItemClass[cnt];
+        int i = 0;
+        for (ListItemClass item : listItems) {
+            if (!item.isDownloaded()) {
+                requestedImages[i] = item;
+                i++;
+            }
+        }
+
+        Log.d("TinderActivity", "in requestImages before task " + requestedImages.length);
+        new GetImagesAsyncTask(this, this, maxHeight, maxWidth)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, requestedImages);
     }
 
     void handleNoInternet(int task) {
@@ -762,7 +775,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         mainPageFragment.changeText(SwipeImageFragment.LOADING);
         unregisterReceiver(connectionRx);
         if (connectionRx != null) {
-            new RequestFromDatabase(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new RequestFromDatabaseTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         connectionRx = null;
     }
@@ -878,7 +891,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     }
 
     public void newFilterSearch (View view){
-        new RequestFromDatabase(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new RequestFromDatabaseTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void onClickNo(View view) {

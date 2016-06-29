@@ -27,10 +27,12 @@ public class LikedListActivity extends AppCompatActivity {
      */
 
     public static final String LIKED_LIST_TAG = "gohead";
+    public static final String CHANGE_LIST = "change list";
 
     // Construct the data source
     ArrayList<ListItemClass> data = new ArrayList<>();
     ListItemClass item = new ListItemClass();
+    boolean listChanged = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,11 +81,16 @@ public class LikedListActivity extends AppCompatActivity {
         // set all data to be viewed
         for(int i = 0; i < data.size(); ++i)
         {
-            data.get(i).setClicked(1);
+            if (!data.get(i).isClicked())
+            {
+                data.get(i).setClicked(1);
+                listChanged = true;
+            }
         }
 
         Intent intent = new Intent(LikedListActivity.this, TinderActivity.class);
         intent.putParcelableArrayListExtra(LIKED_LIST_TAG, data);
+        intent.putExtra(CHANGE_LIST, listChanged);
         setResult(RESULT_OK, intent);
         finish();
     }
