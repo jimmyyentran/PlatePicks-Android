@@ -286,9 +286,9 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
     }
 
     public void yesHold () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
-        final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
-        final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
+        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.about_yes_icon);
+        final ImageView yesCircle = (ImageView) findViewById(R.id.about_yes_circle);
+        final ImageView yesShadow = (ImageView) findViewById(R.id.about_yes_shadow);
 
         yesIcon.animate().scaleX(0.85f).scaleY(0.85f)
                 .setDuration(100)
@@ -304,9 +304,9 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
     }
 
     public void yesReleased () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
-        final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
-        final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
+        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.about_yes_icon);
+        final ImageView yesCircle = (ImageView) findViewById(R.id.about_yes_circle);
+        final ImageView yesShadow = (ImageView) findViewById(R.id.about_yes_shadow);
 
         yesCircle.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
@@ -337,9 +337,9 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
     }
 
     public void noHeld () {
-        final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
-        final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
-        final ImageView noShadow = (ImageView) findViewById(R.id.no_shadow);
+        final ImageView noIcon = (ImageView) findViewById(R.id.about_no_icon);
+        final ImageView noCircle = (ImageView) findViewById(R.id.about_no_circle);
+        final ImageView noShadow = (ImageView) findViewById(R.id.about_no_shadow);
 
         noIcon.setRotation(0);
 
@@ -360,9 +360,9 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
 
         Log.d("in noRelease", "IN NO RELEASE!!!");
 
-        final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
-        final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
-        final ImageView noShadow = (ImageView) findViewById(R.id.no_shadow);
+        final ImageView noIcon = (ImageView) findViewById(R.id.about_no_icon);
+        final ImageView noCircle = (ImageView) findViewById(R.id.about_no_circle);
+        final ImageView noShadow = (ImageView) findViewById(R.id.about_no_shadow);
 
         noCircle.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
@@ -385,6 +385,7 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
                                     public void onAnimationEnd(Animator animation) {
                                         noIcon.animate().setListener(null);
                                         finishActivity(2);
+                                        Log.d("IN ABOUT FOOD", "After finishActivity(2) call");
                                     }
                                 });
                     }
