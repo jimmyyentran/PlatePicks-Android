@@ -44,9 +44,11 @@
             </intent-filter>
         </activity>
         <activity android:name="com.platepicks.LikedListActivity"
-            android:label="@string/liked_list"/>
+            android:label="@string/liked_list"
+            android:screenOrientation="portrait"/>
         <activity android:name="com.platepicks.AboutFoodActivity"
-            android:label="@string/about_food" />
+            android:label="@string/about_food"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.platepicks.SplashActivity"
