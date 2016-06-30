@@ -113,10 +113,8 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
             }
 
                 /* Low on images */
-            if (caller.getImageList().size() < 5 && !caller.isRequestMade()) {
-                caller.setRequestMade(true);
-                new RequestFromDatabaseTask(caller).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
+            if (caller.getImageList().size() < 5 && !caller.isRequestMade())
+                caller.newFilterSearch();
 
             /* After certain number of requests are accumulated, they are all sent to database
                in one thread. */

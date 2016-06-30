@@ -34,7 +34,6 @@ public class SwipeImageFragment extends Fragment {
     private SquareImageButton foodPicture = null;
     private SquareImageButton bg = null;
     private LinearLayout placeholder = null; // Only shown when out of images
-    private ImageView yelp_logo = null;
     private Bitmap image;
     private ListItemClass item;
     public SquareImageButton flashingBorder;
@@ -78,7 +77,6 @@ public class SwipeImageFragment extends Fragment {
             if (image == null) {
                 foodPicture.setImageDrawable(null);
                 bg.setImageDrawable(null);
-                yelp_logo.setVisibility(View.GONE);
                 placeholder.setVisibility(View.VISIBLE);
 
                 Log.d("SwipeImageFragment", "image is null");

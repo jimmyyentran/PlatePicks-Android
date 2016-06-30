@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
     TinderActivity caller;
+    int cnt;
 
     public ReadLikedFileTask(TinderActivity caller) {
         this.caller = caller;
@@ -37,7 +38,7 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
                 builder.append((char) c);
             }
 
-            int cnt = 0;
+            cnt = 0;
             String[] lines = builder.toString().split("\n");
             ArrayList<ListItemClass> likedData = new ArrayList<>(lines.length);
             for (String s : lines) {
@@ -50,7 +51,6 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
             }
 
             caller.setLikedData(likedData);
-            caller.update_list_number(cnt);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -67,6 +67,7 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        caller.update_list_number(cnt);
         caller.accessList.unlock();
     }
 }

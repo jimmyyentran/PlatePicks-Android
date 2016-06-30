@@ -115,6 +115,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     boolean requestMade = false;                        // Flag to indicate making a request
     boolean firstRequest;                               // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
+    boolean isDrawerOpen = false;                       // Flag to indicate drawer status
 
     int cnt = 1;                                    // used for notification count of new liked foods
     boolean triedLocSettingsFlag = false;           // flag to know if app attempted to get location setting enabled
@@ -123,8 +124,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public int foodLimit = 3;                       // Number of food per business
     public int offset = 0;                          // Number of businesses to offset by in yelp request
     public String gpsLocation;                      // "Latitude, Longitude"
-
-    boolean drawerOpened = false;
 
     /* yes/no onHold constrictors */
     boolean yesHeld = false;
@@ -158,10 +157,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     public boolean isRequestMade() {
         return requestMade;
-    }
-
-    public void setRequestMade(boolean requestMade) {
-        this.requestMade = requestMade;
     }
 
     public void setLikedData(ArrayList<ListItemClass> likedData) {
@@ -376,7 +371,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
         waitForUILock.lock();   // Ensure that first network request does not post image before UI is visible
         firstRequest = true;    // Flag to remove splash screen after first request
-        new RequestFromDatabaseTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        newFilterSearch();
 
         /* Splash screen: Covers entire tinder activity for 3 seconds. Created here to simplify
          * calling networks requests in this activity (vs. a splash screen activity) */
@@ -806,7 +801,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         mainPageFragment.changeText(SwipeImageFragment.LOADING);
         unregisterReceiver(connectionRx);
         if (connectionRx != null) {
-            new RequestFromDatabaseTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            newFilterSearch();
         }
         connectionRx = null;
     }
@@ -823,6 +818,15 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         connectionRx = null;
     }
 
+    public void newFilterSearch(){
+        if (!requestMade) {
+            requestMade = true;
+
+            changeSearchButton(true);
+            new RequestFromDatabaseTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
     public void onCreatedUI() {
         Log.d("TinderActivity", "in onCreatedUI");
         
@@ -831,8 +835,31 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             waitForUILock.unlock();
     }
 
+    void changeSearchButton(boolean requestMade) {
+        TextView searchButton = (TextView) findViewById(R.id.new_search_button);
+
+        if (requestMade) {
+            searchButton.setClickable(false);
+            searchButton.setBackgroundResource(R.drawable.gray_button);
+            searchButton.animate().alpha(0.5f)
+                    .setDuration(300)
+                    .setInterpolator(new DecelerateInterpolator());
+        } else {
+            searchButton.setClickable(true);
+            searchButton.setBackgroundResource(R.drawable.red_button_handler);
+            searchButton.animate().alpha(1.0f)
+                    .setDuration(300)
+                    .setInterpolator(new DecelerateInterpolator());
+
+            closeDrawer(null);
+        }
+    }
+
     /* Opens main drawer */
     public void openDrawer(View view) {
+        if (isDrawerOpen)
+            return;
+
         toggleViews("open");
         final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
 
@@ -860,10 +887,14 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
                                  }
                              });
+        isDrawerOpen = true;
     }
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
+        if (!isDrawerOpen)  // Cancel if closed already
+            return;
+
         toggleViews("close");
         final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
         final FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
@@ -895,6 +926,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     }
                 });
 
+        isDrawerOpen = false;
     }
 
     public void toggleViews (String s){
@@ -921,10 +953,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         }
     }
 
-    public void newFilterSearch (View view){
-        new RequestFromDatabaseTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     public void onClickNo(View view) {
         if (imagePager.getCurrentItem() == 1
                 && changeListener.state == ViewPager.SCROLL_STATE_IDLE
@@ -945,6 +973,16 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         }
     }
 
+    public void startNewSearch(View view) {
+        mainPageFragment.changeFood(null, null);
+        firstRequest = true;
+        offset = 0;
+        listItems.clear();
+        imageList.clear();
+        imageAdapter.notifyDataSetChanged();
+        newFilterSearch();
+    }
+
     // Called by AWSIntegratorTask to return json
     @Override
     public void doSomethingWithResults(String ob) {
@@ -963,6 +1001,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     @Override
     public void doSomethingOnAWSError() {
         handleNoInternet(ConnectivityReceiver.REQUEST_FROM_DATABASE);
+        requestMade = false;
+        changeSearchButton(false);
     }
 
     // Called by GetImagesAsyncTask to return list of bitmaps
@@ -992,6 +1032,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
         // Reset various variables
         requestMade = false;
+        changeSearchButton(false);
         accessList.unlock();
 
         // Remove splash] screen and post first pic
