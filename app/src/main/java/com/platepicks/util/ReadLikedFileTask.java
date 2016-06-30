@@ -4,10 +4,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.platepicks.TinderActivity;
+import com.platepicks.objects.StaticConstants;
 import com.platepicks.objects.ListItemClass;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
 
     public ReadLikedFileTask(TinderActivity caller) {
         this.caller = caller;
-        caller.accessList.lock();
+        StaticConstants.accessList.lock();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
         StringBuilder builder = new StringBuilder();
 
         try {
-            fis = caller.openFileInput(caller.getLikedFileName());
+            fis = caller.openFileInput(StaticConstants.SAVED_LIKED_FOODS);
             int c;
 
             while ((c = fis.read()) != -1) {
@@ -68,6 +68,6 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         caller.update_list_number(cnt);
-        caller.accessList.unlock();
+        StaticConstants.accessList.unlock();
     }
 }

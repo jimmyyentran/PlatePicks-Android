@@ -52,6 +52,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.platepicks.objects.StaticConstants;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.support.ConnectivityReceiver;
 import com.platepicks.support.CustomViewPager;
@@ -66,7 +67,6 @@ import com.platepicks.util.ImagePagerAdapter;
 import com.platepicks.objects.ListItemClass;
 import com.platepicks.util.ReadLikedFileTask;
 import com.platepicks.util.RequestFromDatabaseTask;
-import com.platepicks.util.WriteToLikedFileTask;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -87,7 +87,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
     final int REQUEST_PERMISSION_LOCATION = 1;
     final int RESULT_LIKED_LIST = 1, RESULT_SETTINGS_LOCATION = 2;
-    final String SAVED_LIKED_FOODS = "Saved foods";
 
     GoogleApiClient mGoogleApiClient;   // Google location client
     LocationRequest mLocationRequest;   // Google location request
@@ -111,7 +110,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     public ReentrantLock waitForUILock = new ReentrantLock();  // Race condition between first network request and creation of UI
     public ReentrantLock waitForGPSLock = new ReentrantLock(); // Wait for GPS location to be retrieved before making yelp request
-    public ReentrantLock accessList = new ReentrantLock();     // Race condition to access listItems or imageList
     boolean requestMade = false;                        // Flag to indicate making a request
     boolean firstRequest;                               // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
@@ -190,10 +188,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         return rad_seekBar.getProgress();
     }
 
-    public String getLikedFileName() {
-        return SAVED_LIKED_FOODS;
-    }
-
     /* onActivityResult() */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -205,10 +199,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             case (RESULT_LIKED_LIST): {
                 if (resultCode == Activity.RESULT_OK) {
                     this.likedData = data.getParcelableArrayListExtra(LikedListActivity.LIKED_LIST_TAG);
-                    if (data.getBooleanExtra(LikedListActivity.CHANGE_LIST, false)) {
-                        new WriteToLikedFileTask(this, WriteToLikedFileTask.SET_ALL_CLICKED).execute();
-                        Log.d("TinderActivity", "writing");
-                    }
 
                     int tmp = data.getIntExtra("items clicked", 0);
                     Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::ITEMS CLICKED = " + tmp + ":::::::::::::::::::::::::::::::::::::::::");
@@ -990,11 +980,11 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(ob);
 
         // Critical section
-        accessList.lock();
+        StaticConstants.accessList.lock();
         Log.d("TinderActivity", "First request done");
         listItems.addAll(ConvertToObject.toListItemClassList(foodReceives));
         requestImages();
-        accessList.unlock();
+        StaticConstants.accessList.unlock();
     }
 
     // Called by AWSIntegratorTask if internet request fails
@@ -1009,7 +999,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     @Override
     public void doSomethingWithDownloadedImages(List<Bitmap> images) {
         // Critical Section: Add images to list here in activity
-        accessList.lock();
+        StaticConstants.accessList.lock();
 
         Log.d("TinderActivity", "Finished request");
 
@@ -1033,7 +1023,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         // Reset various variables
         requestMade = false;
         changeSearchButton(false);
-        accessList.unlock();
+        StaticConstants.accessList.unlock();
 
         // Remove splash] screen and post first pic
         if (firstRequest) {

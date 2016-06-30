@@ -4,38 +4,39 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.platepicks.TinderActivity;
-import com.platepicks.objects.ListItemClass;
+import com.platepicks.objects.StaticConstants;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by pokeforce on 6/29/16.
  */
 public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
-    static final public int ADD_ITEM = 0, SET_ALL_CLICKED = 1;
+    static final public int ADD_ITEM = 0, SET_ALL_CLICKED = 1, REPLACE_ALL = 2;
 
-    TinderActivity caller;
+    Context caller;
     int mode;
 
-    public WriteToLikedFileTask(TinderActivity caller, int mode) {
+    public WriteToLikedFileTask(Context caller, int mode) {
         this.caller = caller;
         this.mode = mode;
-        caller.accessList.lock();
+        StaticConstants.accessList.lock();
     }
 
     @Override
     protected Void doInBackground(String... params) {
         switch (mode) {
             case ADD_ITEM:
-                addItems(params);
+                writeToFile(Context.MODE_APPEND, params);
                 break;
             case SET_ALL_CLICKED:
                 setAllClicked();
+                break;
+            case REPLACE_ALL:
+                writeToFile(Context.MODE_PRIVATE, params);
                 break;
             default:
                 Log.e("WriteToLikedFileTask", "Invalid mode argument");
@@ -47,13 +48,13 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        caller.accessList.unlock();
+        StaticConstants.accessList.unlock();
     }
 
-    void addItems(String... params) {
+    void writeToFile(final int mode, String... params) {
         FileOutputStream fos = null;
         try {
-            fos = caller.openFileOutput(caller.getLikedFileName(), Context.MODE_APPEND);
+            fos = caller.openFileOutput(StaticConstants.SAVED_LIKED_FOODS, mode);
 
             for (String p : params) {
                 fos.write(p.getBytes());
@@ -82,7 +83,7 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
 
         FileOutputStream fos = null;
         try {
-            fos = caller.openFileOutput(caller.getLikedFileName(), Context.MODE_PRIVATE);
+            fos = caller.openFileOutput(StaticConstants.SAVED_LIKED_FOODS, Context.MODE_PRIVATE);
             fos.write(file.getBytes());
 
             Log.d("WriteToLikedFileTask", "Finished writing (1)");
@@ -106,7 +107,7 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
         StringBuilder builder = new StringBuilder();
 
         try {
-            fis = caller.openFileInput(caller.getLikedFileName());
+            fis = caller.openFileInput(StaticConstants.SAVED_LIKED_FOODS);
             int c;
 
             while ((c = fis.read()) != -1) {

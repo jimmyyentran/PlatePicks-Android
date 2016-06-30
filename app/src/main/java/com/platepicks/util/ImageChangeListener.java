@@ -1,11 +1,11 @@
 package com.platepicks.util;
 
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.support.v4.view.ViewPager;
 
 import com.platepicks.*;
 import com.platepicks.dynamoDB.TableFood;
+import com.platepicks.objects.StaticConstants;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.ListItemClass;
 import com.platepicks.support.CustomViewPager;
@@ -57,7 +57,7 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
             int otherPage;
 
             // Critical section (if request is active)
-            caller.accessList.lock();
+            StaticConstants.accessList.lock();
 
                 /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
             if (imagePager.getCurrentItem() == 0) { // Like
@@ -121,7 +121,7 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
             if (cacheForDatabase.size() >= 6)
                 uploadLikesData();
 
-            caller.accessList.unlock();
+            StaticConstants.accessList.unlock();
             // End critical section
 
                 /* The "new image" animation. Only do it if an animation is idle. */

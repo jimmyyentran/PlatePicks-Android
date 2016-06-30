@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.platepicks.util.ListAdapter;
 import com.platepicks.objects.ListItemClass;
+import com.platepicks.util.WriteToLikedFileTask;
 
 import java.util.ArrayList;
 
@@ -79,7 +80,13 @@ public class LikedListActivity extends AppCompatActivity {
         if(!item.isClicked()) {
             item.setClicked(1);
             ++items_clicked;
-            listChanged = true; // FIXME: Change this to edit single item
+
+            // Change file to account for click
+            String[] array = new String[data.size()];
+            for (int i = 0; i < array.length; i++)
+                array[i] = data.get(i).getFileString();
+
+            new WriteToLikedFileTask(this, WriteToLikedFileTask.REPLACE_ALL).execute(array);
         }
         adapter.notifyDataSetChanged();
         Intent intent = new Intent(LikedListActivity.this, AboutFoodActivity.class);
@@ -92,7 +99,6 @@ public class LikedListActivity extends AppCompatActivity {
         // set all data to be viewed
         Intent intent = new Intent(LikedListActivity.this, TinderActivity.class);
         intent.putParcelableArrayListExtra(LIKED_LIST_TAG, data);
-        intent.putExtra(CHANGE_LIST, listChanged);
         intent.putExtra("items clicked", items_clicked);
         setResult(RESULT_OK, intent);
         finish();
