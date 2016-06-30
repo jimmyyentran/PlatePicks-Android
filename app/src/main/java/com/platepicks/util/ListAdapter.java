@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.platepicks.R;
@@ -92,23 +94,29 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
 
         // font stuff
         String fontPath = "fonts/Hamburger_Heaven.TTF";
-        Typeface tf = Typeface.createFromAsset(mCtx.getAssets(), fontPath);
+        Typeface tf = Typeface.createFromAsset(mCtx.getAssets(), "fonts/SourceSansPro-Black.otf");
 
         // lookup view for data population
         TextView fname = (TextView) convertView.findViewById(R.id.fname);
         TextView rname = (TextView) convertView.findViewById(R.id.rname);
-        ImageView img = (ImageView) convertView.findViewById(R.id.food_circle);
+        ImageView hollowCircle = (ImageView) convertView.findViewById(R.id.hollow_circle);
+        ImageView foodImg = (ImageView) convertView.findViewById(R.id.list_food_picture);
 
         // set font
         fname.setTypeface(tf);
 
-        // highlight if new food
+
+        // handle if food has been clicked or not
+        RelativeLayout itemContainer = (RelativeLayout) convertView.findViewById(R.id.item_container);
+
         if (!item.isClicked()) {
-            fname.setShadowLayer(24, 0, 0, Color.YELLOW);
+            Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM NOT CLICKED BEFORE::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+            itemContainer.setAlpha(1.0f);
         }
-        else
-        {
-            fname.setShadowLayer(0,0,0,0);
+        else {
+            Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM CLICKED BEFORE::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+
+            itemContainer.setAlpha(0.5f);
         }
 
         // populate the data into the template view using the data object
@@ -124,14 +132,15 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
             new ImageSaver(getContext()).
                     setFileName(item.getFoodId()).
                     setDirectoryName("images").
-                    load(img, this);
-//            new GetOneTinyImageTask(this, img, mCtx, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
+                    load(foodImg, this);
+//            new GetOneTinyImageTask(this, foodImg, mCtx, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
 //                    .execute(item);
         }
         else
         {
             bitmap = getBitmapFromMemCache(key);
-            img.setImageBitmap(bitmap);
+            foodImg.setImageBitmap(bitmap);
+            foodImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
 
         // Return the completed view to render on screen
@@ -143,9 +152,7 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
         addBitmapToMemoryCache(foodId, b);
 
         if (imageView != null)
-            imageView.setImageBitmap(RotateBitmap(b, 180));
+            imageView.setImageBitmap(RotateBitmap(b, 0));
     }
-
-
     /* end ListAdapter */
 }

@@ -156,20 +156,10 @@ public class SwipeImageFragment extends Fragment {
                     Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
                     aboutPage.putExtra("key2", item);
                     aboutPage.putExtra("origin", "main page");
-                    int result = 0;
-                    startActivityForResult(aboutPage, result);
-                    /* if not liked or disliked */
-                    if(result == 0){
 
-                    }
-                    /* if liked */
-                    else if(result == 1){
-                        ((TinderActivity) getActivity()).onClickYes(foodPicture);
-                    }
-                    /*if not liked */
-                    else if(result == 2){
-                        ((TinderActivity) getActivity()).onClickNo(foodPicture);
-                    }
+                    int request = 99;
+                    Log.d("SwipeImageFragment", "Before startActivity " + request);
+                    getActivity().startActivityForResult(aboutPage, request);
                 }
             }
         });

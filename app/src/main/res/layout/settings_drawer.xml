@@ -394,7 +394,7 @@
                     android:id="@+id/types_list"
                     android:background="@color/white">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
@@ -403,7 +403,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/scrollView"
-                            android:layout_marginBottom="20dp">
+                            android:layout_marginBottom="20dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="0dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="0dp"
+                            android:layout_above="@+id/ok_clear_container">
 
                             <LinearLayout
                                 android:orientation="horizontal"
@@ -618,9 +623,14 @@
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:paddingLeft="30dp"
-                            android:paddingRight="30dp">
+                            android:paddingRight="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="false"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="12dp"
+                            android:id="@+id/ok_clear_container">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -659,7 +669,7 @@
                                 android:clickable="true" />
 
                         </LinearLayout>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                 </FrameLayout>
                 <!--end Drawer Content-->

@@ -15,6 +15,7 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
@@ -71,7 +72,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
-
 
 /**
  * Created by pokeforce on 4/12/16.
@@ -204,6 +204,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d("onActivityResult", "BEFORE SWITCH CASES: " + requestCode);
+
         switch (requestCode) {
             case (RESULT_LIKED_LIST): {
                 if (resultCode == Activity.RESULT_OK) {
@@ -212,6 +214,13 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                         new WriteToLikedFileTask(this, WriteToLikedFileTask.SET_ALL_CLICKED).execute();
                         Log.d("TinderActivity", "writing");
                     }
+
+                    int tmp = data.getIntExtra("items clicked", 0);
+                    Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::ITEMS CLICKED = " + tmp + ":::::::::::::::::::::::::::::::::::::::::");
+                    cnt = cnt - tmp - 1;
+                    Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::NEW CNT = " + cnt + ":::::::::::::::::::::::::::::::::::::::::");
+
+                    update_list_number();
                 }
                 break;
             }
@@ -223,7 +232,35 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 handleLocationSetting();
                 break;
             }
+            case (99): {
+                Log.d("onActivityResult", "INISED CASE #99");
+                if(resultCode == 0){
+
+                }
+                else if(resultCode == 1){
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onClickYes(null);
+                        }
+                    }, 400);
+                }
+                else if(resultCode == 2){
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onClickNo(null);
+                        }
+                    }, 400);
+                }
+                break;
+            }
         }
+
+        Log.d("onActivityResult", "AFTER SWITCH CASES");
+
     }
 
     /* onCreate():
@@ -707,15 +744,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     /* Moves to Like-List Activity */
     public void gotoList(View view) {
         /* Count starts over */
-        cnt = 1;
-
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", likedData);
         startActivityForResult(intent, RESULT_LIKED_LIST);
-
-        /* Heart is empty again */
-        if (notification_number != null)
-            notification_number.setVisibility(View.GONE);
     }
 
     // Called after requestFromDatabase in doSomethingWithResults()

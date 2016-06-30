@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -28,6 +29,9 @@ public class LikedListActivity extends AppCompatActivity {
     public static final String LIKED_LIST_TAG = "gohead";
     public static final String CHANGE_LIST = "change list";
 
+    ListAdapter adapter = null;
+    int items_clicked;
+
     // Construct the data source
     ArrayList<ListItemClass> data = new ArrayList<>();
     ListItemClass item = new ListItemClass();
@@ -44,15 +48,16 @@ public class LikedListActivity extends AppCompatActivity {
 
         // Loading Font Face
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+        Typeface source_bold = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Bold.otf");
 
         // Applying font
-        likes_title.setTypeface(tf);
+        likes_title.setTypeface(source_bold);
 
         // Construct the data source
         data = getIntent().getParcelableArrayListExtra("key");
 
         // Create the adapter to convert the array to views
-        final ListAdapter adapter = new ListAdapter(this, data);
+        adapter = new ListAdapter(this, data);
 
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.listview_liked);
@@ -66,10 +71,17 @@ public class LikedListActivity extends AppCompatActivity {
         });
 
         listView.setAdapter(adapter);
+        items_clicked = 0;
     }
 
     public void gotoAbout(int index) {
         item = data.get(index);
+        if(!item.isClicked()) {
+            item.setClicked(1);
+            ++items_clicked;
+            listChanged = true; // FIXME: Change this to edit single item
+        }
+        adapter.notifyDataSetChanged();
         Intent intent = new Intent(LikedListActivity.this, AboutFoodActivity.class);
         intent.putExtra("key2", item);
         intent.putExtra("origin", "list page");
@@ -78,18 +90,10 @@ public class LikedListActivity extends AppCompatActivity {
 
     public void backArrow (View view){
         // set all data to be viewed
-        for(int i = 0; i < data.size(); ++i)
-        {
-            if (!data.get(i).isClicked())
-            {
-                data.get(i).setClicked(1);
-                listChanged = true;
-            }
-        }
-
         Intent intent = new Intent(LikedListActivity.this, TinderActivity.class);
         intent.putParcelableArrayListExtra(LIKED_LIST_TAG, data);
         intent.putExtra(CHANGE_LIST, listChanged);
+        intent.putExtra("items clicked", items_clicked);
         setResult(RESULT_OK, intent);
         finish();
     }

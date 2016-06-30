@@ -48,6 +48,8 @@ public class AboutFoodActivity extends AppCompatActivity
     ListItemClass item;
     boolean isScaled;
 
+    String origin = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Basic setup of which layout we want to use (aboutfood) and toolbar (set as "action bar"
@@ -56,7 +58,6 @@ public class AboutFoodActivity extends AppCompatActivity
         setContentView(R.layout.activity_aboutfood);
 
         item = getIntent().getParcelableExtra("key2");
-        item.setClicked(1);
 
         /* set custom fonts */
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
@@ -151,7 +152,9 @@ public class AboutFoodActivity extends AppCompatActivity
         /* handle like/dislike buttons appearing on page */
         RelativeLayout aboutButtons = (RelativeLayout) findViewById(R.id.about_buttons_container);
 
-        if(getIntent().getStringExtra("origin").equals("main page")) {
+        origin = getIntent().getStringExtra("origin");
+
+        if(origin.equals("main page")) {
             aboutButtons.setVisibility(View.VISIBLE);
 //            new ImageSaver(AboutFoodActivity.this).
 //                    setFileName(item.getFoodId()).
@@ -159,7 +162,10 @@ public class AboutFoodActivity extends AppCompatActivity
 //                    load(img, this);
             Log.d("AboutFoodActivity", "From storage");
         }
-        else if(getIntent().getStringExtra("origin").equals("list page")) {
+        else if(origin.equals("list page")) {
+            item.setClicked(1);
+            Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM SET TO CLICKED: " + item.getFoodName() + "::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+
             aboutButtons.setVisibility(View.GONE);
 //            new GetImagesAsyncTask(this, this, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
 //                    .execute(item);
@@ -219,7 +225,8 @@ public class AboutFoodActivity extends AppCompatActivity
         File dir = getFilesDir();
         File file = new File(dir, item.getFoodId());
         boolean deleted = file.delete();
-        finishActivity(0);
+        setResult(0);
+        finish();
         //super.onBackPressed();
     }
 
@@ -341,8 +348,13 @@ public class AboutFoodActivity extends AppCompatActivity
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
+                                        Log.d("yesReleased", "BEFORE FINISH");
                                         yesIcon.animate().setListener(null);
-                                        finishActivity(1);
+                                        setResult(1);
+                                        finish();
+                                        Log.d("yesReleased", "AFTER FINISH");
+
+                                        //finishActivity(1);
                                     }
                                 });
                     }
@@ -397,9 +409,12 @@ public class AboutFoodActivity extends AppCompatActivity
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
+                                        Log.d("noReleased", "BEFORE FINISH");
+
                                         noIcon.animate().setListener(null);
-                                        finishActivity(2);
-                                        Log.d("IN ABOUT FOOD", "After finishActivity(2) call");
+                                        setResult(2);
+                                        finish();
+                                        Log.d("noReleased", "AFTER FINISH");
                                     }
                                 });
                     }

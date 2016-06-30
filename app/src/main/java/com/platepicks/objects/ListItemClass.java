@@ -3,7 +3,6 @@ package com.platepicks.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import android.widget.TableLayout;
 
 /**
  * Created by elizamae on 4/29/16.
