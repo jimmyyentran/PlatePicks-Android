@@ -147,7 +147,7 @@ public class AboutFoodActivity extends AppCompatActivity
         new ImageSaver(AboutFoodActivity.this).
                 setFileName(item.getFoodId()).
                 setDirectoryName("images").
-                load(img, this);
+                load(img, this, false);
 
         /* handle like/dislike buttons appearing on page */
         RelativeLayout aboutButtons = (RelativeLayout) findViewById(R.id.about_buttons_container);

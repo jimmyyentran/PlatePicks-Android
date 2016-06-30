@@ -105,7 +105,6 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
         // set font
         fname.setTypeface(tf);
 
-
         // handle if food has been clicked or not
         RelativeLayout itemContainer = (RelativeLayout) convertView.findViewById(R.id.item_container);
 
@@ -125,14 +124,14 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
 
         String key = item.getFoodId();
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = Bitmap.createBitmap(60,60,conf);
+        Bitmap bitmap;
 
         if (getBitmapFromMemCache(key) == null)
         {
             new ImageSaver(getContext()).
                     setFileName(item.getFoodId()).
                     setDirectoryName("images").
-                    load(foodImg, this);
+                    load(foodImg, this, true);
 //            new GetOneTinyImageTask(this, foodImg, mCtx, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
 //                    .execute(item);
         }

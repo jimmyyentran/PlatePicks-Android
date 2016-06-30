@@ -27,6 +27,7 @@ public class ImageSaver {
     private String directoryName = "images";
     private String[] fileNames;
     private Context context;
+    boolean small = false;
 
     public ImageSaver(Context context) {
         this.context = context;
@@ -50,13 +51,15 @@ public class ImageSaver {
     private File createFile(String file) {
         File directory = context.getDir(directoryName, Context.MODE_PRIVATE);
 
-        for (String s : directory.list())
-            Log.d("ImageSaver", "File: " + s);
+//        for (String s : directory.list())
+//            Log.d("ImageSaver", "File: " + s);
 
         return new File(directory, file);
     }
 
-    public void load(ImageView imageView, OnCompleteListener caller) {
+    public void load(ImageView imageView, OnCompleteListener caller, boolean small) {
+        Log.d("ImageSaver", "In Load");
+        this.small = small;
         new LoadImageAsyncTask(imageView, caller).execute();
     }
 
@@ -109,6 +112,8 @@ public class ImageSaver {
 
         @Override
         protected Bitmap doInBackground(Void... params) {
+            Log.d("ImageSaver", "In loading task");
+
             FileInputStream inputStream = null;
             try {
                 File imgFile = createFile(fileNames[0]);
@@ -123,9 +128,10 @@ public class ImageSaver {
                 inputStream = new FileInputStream(imgFile);
                 accessFiles.unlock();
 
-                Bitmap food = BitmapFactory.decodeStream(inputStream);
-
-                return food;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                if (small)
+                    options.inSampleSize = 4;
+                return BitmapFactory.decodeStream(inputStream, null, options);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
