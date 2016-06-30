@@ -55,6 +55,8 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
     ListItemClass item;
     boolean isScaled;
 
+    String origin = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Basic setup of which layout we want to use (aboutfood) and toolbar (set as "action bar"
@@ -63,7 +65,6 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         setContentView(R.layout.activity_aboutfood);
 
         item = getIntent().getParcelableExtra("key2");
-        item.setClicked(1);
 
         /* set custom fonts */
         Typeface quicksand = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.otf");
@@ -164,10 +165,15 @@ public class AboutFoodActivity extends AppCompatActivity implements ImageSaver.O
         /* handle like/dislike buttons appearing on page */
         RelativeLayout aboutButtons = (RelativeLayout) findViewById(R.id.about_buttons_container);
 
-        if(getIntent().getStringExtra("origin").equals("main page")) {
+        origin = getIntent().getStringExtra("origin");
+
+        if(origin.equals("main page")) {
             aboutButtons.setVisibility(View.VISIBLE);
         }
-        else if(getIntent().getStringExtra("origin").equals("list page")) {
+        else if(origin.equals("list page")) {
+            item.setClicked(1);
+            Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM SET TO CLICKED: " + item.getFoodName() + "::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+
             aboutButtons.setVisibility(View.GONE);
         }
 

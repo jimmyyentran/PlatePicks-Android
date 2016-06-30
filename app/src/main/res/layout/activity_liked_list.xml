@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@color/white">
 
 
     <include
@@ -12,12 +13,19 @@
         android:layout_gravity="right"
         android:layout_weight="1.35" />
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/main_red"
-        android:id="@+id/toolbar_tinder" >
+        android:layout_height="60dp"
+        android:id="@+id/toolbar_tinder"
+        android:background="@drawable/bar_shadow">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/liked_list_bar"
+            android:src="@drawable/two_shaded_bar"
+            android:scaleType="fitXY" />
 
         <ImageView
             android:layout_width="50dp"
@@ -30,14 +38,23 @@
             android:paddingRight="10dp"
             android:id="@+id/back_button"
             android:onClick="backArrow"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:layout_alignBottom="@+id/liked_list_bar" />
 
         <ImageView
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/background_gray"
             android:alpha="0.4"
-            android:layout_gravity="bottom" />
+            android:layout_gravity="bottom"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/back_button"
+            android:layout_alignBottom="@+id/liked_list_bar" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,17 +62,23 @@
             android:text="Favorites"
             android:id="@+id/likes_title"
             android:textColor="#ffffff"
-            android:textSize="28dp"
+            android:textSize="20dp"
             android:layout_gravity="center_vertical"
-            android:paddingLeft="100dp" />
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentBottom="false"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_alignBottom="@+id/liked_list_bar" />
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/listview_liked"
-        android:background="#ffffff" />
+        android:background="@color/white" />
     <!--Top Checker Border-->
 </LinearLayout>

@@ -216,6 +216,12 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             case (RESULT_LIKED_LIST): {
                 if (resultCode == Activity.RESULT_OK) {
                     this.likedData = data.getParcelableArrayListExtra(LikedListActivity.LIKED_LIST_TAG);
+                    int tmp = data.getIntExtra("items clicked", 0);
+                    Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::ITEMS CLICKED = " + tmp + ":::::::::::::::::::::::::::::::::::::::::");
+                    cnt = cnt - tmp - 1;
+                    Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::NEW CNT = " + cnt + ":::::::::::::::::::::::::::::::::::::::::");
+
+                    update_list_number();
                 }
                 break;
             }
@@ -732,15 +738,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     /* Moves to Like-List Activity */
     public void gotoList(View view) {
         /* Count starts over */
-        cnt = 1;
-
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
         intent.putParcelableArrayListExtra("key", likedData);
         startActivityForResult(intent, RESULT_LIKED_LIST);
-
-        /* Heart is empty again */
-        if (notification_number != null)
-            notification_number.setVisibility(View.GONE);
     }
 
     // Called after requestFromDatabase in doSomethingWithResults()

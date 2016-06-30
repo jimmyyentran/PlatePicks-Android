@@ -2,6 +2,7 @@ package com.platepicks.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
 import com.platepicks.objects.FoodReceive;
