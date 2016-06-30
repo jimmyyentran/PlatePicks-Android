@@ -34,6 +34,7 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -431,18 +432,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             }
         });
 
-        /* slogan typeface setup */
-        TextView line1 = (TextView) findViewById(R.id.new_food);
-        TextView line2 = (TextView) findViewById(R.id.new_places);
-        TextView line3 = (TextView) findViewById(R.id.you_pick);
-
         Typeface source_bold = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Bold.otf");
 
-        line1.setTypeface(source_bold);
-        line2.setTypeface(source_bold);
-        line3.setTypeface(source_bold);
-
-                /* Custom font for Drawer's Header */
+        /* Custom font for Drawer's Header */
         TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
         drawer_header.setTypeface(source_bold);
 
@@ -837,6 +829,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     void changeSearchButton(boolean requestMade) {
         TextView searchButton = (TextView) findViewById(R.id.new_search_button);
+        ProgressBar searchPB = (ProgressBar) findViewById(R.id.new_search_progress_bar);
 
         if (requestMade) {
             searchButton.setClickable(false);
@@ -844,12 +837,14 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             searchButton.animate().alpha(0.5f)
                     .setDuration(300)
                     .setInterpolator(new DecelerateInterpolator());
+            searchPB.setVisibility(View.VISIBLE);
         } else {
             searchButton.setClickable(true);
             searchButton.setBackgroundResource(R.drawable.red_button_handler);
             searchButton.animate().alpha(1.0f)
                     .setDuration(300)
                     .setInterpolator(new DecelerateInterpolator());
+            searchPB.setVisibility(View.INVISIBLE);
 
             closeDrawer(null);
         }

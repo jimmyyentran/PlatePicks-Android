@@ -16,8 +16,8 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:id="@+id/drawer1"
-        android:visibility="gone"
         android:background="@color/white"
+        android:visibility="gone"
         android:translationX="-300dp">
 
         <!--Drawer Frame-->
@@ -233,26 +233,47 @@
 
                         </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Search with these parameters"
-                            android:id="@+id/new_search_button"
-                            android:layout_centerHorizontal="true"
-                            android:textColor="#ffffff"
-                            android:background="@drawable/red_button_handler"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp"
-                            android:textSize="14dp"
-                            android:paddingTop="8dp"
-                            android:paddingBottom="8dp"
-                            android:textStyle="bold"
                             android:layout_marginLeft="45dp"
-                            android:layout_marginRight="25dp"
-                            android:gravity="center_horizontal"
-                            android:clickable="true"
                             android:layout_marginTop="8dp"
-                            android:onClick="startNewSearch"/>
+                            android:layout_marginRight="25dp"
+                            android:id="@+id/new_search_btn_container">
+
+                            <ProgressBar
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:indeterminate="true"
+                                android:indeterminateTint="@color/material_deep_teal_500"
+                                android:layout_gravity="center"
+                                android:layout_alignParentEnd="true"
+                                android:id="@+id/new_search_progress_bar"
+                                android:visibility="visible"
+                                android:layout_centerVertical="true" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Start New Search"
+                                android:id="@+id/new_search_button"
+                                android:textColor="#ffffff"
+                                android:background="@drawable/red_button_handler_2"
+                                android:paddingLeft="12dp"
+                                android:paddingRight="12dp"
+                                android:textSize="14dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+                                android:textStyle="bold"
+                                android:clickable="true"
+                                android:onClick="startNewSearch"
+                                android:gravity="center_horizontal"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/new_search_progress_bar"
+                                android:layout_marginRight="8dp" />
+                        </RelativeLayout>
+
                         <!--end food types parameter container-->
 
                     </LinearLayout>

@@ -28,9 +28,9 @@
             android:background="@android:color/transparent"
             android:id="@+id/flashing_border"
             android:alpha="0.0"
-            android:layout_centerVertical="true"
             android:adjustViewBounds="false"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:layout_centerInParent="true" />
 
         <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
