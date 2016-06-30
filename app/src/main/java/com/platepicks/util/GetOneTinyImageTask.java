@@ -4,9 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
+import android.widget.ImageView;
 
+import com.platepicks.R;
 import com.platepicks.objects.ListItemClass;
 
 import java.io.ByteArrayInputStream;
@@ -15,74 +16,49 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.LinkedList;
 
 /**
- * Created by pokeforce on 5/6/16.
+ * Created by pokeforce on 6/29/16.
  */
-public class GetImagesAsyncTask extends AsyncTask<ListItemClass, Void, LinkedList<Bitmap>> {
-    final int maxMemory = (int) (Runtime.getRuntime().maxMemory());  // In bytes
-    final int limitMemory = maxMemory / 8;                           // Use 1/8 of max memory
-
+public class GetOneTinyImageTask extends AsyncTask<ListItemClass, Void, Void> {
+    OnCompleteListener caller;  // arguments
+    ImageView imageView;
+    Context c;
     int maxHeight, maxWidth;
-    boolean internetErrorFlag = false;
+
+    Bitmap requestedBmp = null; // results
+    String foodId = null;
+
+    boolean internetErrorFlag = false;  // extra
     BitmapFactory.Options options;
 
-    ImageLoaderInterface caller;
-    Context c;
-
-    public GetImagesAsyncTask(ImageLoaderInterface caller, Context c, int screenHeight, int screenWidth) {
-        Log.d("GetImagesAsyncTask", "Creating task");
-
+    public GetOneTinyImageTask(OnCompleteListener caller, ImageView imgView, Context c,
+                               int screenHeight, int screenWidth) {
         this.caller = caller;
+        this.imageView = imgView;
         this.c = c;
 
-        // Memory optimization, 3/4 the width/height of the imageView
+        maxHeight = screenHeight;
+        maxWidth = screenWidth;
         options = new BitmapFactory.Options();
-        maxHeight = (screenHeight * 3) / 4;
-        maxWidth = (screenWidth * 3) / 4;
     }
 
     @Override
-    protected LinkedList<Bitmap> doInBackground(ListItemClass... params) {
-        Log.d("GetImagesAsyncTask", "Background");
-
-        int currentMemUsed = 0;
-        LinkedList<Bitmap> images = new LinkedList<>();
-
-        for (ListItemClass item : params) {
-            Log.d("GetImagesAsyncTask", "Background");
-            Bitmap b = downloadImage(item.getImageUrl());
-
-            if (b != null) {
-                // Add image to list of successful downloads
-                images.add(b);
-                item.setDownloaded(true);
-
-                // Size in terms of memory
-                int bytes;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                    bytes = b.getAllocationByteCount();
-                else
-                    bytes = b.getByteCount();
-
-                // Add to total amount
-                currentMemUsed += bytes;
-                Log.d("GetImagesAsyncTask", "Bytes: " + bytes + " " + item.getFoodName());
-            }
-
-            if (currentMemUsed >= limitMemory || internetErrorFlag) break;
+    protected Void doInBackground(ListItemClass... params) {
+        if (params.length == 1) {
+            foodId = params[0].getFoodId();
+            requestedBmp = downloadImage(params[0].getTinyImageUrl());
         }
 
-        return images;
+        if (requestedBmp == null)
+            requestedBmp = BitmapFactory.decodeResource(c.getResources(), R.drawable.no_pix_small);
+
+        return null;
     }
 
     @Override
-    protected void onPostExecute(LinkedList<Bitmap> images) {
-        if (internetErrorFlag)
-            caller.doSomethingOnImageError();
-
-        caller.doSomethingWithDownloadedImages(images);
+    protected void onPostExecute(Void aVoid) {
+        caller.doSomethingWithBitmap(imageView, requestedBmp, foodId);
     }
 
     // Takes in url and downloads webpage, decoding it into a bitmap
@@ -128,7 +104,7 @@ public class GetImagesAsyncTask extends AsyncTask<ListItemClass, Void, LinkedLis
 
             // Scaling image down to fit the dimensions of the specified imageView
             int scaledHeight = options.outHeight,
-                scaledWidth = options.outWidth;
+                    scaledWidth = options.outWidth;
             int sampleSize = 1;     // How much to scale the image down by
 
             // Check if height or width of image is greater than those of imageView
@@ -169,5 +145,7 @@ public class GetImagesAsyncTask extends AsyncTask<ListItemClass, Void, LinkedLis
         return image;
     }
 
-
+    public interface OnCompleteListener {
+        void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId);
+    }
 }

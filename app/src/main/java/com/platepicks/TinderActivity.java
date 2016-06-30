@@ -976,6 +976,11 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     }
 
     @Override
+    public void doSomethingWithImageView(ImageView imageView, Bitmap b, String foodID) {
+
+    }
+
+    @Override
     public void onConnected(Bundle bundle) {
         // Currently, just want 1 location. If statement avoids another location on return to
         // activity and repeat onConnected

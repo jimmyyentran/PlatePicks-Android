@@ -22,7 +22,11 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by elizamae on 5/1/16.
  */
-public class ListAdapter extends ArrayAdapter<ListItemClass> implements ImageSaver.OnCompleteListener {
+public class ListAdapter extends ArrayAdapter<ListItemClass>
+        implements ImageSaver.OnCompleteListener,
+        GetOneTinyImageTask.OnCompleteListener {
+    final int DFLT_IMG_MAX_WIDTH = 258, DFLT_IMG_MAX_HEIGHT = 258;
+
     private Context mCtx; //<-- declare a Context reference
     ArrayList<ListItemClass> data;
     LruCache<String,Bitmap> mMemoryCache;
@@ -78,8 +82,6 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> implements ImageSav
             }
         };
 
-
-
         // Get the data item for this position
         ListItemClass item = getItem(pos);
 
@@ -123,6 +125,8 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> implements ImageSav
                     setFileName(item.getFoodId()).
                     setDirectoryName("images").
                     load(img, this);
+//            new GetOneTinyImageTask(this, img, mCtx, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
+//                    .execute(item);
         }
         else
         {
@@ -136,7 +140,6 @@ public class ListAdapter extends ArrayAdapter<ListItemClass> implements ImageSav
 
     @Override
     public void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId) {
-
         addBitmapToMemoryCache(foodId, b);
 
         if (imageView != null)

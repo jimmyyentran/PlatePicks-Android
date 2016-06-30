@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.platepicks.util.ListAdapter;
 import com.platepicks.objects.ListItemClass;
-import com.platepicks.util.WriteToLikedFileTask;
 
 import java.util.ArrayList;
 

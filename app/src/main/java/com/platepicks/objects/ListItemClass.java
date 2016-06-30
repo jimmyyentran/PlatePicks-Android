@@ -2,6 +2,7 @@ package com.platepicks.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.TableLayout;
 
 /**
@@ -110,5 +111,11 @@ public class ListItemClass implements Parcelable {
         }
 
         return newItem;
+    }
+
+    public String getTinyImageUrl() {
+        String url = imageUrl.substring(0, imageUrl.length() - 5) + "258s.jpg";
+        Log.d("ListItemClass", url);
+        return url;
     }
 }

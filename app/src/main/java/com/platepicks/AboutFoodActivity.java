@@ -143,22 +143,26 @@ public class AboutFoodActivity extends AppCompatActivity
 
         // Food image
         img = (ImageView) findViewById(R.id.about_image);
+        new ImageSaver(AboutFoodActivity.this).
+                setFileName(item.getFoodId()).
+                setDirectoryName("images").
+                load(img, this);
 
         /* handle like/dislike buttons appearing on page */
         RelativeLayout aboutButtons = (RelativeLayout) findViewById(R.id.about_buttons_container);
 
         if(getIntent().getStringExtra("origin").equals("main page")) {
             aboutButtons.setVisibility(View.VISIBLE);
-            new ImageSaver(AboutFoodActivity.this).
-                    setFileName(item.getFoodId()).
-                    setDirectoryName("images").
-                    load(img, this);
+//            new ImageSaver(AboutFoodActivity.this).
+//                    setFileName(item.getFoodId()).
+//                    setDirectoryName("images").
+//                    load(img, this);
             Log.d("AboutFoodActivity", "From storage");
         }
         else if(getIntent().getStringExtra("origin").equals("list page")) {
             aboutButtons.setVisibility(View.GONE);
-            new GetImagesAsyncTask(this, this, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
-                    .execute(item);
+//            new GetImagesAsyncTask(this, this, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
+//                    .execute(item);
             Log.d("AboutFoodActivity", "From internet");
         }
 
@@ -257,6 +261,11 @@ public class AboutFoodActivity extends AppCompatActivity
     public void doSomethingOnImageError() {
         Log.e("AboutFoodActivity", "Error downloading image");
         img.setImageResource(R.drawable.no_pix);
+    }
+
+    @Override
+    public void doSomethingWithImageView(ImageView imageView, Bitmap b, String foodID) {
+
     }
 
     private void scaleText (TextView s, float width) {

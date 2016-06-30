@@ -1,6 +1,9 @@
 package com.platepicks.util;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
+
+import com.platepicks.objects.ListItemClass;
 
 import java.util.List;
 
@@ -10,4 +13,5 @@ import java.util.List;
 public interface ImageLoaderInterface {
     void doSomethingWithDownloadedImages(List<Bitmap> images);
     void doSomethingOnImageError();
+    void doSomethingWithImageView(ImageView imageView, Bitmap b, String foodID);
 }
