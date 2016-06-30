@@ -6,6 +6,10 @@ import android.util.Log;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBSaveExpression;
+import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
+import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
+import com.amazonaws.util.ImmutableMapParameter;
 import com.platepicks.dynamoDB.nosql.FoodDO;
 import com.platepicks.dynamoDB.nosql.RestaurantDO;
 import com.platepicks.objects.FoodReceive;
@@ -16,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.platepicks.dynamoDB.TableRestaurant.getRestaurantInfo;
 import static com.platepicks.dynamoDB.TableRestaurant.insertRestaurant;
@@ -74,7 +79,7 @@ public final class TableFood {
      * @param food The object to be increased
      */
     public static void dislikeFood (FoodReceive food){
-        Log.d(LOG_TAG, "Inserting like!");
+        Log.d(LOG_TAG, "Inserting dislike!");
         final DynamoDBMapper mapper = AWSMobileClient.defaultMobileClient().getDynamoDBMapper();
         AmazonClientException lastException = null;
 
@@ -84,28 +89,28 @@ public final class TableFood {
             if(foodToGet == null){
                 Log.d(LOG_TAG, "The foodId does not exist, attempting to add to database");
                 System.out.println("The foodId does not exist, attempting to add to database");
-                try {
-                    // Food doesn't exist, so upload then exit
-                    insertFood(food);
-                    insertRestaurant(food.getLocation());
-                    Log.d(LOG_TAG, "Upload to database successful");
-                    return;
-                } catch (final AmazonClientException ex2){
-                    lastException = ex2;
-                }
+//                try {
+//                    // Food doesn't exist, so upload then exit
+//                    insertFood(food);
+//                    insertRestaurant(food.getLocation());
+//                    Log.d(LOG_TAG, "Upload to database successful");
+//                    return;
+//                } catch (final AmazonClientException ex2){
+//                    lastException = ex2;
+//                }
             }
         } catch (final AmazonClientException ex) {
             Log.d(LOG_TAG, "The foodId does not exist, attempting to add to database");
             System.out.println("The foodId does not exist, attempting to add to database");
-            try {
-                // Food doesn't exist, so upload then exit
-                insertFood(food);
-                insertRestaurant(food.getLocation());
-                Log.d(LOG_TAG, "Upload to database successful");
-                return;
-            } catch (final AmazonClientException ex2){
-                lastException = ex2;
-            }
+//            try {
+//                // Food doesn't exist, so upload then exit
+//                insertFood(food);
+//                insertRestaurant(food.getLocation());
+//                Log.d(LOG_TAG, "Upload to database successful");
+//                return;
+//            } catch (final AmazonClientException ex2){
+                lastException = ex;
+//            }
             //TODO
         }
 
@@ -132,7 +137,7 @@ public final class TableFood {
             return;
         }
 
-        Log.d(LOG_TAG,"Insert like successful");
+        Log.d(LOG_TAG,"Insert dislike successful");
     }
 
     /**
@@ -151,26 +156,26 @@ public final class TableFood {
             if(foodToGet == null){
                 Log.d(LOG_TAG, "The foodId does not exist, attempting to add to database");
 //                System.out.println("The foodId does not exist, attempting to add to database");
-                try {
-                    // Food doesn't exist, so upload then exit
-                    insertFood(food);
-                    insertRestaurant(food.getLocation());
-                    Log.d(LOG_TAG, "Upload to database called");
-                } catch (final AmazonClientException ex2){
-                    lastException = ex2;
-                }
+//                try {
+//                    // Food doesn't exist, so upload then exit
+//                    insertFood(food);
+//                    insertRestaurant(food.getLocation());
+//                    Log.d(LOG_TAG, "Upload to database called");
+//                } catch (final AmazonClientException ex2){
+//                    lastException = ex2;
+//                }
             }
         } catch (final AmazonClientException ex) {
             Log.d(LOG_TAG, "The foodId does not exist, attempting to add to database");
 //            System.out.println("The foodId does not exist, attempting to add to database");
-            try {
-                // Food doesn't exist, so upload then exit
-                insertFood(food);
-                insertRestaurant(food.getLocation());
-                Log.d(LOG_TAG, "Upload to database called");
-            } catch (final AmazonClientException ex2){
-                lastException = ex2;
-            }
+//            try {
+//                // Food doesn't exist, so upload then exit
+//                insertFood(food);
+//                insertRestaurant(food.getLocation());
+//                Log.d(LOG_TAG, "Upload to database called");
+//            } catch (final AmazonClientException ex2){
+                lastException = ex;
+//            }
             //TODO
         }
 
@@ -234,11 +239,20 @@ public final class TableFood {
         firstItem.setName(food.getName());
 
         AmazonClientException lastException = null;
+        DynamoDBSaveExpression saveExpression = new DynamoDBSaveExpression();
+        Map<String, ExpectedAttributeValue> expectedAttributes =
+                ImmutableMapParameter.<String, ExpectedAttributeValue>builder()
+                        .put("foodId", new ExpectedAttributeValue(false)).build();
+        saveExpression.setExpected(expectedAttributes);
 
         try {
-            mapper.save(firstItem);
+//            mapper.save(firstItem);
+            mapper.save(firstItem, saveExpression);
+        } catch (ConditionalCheckFailedException e){
+            Log.e(LOG_TAG,"The foodId exists: " + e.getMessage());
+            lastException = e;
         } catch (final AmazonClientException ex) {
-            Log.d(LOG_TAG,"Failed saving item batch: " + ex.getMessage());
+            Log.e(LOG_TAG,"Failed saving item batch: " + ex.getMessage());
             lastException = ex;
         }
 
