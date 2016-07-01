@@ -16,8 +16,10 @@ import java.util.ArrayList;
 /**
  * Created by pokeforce on 6/29/16.
  */
+
+
 public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
-    static final public int ADD_ITEM = 0, SET_ALL_CLICKED = 1;
+    static final public int ADD_ITEM = 0, SET_ALL_CLICKED = 1, CLEAR_FILE = 2;
 
     TinderActivity caller;
     int mode;
@@ -36,6 +38,9 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
                 break;
             case SET_ALL_CLICKED:
                 setAllClicked();
+                break;
+            case CLEAR_FILE:
+                clearFile();
                 break;
             default:
                 Log.e("WriteToLikedFileTask", "Invalid mode argument");
@@ -126,5 +131,9 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
         }
 
         return null;
+    }
+
+    void clearFile() {
+        caller.deleteFile(caller.getLikedFileName());
     }
 }
