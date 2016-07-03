@@ -67,8 +67,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:id="@+id/exit_icon_fg"
-                            android:background="@drawable/exit_button_2"/>
+                            android:id="@+id/exit_icon_fg"/>
                     </FrameLayout>
 
                     <!--Menu text-->
@@ -118,8 +117,7 @@
                                 android:background="@color/main_red"/>
                             <ImageView
                                 android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/search_icon_light_theme"/>
+                                android:layout_height="30dp"/>
 
                         </FrameLayout>
 
@@ -225,7 +223,6 @@
                                     android:layout_height="8dp"
                                     android:id="@+id/types_dropdown"
                                     android:layout_alignParentEnd="true"
-                                    android:background="@drawable/dropdown_icon"
                                     android:layout_centerVertical="true"
                                     android:layout_gravity="center"
                                     android:layout_marginRight="2dp" />
@@ -258,7 +255,6 @@
                                 android:text="Start New Search"
                                 android:id="@+id/new_search_button"
                                 android:textColor="#ffffff"
-                                android:background="@drawable/red_button_handler_2"
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:textSize="14dp"
@@ -310,8 +306,7 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:id="@+id/profile_fg"
-                                android:background="@drawable/profile_icon_light_theme" />
+                                android:id="@+id/profile_fg"/>
                         </FrameLayout>
 
                         <TextView
@@ -374,7 +369,6 @@
                                 android:id="@+id/reset_list"
                                 android:layout_centerHorizontal="true"
                                 android:textColor="#ffffff"
-                                android:background="@drawable/red_button_handler"
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
                                 android:textSize="20dp"
@@ -663,7 +657,6 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textColor="#ffffff"
-                                android:background="@drawable/red_button_handler"
                                 android:textStyle="bold"
                                 android:textSize="20dp"
                                 android:paddingLeft="60dp"
@@ -681,7 +674,6 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textColor="#ffffff"
-                                android:background="@drawable/red_button_handler"
                                 android:textStyle="bold"
                                 android:textSize="20dp"
                                 android:paddingLeft="60dp"

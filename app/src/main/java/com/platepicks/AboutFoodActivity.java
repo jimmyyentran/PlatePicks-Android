@@ -230,27 +230,6 @@ public class AboutFoodActivity extends AppCompatActivity
         //super.onBackPressed();
     }
 
-
-    public void openCommentInput(View view) {
-        LinearLayout tmp = (LinearLayout) findViewById(R.id.comment_input_field);
-        EditText edit = (EditText) findViewById((R.id.input_box));
-        if (tmp.getVisibility() == View.GONE) {
-            edit.setMaxLines(6);
-            edit.setVerticalScrollBarEnabled(true);
-            tmp.setVisibility(View.VISIBLE);
-            edit.requestFocus();
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        } else
-            tmp.setVisibility(View.GONE);
-
-        /* Hide the soft keyboard if necessary */
-        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(edit.getWindowToken(), 0);
-
-        /* emtpy the EditText view */
-        edit.setText("");
-    }
-
     // ImageSaver.OnCompleteListener
     @Override
     public void doSomethingWithBitmap(ImageView imageView, Bitmap b, String foodId) {
@@ -307,13 +286,9 @@ public class AboutFoodActivity extends AppCompatActivity
     }
 
     public void yesHold () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.about_yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.about_yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.about_yes_shadow);
 
-        yesIcon.animate().scaleX(0.85f).scaleY(0.85f)
-                .setDuration(100)
-                .setInterpolator(new DecelerateInterpolator());
 
         yesCircle.animate().scaleX(0.85f).scaleY(0.85f)
                 .setDuration(100)
@@ -325,7 +300,6 @@ public class AboutFoodActivity extends AppCompatActivity
     }
 
     public void yesReleased () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.about_yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.about_yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.about_yes_shadow);
 
@@ -337,28 +311,7 @@ public class AboutFoodActivity extends AppCompatActivity
                 .setDuration(100)
                 .setInterpolator(new DecelerateInterpolator());
 
-        yesIcon.animate().scaleX(1f).scaleY(1f)
-                .setDuration(100)
-                .setInterpolator(new DecelerateInterpolator())
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        yesIcon.animate().scaleX(1f)
-                                .setDuration(400)
-                                .setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        Log.d("yesReleased", "BEFORE FINISH");
-                                        yesIcon.animate().setListener(null);
-                                        setResult(1);
-                                        finish();
-                                        Log.d("yesReleased", "AFTER FINISH");
 
-                                        //finishActivity(1);
-                                    }
-                                });
-                    }
-                });
 
     }
 

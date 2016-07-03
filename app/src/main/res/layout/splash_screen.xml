@@ -23,7 +23,6 @@
             android:layout_height="140dp"
             android:layout_centerInParent="true"
             android:id="@+id/main_logo_half"
-            android:src="@drawable/main_logo"
             android:contentDescription="@string/contentDescription_logo"/>
 
     </LinearLayout>

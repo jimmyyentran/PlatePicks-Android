@@ -1233,13 +1233,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     }
 
     public void yesHold () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
 
-        yesIcon.animate().scaleX(0.85f).scaleY(0.85f)
-            .setDuration(100)
-            .setInterpolator(new DecelerateInterpolator());
 
         yesCircle.animate().scaleX(0.85f).scaleY(0.85f)
                 .setDuration(100)
@@ -1251,7 +1247,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     }
 
     public void yesReleased () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
 
@@ -1276,29 +1271,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         yesShadow.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
                 .setInterpolator(new DecelerateInterpolator());
-
-        yesIcon.animate().scaleX(1f).scaleY(1f)
-                .setDuration(100)
-                .setInterpolator(new DecelerateInterpolator())
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        yesIcon.animate().scaleX(1f)
-                                .setDuration(400)
-                                .setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        if (imagePager.getCurrentItem() == 1
-                                                && changeListener.state == ViewPager.SCROLL_STATE_IDLE) {
-                                            imagePager.setCurrentItem(0);
-                                            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.click_sound1);
-                                            //mp.start();
-                                        }
-                                        yesIcon.animate().setListener(null);
-                                    }
-                                });
-                    }
-                });
 
         borderFlash("green");
 

@@ -15,7 +15,6 @@
         <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/theme_light_image_border"
             android:background="@android:color/transparent"
             android:layout_centerVertical="true"
             android:layout_margin="3dp" />
@@ -23,7 +22,6 @@
         <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/flashing_border_red"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
             android:id="@+id/flashing_border"

@@ -37,21 +37,18 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:id="@+id/bar_shadow"
-                android:src="@drawable/bar_shadow" />
+                android:id="@+id/bar_shadow"/>
 
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:id="@+id/circle_shadow"
-                android:src="@drawable/circle_shadow"
                 android:layout_centerHorizontal="true" />
 
             <ImageView
                 android:layout_width="92dp"
                 android:layout_height="92dp"
                 android:id="@+id/red_circle"
-                android:src="@drawable/red_circle"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY" />
 
@@ -62,7 +59,6 @@
                 android:layout_height="50dp"
                 android:layout_gravity="top"
                 android:contentDescription="@string/contentDescription_redBG"
-                android:src="@drawable/two_shaded_bar"
                 android:scaleType="fitXY"/>
 
             <TextView
@@ -79,7 +75,6 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:id="@+id/app_name"
-                android:src="@drawable/main_logo_circle"
                 android:layout_alignTop="@+id/grey_bar"
                 android:layout_marginTop="5dp"
                 android:layout_alignLeft="@+id/red_circle"
@@ -92,7 +87,6 @@
                 android:layout_height="50dp"
                 android:padding="15dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/drawer_icon"
                 android:background="@android:color/transparent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="20dp"
@@ -118,7 +112,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/heart_icon_green"
-                    android:src="@drawable/list_icon"
                     android:visibility="invisible" />
 
                 <ImageButton
@@ -126,7 +119,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/list_icon"
                     android:background="@android:color/transparent"
                     android:onClick="gotoList"
                     android:contentDescription="@string/contentDescription_list"
@@ -206,7 +198,6 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:id="@+id/no_shadow"
-                    android:src="@drawable/circle_shadow"
                     android:layout_alignLeft="@+id/no_circle"
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="3dp" />
@@ -215,7 +206,6 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:id="@+id/no_circle"
-                    android:src="@drawable/theme_dark_circle_btn_default"
                     android:layout_centerInParent="true" />
 
                 <ImageView
@@ -223,7 +213,7 @@
                     android:layout_height="90dp"
                     android:id="@+id/no_icon"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/red_x" />
+                    android:scaleType="fitXY" />
             </RelativeLayout>
 
 
@@ -240,7 +230,6 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:id="@+id/yes_shadow"
-                    android:src="@drawable/circle_shadow"
                     android:layout_marginTop="15dp"
                     android:layout_alignLeft="@+id/yes_circle"
                     android:layout_marginLeft="3dp" />
@@ -249,15 +238,9 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:id="@+id/yes_circle"
-                    android:src="@drawable/theme_dark_circle_btn_default"
                     android:layout_alignParentTop="false"
                     android:layout_centerInParent="true" />
 
-                <include layout="@layout/green_bell"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_centerInParent="true"
-                    android:id="@+id/yes_icon" />
 
             </RelativeLayout>
 

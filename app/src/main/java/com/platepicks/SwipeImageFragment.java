@@ -89,9 +89,9 @@ public class SwipeImageFragment extends Fragment {
                 }
 
                 flashingBorder.setAlpha(0.0f);
-                foodPicture.setImageBitmap(image);
+                //foodPicture.setImageBitmap(image);
                 if(Build.VERSION.SDK_INT >= 17) {
-                    bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
+                    //bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
                 }
                 else {
                     foodPicture.setBackgroundColor(Color.WHITE);
@@ -166,10 +166,10 @@ public class SwipeImageFragment extends Fragment {
     }
 
     public void borderFlash (String color) {
-        if(color.equals("red"))
-            flashingBorder.setImageResource(R.drawable.flashing_border_red);
-        else if(color.equals("green"))
-            flashingBorder.setImageResource(R.drawable.flashing_border_green);
+        //if(color.equals("red"))
+            //flashingBorder.setImageResource(R.drawable.flashing_border_red);
+       // else if(color.equals("green"))
+            //flashingBorder.setImageResource(R.drawable.flashing_border_green);
 
         flashingBorder.animate().alpha(1.0f)
                 .setDuration(100)

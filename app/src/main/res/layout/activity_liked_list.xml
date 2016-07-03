@@ -17,20 +17,17 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:id="@+id/toolbar_tinder"
-        android:background="@drawable/bar_shadow">
+        android:id="@+id/toolbar_tinder">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:id="@+id/liked_list_bar"
-            android:src="@drawable/two_shaded_bar"
             android:scaleType="fitXY" />
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/back_button"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
             android:paddingTop="15dp"
