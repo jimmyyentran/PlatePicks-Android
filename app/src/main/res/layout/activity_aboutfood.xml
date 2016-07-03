@@ -119,14 +119,6 @@
                         android:layout_marginLeft="-5px"
                         android:layout_marginTop="-5px" />
 
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="50dp"
-                        android:id="@+id/required_yelp_2"
-                        android:src="@drawable/yelp_logo"
-                        android:layout_alignParentEnd="true"
-                        android:visibility="gone" />
-
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
