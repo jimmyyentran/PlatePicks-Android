@@ -473,15 +473,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
         drawer_header.setTypeface(source_bold);
 
-
-        Typeface Ham_Heaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
-        TextView appName2 = (TextView) findViewById(R.id.app_name_2);
-        appName2.setTypeface(Ham_Heaven);
-
-
-        /* set shrink/grow animation */
-
-
+        /* bitmap optimizations */
     }
 
     @Override
@@ -1212,24 +1204,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     .alpha(0f)
                     .setListener(new SplashAnimatorListener()); /* Listener to remove view once finished */
         }
-    }
-
-    public void toggleTitle (View view){
-        ImageView style1 = (ImageView) findViewById(R.id.app_name);
-        TextView style2 = (TextView) findViewById(R.id.app_name_2);
-
-        if(style1.getVisibility() == View.GONE){
-            style1.setVisibility(View.VISIBLE);
-            style2.setVisibility(View.GONE);
-        }
-        else{
-            style1.setVisibility(View.GONE);
-            style2.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void toggleTheme (View view){
-        RelativeLayout ui_background = (RelativeLayout) findViewById(R.id.main_ui);
     }
 
     public void yesHold () {
