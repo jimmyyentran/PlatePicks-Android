@@ -2,7 +2,7 @@
 *.apk
 *.ap_
 
-# Files for the Dalvik VM
+# Files for the ART/Dalvik VM
 *.dex
 
 # Java class files
@@ -11,6 +11,7 @@
 # Generated files
 bin/
 gen/
+out/
 
 # Gradle files
 .gradle/
@@ -30,20 +31,11 @@ proguard/
 
 # Android Studio captures folder
 captures/
+
+# Intellij
 *.iml
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-/captures
-app/.idea/workspace.xml
-app/.idea/libraries/
+.idea/workspace.xml
+.idea/libraries
 
-
-# Python
-__pycache__/
-*.pyc
-
-*.orig
+# Keystore files
+*.jks
