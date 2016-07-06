@@ -155,7 +155,12 @@ public class AWSIntegratorTest {
             str = ob;
         }
 
-        public String returnResults() {
+    @Override
+    public void doSomethingOnAWSError() {
+
+    }
+
+    public String returnResults() {
             return str;
         }
 }
