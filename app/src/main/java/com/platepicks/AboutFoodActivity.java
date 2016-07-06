@@ -144,6 +144,9 @@ public class AboutFoodActivity extends AppCompatActivity
 
         // Food image
         img = (ImageView) findViewById(R.id.about_image);
+        Application app = (Application) getApplication();
+//        img.setImageBitmap(app.getImage());
+        img.setImageBitmap(app.getImage());
         new ImageSaver(AboutFoodActivity.this).
                 setFileName(item.getFoodId()).
                 setDirectoryName("images").
