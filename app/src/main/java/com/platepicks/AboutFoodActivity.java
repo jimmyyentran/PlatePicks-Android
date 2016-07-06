@@ -152,9 +152,18 @@ public class AboutFoodActivity extends AppCompatActivity
 
         if(origin.equals("main page")) {
 
-            // Load image from the global Application
-            Application app = (Application) getApplication();
-            img.setImageBitmap(app.getImage());
+            // Load image from the global Application. In case there is an exception, load the
+            // through internal storage
+            try {
+                Application app = (Application) getApplication();
+                img.setImageBitmap(app.getImage());
+            }catch(Exception e) {
+                Log.e("AboutFoodActivity", e.getMessage());
+                new ImageSaver(AboutFoodActivity.this).
+                        setFileName(item.getFoodId()).
+                        setDirectoryName("images").
+                        load(img, this, false);
+            }
 
             aboutButtons.setVisibility(View.VISIBLE);
 //            new ImageSaver(AboutFoodActivity.this).
