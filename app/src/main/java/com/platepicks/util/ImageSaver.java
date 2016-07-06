@@ -64,7 +64,7 @@ public class ImageSaver {
         if (cancelPotentialLoad(imageView)) {
             LoadImageAsyncTask loadTask = new LoadImageAsyncTask(imageView, caller, fileNames[0]);
             DownloadedDrawable drawable = new DownloadedDrawable(loadTask);
-//            imageView.setImageDrawable(drawable);
+            imageView.setImageDrawable(drawable);
             drawable.getLoadImageAsyncTask().execute();
         }
     }

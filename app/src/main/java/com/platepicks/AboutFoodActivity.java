@@ -144,13 +144,14 @@ public class AboutFoodActivity extends AppCompatActivity
 
         // Food image
         img = (ImageView) findViewById(R.id.about_image);
+
+        // Load image from the global Application
         Application app = (Application) getApplication();
-//        img.setImageBitmap(app.getImage());
         img.setImageBitmap(app.getImage());
-        new ImageSaver(AboutFoodActivity.this).
-                setFileName(item.getFoodId()).
-                setDirectoryName("images").
-                load(img, this, false);
+//        new ImageSaver(AboutFoodActivity.this).
+//                setFileName(item.getFoodId()).
+//                setDirectoryName("images").
+//                load(img, this, false);
 
         /* handle like/dislike buttons appearing on page */
         RelativeLayout aboutButtons = (RelativeLayout) findViewById(R.id.about_buttons_container);
