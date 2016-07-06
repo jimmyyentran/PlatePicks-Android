@@ -39,7 +39,7 @@ captures/
 /build
 /captures
 app/.idea/workspace.xml
-app/.idea/libraries/
+app/.idea/libraries
 
 
 # Python
