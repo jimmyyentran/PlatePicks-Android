@@ -90,6 +90,11 @@ public class SwipeImageFragment extends Fragment {
 
                 flashingBorder.setAlpha(0.0f);
                 foodPicture.setImageBitmap(image);
+
+                // Set image to global Application class
+                Application app = (Application) getActivity().getApplication();
+                app.setImage(image);
+
                 if(Build.VERSION.SDK_INT >= 17) {
                     bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
                 }
