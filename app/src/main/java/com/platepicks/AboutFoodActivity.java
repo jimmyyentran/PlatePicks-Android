@@ -145,20 +145,17 @@ public class AboutFoodActivity extends AppCompatActivity
         // Food image
         img = (ImageView) findViewById(R.id.about_image);
 
-//        new ImageSaver(AboutFoodActivity.this).
-//                setFileName(item.getFoodId()).
-//                setDirectoryName("images").
-//                load(img, this, false);
-
         /* handle like/dislike buttons appearing on page */
         RelativeLayout aboutButtons = (RelativeLayout) findViewById(R.id.about_buttons_container);
 
         origin = getIntent().getStringExtra("origin");
 
         if(origin.equals("main page")) {
+
             // Load image from the global Application
             Application app = (Application) getApplication();
             img.setImageBitmap(app.getImage());
+
             aboutButtons.setVisibility(View.VISIBLE);
 //            new ImageSaver(AboutFoodActivity.this).
 //                    setFileName(item.getFoodId()).
@@ -167,10 +164,13 @@ public class AboutFoodActivity extends AppCompatActivity
             Log.d("AboutFoodActivity", "From storage");
         }
         else if(origin.equals("list page")) {
+
+            // Load image from storage through AsyncTask
             new ImageSaver(AboutFoodActivity.this).
                     setFileName(item.getFoodId()).
                     setDirectoryName("images").
                     load(img, this, false);
+
             item.setClicked(1);
             Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM SET TO CLICKED: " + item.getFoodName() + "::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
