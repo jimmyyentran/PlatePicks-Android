@@ -36,9 +36,20 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
 
     public ListAdapter(Context context, ArrayList<ListItemClass> data) {
         super(context, 0, data);
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);  // maxMemory for LruCache
+        final int cacheSize = maxMemory / 8;    // Use 1/8th of the available memory for this memory cache.
+
         mCtx = context; //<-- fill it with the Context you are passed
         this.data = data;
         accessCache = new ReentrantLock();
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
     }
 
     public Bitmap getBitmapFromMemCache(String key) {
@@ -64,66 +75,56 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         int pos = data.size() - position - 1;
 
-        // maxMemory for LruCache
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
-
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
-
         // Get the data item for this position
         ListItemClass item = getItem(pos);
+        ViewHolder viewHolder;
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.likeditem_custom, parent, false);
+
+            // font stuff
+            Typeface tf = Typeface.createFromAsset(mCtx.getAssets(), "fonts/SourceSansPro-Black.otf");
+
+            // lookup view for data population
+            TextView fname = (TextView) convertView.findViewById(R.id.fname);
+            TextView rname = (TextView) convertView.findViewById(R.id.rname);
+            ImageView foodImg = (ImageView) convertView.findViewById(R.id.list_food_picture);
+            RelativeLayout itemContainer = (RelativeLayout) convertView.findViewById(R.id.item_container);
+
+            // set font
+            fname.setTypeface(tf);
+
+            viewHolder = new ViewHolder();
+            viewHolder.fname = fname;
+            viewHolder.rname = rname;
+            viewHolder.foodImg = foodImg;
+            viewHolder.itemContainer = itemContainer;
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        // font stuff
-        String fontPath = "fonts/Hamburger_Heaven.TTF";
-        Typeface tf = Typeface.createFromAsset(mCtx.getAssets(), "fonts/SourceSansPro-Black.otf");
-
-        // lookup view for data population
-        TextView fname = (TextView) convertView.findViewById(R.id.fname);
-        TextView rname = (TextView) convertView.findViewById(R.id.rname);
-        ImageView hollowCircle = (ImageView) convertView.findViewById(R.id.hollow_circle);
-        ImageView foodImg = (ImageView) convertView.findViewById(R.id.list_food_picture);
-
-        // set font
-        fname.setTypeface(tf);
-
         // handle if food has been clicked or not
-        RelativeLayout itemContainer = (RelativeLayout) convertView.findViewById(R.id.item_container);
-
         if (!item.isClicked()) {
             Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM NOT CLICKED BEFORE::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-            itemContainer.setAlpha(1.0f);
+            viewHolder.itemContainer.setAlpha(1.0f);
         }
         else {
             Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM CLICKED BEFORE::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-
-            itemContainer.setAlpha(0.5f);
+            viewHolder.itemContainer.setAlpha(0.5f);
         }
 
         // populate the data into the template view using the data object
-        fname.setText(item.getFoodName());
-        rname.setText(item.getRestaurantName());
+        viewHolder.fname.setText(item.getFoodName());
+        viewHolder.rname.setText(item.getRestaurantName());
 
         String key = item.getFoodId();
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+//        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bitmap;
 
         if (getBitmapFromMemCache(key) == null)
@@ -131,15 +132,15 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
             new ImageSaver(getContext()).
                     setFileName(item.getFoodId()).
                     setDirectoryName("images").
-                    load(foodImg, this, true);
+                    load(viewHolder.foodImg, this, true);
 //            new GetOneTinyImageTask(this, foodImg, mCtx, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
 //                    .execute(item);
         }
         else
         {
             bitmap = getBitmapFromMemCache(key);
-            foodImg.setImageBitmap(bitmap);
-            foodImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            viewHolder.foodImg.setImageBitmap(bitmap);
+            viewHolder.foodImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
 
         // Return the completed view to render on screen
@@ -154,4 +155,11 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
             imageView.setImageBitmap(RotateBitmap(b, 0));
     }
     /* end ListAdapter */
+
+    static class ViewHolder {
+        TextView fname;
+        TextView rname;
+        ImageView foodImg;
+        RelativeLayout itemContainer;
+    }
 }

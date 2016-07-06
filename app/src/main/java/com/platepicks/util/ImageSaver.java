@@ -4,10 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -26,11 +26,11 @@ public class ImageSaver {
 
     private String directoryName = "images";
     private String[] fileNames;
-    private Context context;
+    private WeakReference<Context> contextRef;
     boolean small = false;
 
     public ImageSaver(Context context) {
-        this.context = context;
+        this.contextRef = new WeakReference<>(context);
     }
 
     public ImageSaver setFileName(String... fileNames) {
@@ -47,24 +47,57 @@ public class ImageSaver {
         new SaveImageTask().execute(bitmapImage);
     }
 
-    @NonNull
     private File createFile(String file) {
-        File directory = context.getDir(directoryName, Context.MODE_PRIVATE);
+        if (contextRef == null || contextRef.get() == null)
+            return null;
 
+        File directory = contextRef.get().getDir(directoryName, Context.MODE_PRIVATE);
 //        for (String s : directory.list())
 //            Log.d("ImageSaver", "File: " + s);
-
         return new File(directory, file);
     }
 
     public void load(ImageView imageView, OnCompleteListener caller, boolean small) {
         Log.d("ImageSaver", "In Load");
         this.small = small;
-        new LoadImageAsyncTask(imageView, caller).execute();
+
+        if (cancelPotentialLoad(imageView)) {
+            LoadImageAsyncTask loadTask = new LoadImageAsyncTask(imageView, caller, fileNames[0]);
+            DownloadedDrawable drawable = new DownloadedDrawable(loadTask);
+            imageView.setImageDrawable(drawable);
+            drawable.getLoadImageAsyncTask().execute();
+        }
     }
 
     public void delete() {
         new DeleteImageAsyncTask().execute();
+    }
+
+    private boolean cancelPotentialLoad(ImageView imageView) {
+        LoadImageAsyncTask loadTask = getLoadImageAsyncTask(imageView);
+
+        if (loadTask != null) {
+            String bitmapFile = loadTask.filename;
+            if (!bitmapFile.equals(fileNames[0])) {
+                loadTask.cancel(true);
+            } else {
+                // The same file is being retrieved
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private LoadImageAsyncTask getLoadImageAsyncTask(ImageView imageView) {
+        if (imageView != null) {
+            Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof DownloadedDrawable) {
+                return ((DownloadedDrawable) drawable).getLoadImageAsyncTask();
+            }
+        }
+
+        return null;
     }
 
     class SaveImageTask extends AsyncTask<Bitmap, Void, Void> {
@@ -79,7 +112,7 @@ public class ImageSaver {
                 for (int i = 0; i < params.length; i++) {
                     File newImg = createFile(fileNames[i]);
 
-                    if (!newImg.exists()) {
+                    if (newImg != null && !newImg.exists()) {
                         newImg.deleteOnExit();
                         fileOutputStream = new FileOutputStream(newImg);
                         params[i].compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
@@ -105,9 +138,12 @@ public class ImageSaver {
         WeakReference<ImageView> imageViewRef;  // To not stop garbage collection if imageview is gone
         WeakReference<OnCompleteListener> callerRef;
 
-        LoadImageAsyncTask(ImageView imageView, OnCompleteListener caller) {
+        String filename;
+
+        LoadImageAsyncTask(ImageView imageView, OnCompleteListener caller, String filename) {
             this.imageViewRef = new WeakReference<ImageView>(imageView);
             this.callerRef = new WeakReference<OnCompleteListener>(caller);
+            this.filename = filename;
         }
 
         @Override
@@ -116,8 +152,14 @@ public class ImageSaver {
 
             FileInputStream inputStream = null;
             try {
-                File imgFile = createFile(fileNames[0]);
+                File imgFile = createFile(filename);
                 accessFiles.lock();
+
+                if (imgFile == null) {
+                    Log.e("ImageSaver Load", "Null returned file. Context garbage collected?");
+                    accessFiles.unlock();
+                    return null;
+                }
 
                 while (!imgFile.exists()) {
                     accessFiles.unlock();
@@ -151,8 +193,13 @@ public class ImageSaver {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (callerRef.get() != null)
-                callerRef.get().doSomethingWithBitmap(imageViewRef.get(), bitmap, fileNames[0]);
+            if (isCancelled())
+                bitmap = null;
+
+            if (callerRef != null && imageViewRef != null)
+                if (callerRef.get() != null && imageViewRef.get() != null)
+                    if (this == getLoadImageAsyncTask(imageViewRef.get()))
+                        callerRef.get().doSomethingWithBitmap(imageViewRef.get(), bitmap, filename);
         }
     }
 
@@ -163,6 +210,13 @@ public class ImageSaver {
 
             Log.d("ImageSaver", "In delete");
             File file = createFile(fileNames[0]);
+
+            if (file == null) {
+                Log.e("ImageSaver Delete", "Null returned file. Context garbage collected?");
+                accessFiles.unlock();
+                return null;
+            }
+
             if (file.exists()) {
                 if (!file.delete())
                     Log.e("ImageSaver", "Failed to delete " + fileNames[0]);
@@ -173,6 +227,19 @@ public class ImageSaver {
             accessFiles.unlock();
 
             return null;
+        }
+    }
+
+    static class DownloadedDrawable extends ColorDrawable {
+        private final WeakReference<LoadImageAsyncTask> loadImageTask;
+
+        public DownloadedDrawable(LoadImageAsyncTask loadImageTask) {
+            super(Color.TRANSPARENT);
+            this.loadImageTask = new WeakReference<>(loadImageTask);
+        }
+
+        public LoadImageAsyncTask getLoadImageAsyncTask() {
+            return loadImageTask.get();
         }
     }
 
