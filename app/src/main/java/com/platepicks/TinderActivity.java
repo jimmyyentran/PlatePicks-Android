@@ -1207,7 +1207,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     }
 
     public void yesHold () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
+        final ImageView yesIcon = (ImageView) findViewById(R.id.yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
 
@@ -1225,23 +1225,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     }
 
     public void yesReleased () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
+        final ImageView yesIcon = (ImageView) findViewById(R.id.yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.yes_shadow);
-
-
-        bellHammer.animate().translationY(bellHammer.getHeight() / 19)
-                .setDuration(100)
-                .setInterpolator(new DecelerateInterpolator())
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        bellHammer.animate().translationY(0)
-                                .setDuration(150)
-                                .setInterpolator(new DecelerateInterpolator());
-                        bellHammer.animate().setListener(null);
-                    }
-                });
 
         yesCircle.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
