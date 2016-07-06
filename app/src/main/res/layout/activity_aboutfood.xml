@@ -17,16 +17,24 @@
             android:id="@+id/imageView4"
             android:src="@drawable/bar_shadow" />
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/two_shaded_bar"
             android:id="@+id/toolbar_tinder"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="0dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="0dp">
+
+            <include
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                layout="@layout/two_shaded_bar"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp" />
 
             <ImageView
                 android:layout_width="50dp"
@@ -39,15 +47,20 @@
                 android:paddingRight="10dp"
                 android:id="@+id/back_button"
                 android:onClick="backArrow"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" />
 
             <ImageView
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/background_gray"
                 android:alpha="0.4"
-                android:layout_gravity="bottom" />
-        </LinearLayout>
+                android:layout_gravity="bottom"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentTop="false"
+                android:layout_toRightOf="@+id/back_button" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -118,14 +131,6 @@
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="-5px"
                         android:layout_marginTop="-5px" />
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="50dp"
-                        android:id="@+id/required_yelp_2"
-                        android:src="@drawable/yelp_logo"
-                        android:layout_alignParentEnd="true"
-                        android:visibility="gone" />
 
                     <FrameLayout
                         android:layout_width="wrap_content"

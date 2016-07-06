@@ -385,13 +385,14 @@
                                 android:layout_marginRight="30dp"
                                 android:gravity="center_horizontal"
                                 android:layout_marginBottom="3dp"
-                                android:clickable="true" />
+                                android:clickable="true"
+                                android:onClick="clearLikedData" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="(tap twice)"
-                                android:id="@+id/textView"
+                                android:id="@+id/tap_twice"
                                 android:layout_centerHorizontal="true"
                                 android:textSize="10dp"
                                 android:textColor="@color/dark_red" />

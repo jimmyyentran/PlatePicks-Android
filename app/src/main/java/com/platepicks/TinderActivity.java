@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -69,6 +70,8 @@ import com.platepicks.objects.ListItemClass;
 import com.platepicks.util.ReadLikedFileTask;
 import com.platepicks.util.RequestFromDatabaseTask;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -141,6 +144,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     ScaleAnimation growAnim = null;
     ScaleAnimation shrinkAnim = null;
 
+    /* counter for ClearFavs button */
+    int clearCounter = 0;
+
     // Function: creates list item
     public ListItemClass createListItem(String foodName) {
         ListItemClass newItem = new ListItemClass();
@@ -167,6 +173,33 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         this.likedData.add(toAdd);
     }
 
+    public void clearLikedData(View view) {
+        final TextView tapTwice = (TextView) findViewById(R.id.tap_twice);
+
+        if(clearCounter == 0){
+            ++clearCounter;
+            tapTwice.setText("(tap once)");
+            tapTwice.animate().scaleX(1.0f)
+                    .setDuration(1000)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            clearCounter = 0;
+                            tapTwice.setText("(tap twice)");
+                            tapTwice.animate().setListener(null);
+                        }
+                    });
+        }
+        else {
+            likedData = null;
+            setLikedData(new ArrayList<ListItemClass>());
+            deleteFile(getLikedFileName());
+            System.gc();
+            update_list_number(0);
+            tapTwice.setText("(tap twice)");
+        }
+    }
+
     public void changeToNextFood() {
         mainPageFragment.changeFood(imageList.get(1), listItems.get(1));
     }
@@ -187,6 +220,10 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     public int getRadius() {
         return rad_seekBar.getProgress();
+    }
+
+    public String getLikedFileName() {
+        return "Saved foods";
     }
 
     /* onActivityResult() */
@@ -357,6 +394,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
         /* Create task to load likedData with persistent data */
         new ReadLikedFileTask(this).execute();
+        //jordansReadLikedFile();
+
 
         // First batch of images
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
@@ -428,15 +467,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         TextView drawer_header = (TextView) findViewById(R.id.drawer_header_text);
         drawer_header.setTypeface(source_bold);
 
-
-        Typeface Ham_Heaven = Typeface.createFromAsset(getAssets(), "fonts/Hamburger_Heaven.TTF");
-        TextView appName2 = (TextView) findViewById(R.id.app_name_2);
-        appName2.setTypeface(Ham_Heaven);
-
-
-        /* set shrink/grow animation */
-
-
+        /* bitmap optimizations */
     }
 
     @Override
@@ -1169,24 +1200,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         }
     }
 
-    public void toggleTitle (View view){
-        ImageView style1 = (ImageView) findViewById(R.id.app_name);
-        TextView style2 = (TextView) findViewById(R.id.app_name_2);
-
-        if(style1.getVisibility() == View.GONE){
-            style1.setVisibility(View.VISIBLE);
-            style2.setVisibility(View.GONE);
-        }
-        else{
-            style1.setVisibility(View.GONE);
-            style2.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void toggleTheme (View view){
-        RelativeLayout ui_background = (RelativeLayout) findViewById(R.id.main_ui);
-    }
-
     public void yesHold () {
         final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.yes_circle);
@@ -1362,5 +1375,44 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                         heartIcon.animate().setListener(null);
                     }
                 });
+    }
+
+    private void jordansReadLikedFile () {
+        TinderActivity caller = this;
+
+        FileInputStream fis = null;
+        StringBuilder builder = new StringBuilder();
+
+        try {
+            fis = caller.openFileInput(caller.getLikedFileName());
+            int c;
+
+            while ((c = fis.read()) != -1) {
+                builder.append((char) c);
+            }
+
+            cnt = 0;
+            String[] lines = builder.toString().split("\n");
+            ArrayList<ListItemClass> likedData = new ArrayList<>(lines.length);
+            for (String s : lines) {
+                ListItemClass item = ListItemClass.createFrom(s);
+                likedData.add(item);
+                if (!item.isClicked())
+                    cnt++;
+
+                Log.d("ReadLikedFileTask", s);
+            }
+
+            caller.setLikedData(likedData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null)
+                    fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

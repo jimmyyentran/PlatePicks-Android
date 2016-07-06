@@ -4,6 +4,7 @@
     <color name="background_gray">#c8000000</color>
     <color name="main_red">#bf3b3b</color>
     <color name="light_red">#d15a5a</color>
+    <color name="lighter_red">#d05858</color>
     <color name="dark_red">#3b2e2e</color>
     <color name="light_grey">#e1e1e1</color>
     <color name="main_grey">#2e2e2e</color>

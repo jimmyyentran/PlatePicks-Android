@@ -47,7 +47,7 @@ public class ImageSaver {
         new SaveImageTask().execute(bitmapImage);
     }
 
-    private File createFile(String file) {
+    private static File createFile(String file) {
         if (contextRef == null || contextRef.get() == null)
             return null;
 
@@ -58,7 +58,7 @@ public class ImageSaver {
     }
 
     public void load(ImageView imageView, OnCompleteListener caller, boolean small) {
-        Log.d("ImageSaver", "In Load");
+        Log.d("ImageSaver", fileNames[0] + " In Load");
         this.small = small;
 
         if (cancelPotentialLoad(imageView)) {
@@ -73,13 +73,15 @@ public class ImageSaver {
         new DeleteImageAsyncTask().execute();
     }
 
-    private boolean cancelPotentialLoad(ImageView imageView) {
+    // FIXME: Next time, 
+    private static boolean cancelPotentialLoad(ImageView imageView, String filename) {
         LoadImageAsyncTask loadTask = getLoadImageAsyncTask(imageView);
 
         if (loadTask != null) {
             String bitmapFile = loadTask.filename;
-            if (!bitmapFile.equals(fileNames[0])) {
+            if (!bitmapFile.equals(filename)) {
                 loadTask.cancel(true);
+                Log.d("ImageSaver", "Cancelled previous task");
             } else {
                 // The same file is being retrieved
                 return false;
@@ -89,7 +91,7 @@ public class ImageSaver {
         return true;
     }
 
-    private LoadImageAsyncTask getLoadImageAsyncTask(ImageView imageView) {
+    private static LoadImageAsyncTask getLoadImageAsyncTask(ImageView imageView) {
         if (imageView != null) {
             Drawable drawable = imageView.getDrawable();
             if (drawable instanceof DownloadedDrawable) {
@@ -134,21 +136,22 @@ public class ImageSaver {
         }
     }
 
-    class LoadImageAsyncTask extends AsyncTask<Void, Void, Bitmap> {
+    static class LoadImageAsyncTask extends AsyncTask<Void, Void, Bitmap> {
         WeakReference<ImageView> imageViewRef;  // To not stop garbage collection if imageview is gone
         WeakReference<OnCompleteListener> callerRef;
-
         String filename;
+        boolean small;
 
-        LoadImageAsyncTask(ImageView imageView, OnCompleteListener caller, String filename) {
-            this.imageViewRef = new WeakReference<ImageView>(imageView);
-            this.callerRef = new WeakReference<OnCompleteListener>(caller);
+        LoadImageAsyncTask(ImageView imageView, OnCompleteListener caller, String filename, boolean small) {
+            this.imageViewRef = new WeakReference<>(imageView);
+            this.callerRef = new WeakReference<>(caller);
             this.filename = filename;
+            this.small = small;
         }
 
         @Override
         protected Bitmap doInBackground(Void... params) {
-            Log.d("ImageSaver", "In loading task");
+            Log.d("ImageSaver", filename + " In loading task");
 
             FileInputStream inputStream = null;
             try {

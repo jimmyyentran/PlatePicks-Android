@@ -20,16 +20,14 @@
         android:id="@+id/toolbar_tinder"
         android:background="@drawable/bar_shadow">
 
-        <ImageView
-            android:layout_width="match_parent"
+        <include layout="@layout/two_shaded_bar"
+            android:id="@+id/list_shaded_bar"
             android:layout_height="50dp"
-            android:id="@+id/liked_list_bar"
-            android:src="@drawable/two_shaded_bar"
-            android:scaleType="fitXY" />
+            android:layout_width="match_parent" />
 
         <ImageView
             android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:src="@drawable/back_button"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
@@ -43,7 +41,7 @@
             android:layout_marginLeft="0dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="0dp"
-            android:layout_alignBottom="@+id/liked_list_bar" />
+            android:layout_alignBottom="@+id/list_shaded_bar" />
 
         <ImageView
             android:layout_width="1dp"
@@ -54,7 +52,7 @@
             android:layout_alignParentLeft="false"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/back_button"
-            android:layout_alignBottom="@+id/liked_list_bar" />
+            android:layout_alignBottom="@+id/list_shaded_bar" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,7 +68,7 @@
             android:layout_alignParentBottom="false"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:layout_alignBottom="@+id/liked_list_bar" />
+            android:layout_alignBottom="@+id/list_shaded_bar" />
 
 
     </RelativeLayout>

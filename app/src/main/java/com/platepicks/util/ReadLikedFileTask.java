@@ -23,6 +23,7 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
         StaticConstants.accessList.lock();
     }
 
+
     @Override
     protected Void doInBackground(Void... params) {
         Log.d("ReadLikedFileTask", "Reading");

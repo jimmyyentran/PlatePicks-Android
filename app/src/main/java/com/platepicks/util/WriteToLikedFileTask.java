@@ -14,8 +14,10 @@ import java.io.IOException;
 /**
  * Created by pokeforce on 6/29/16.
  */
-public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
-    static final public int ADD_ITEM = 0, SET_ALL_CLICKED = 1, REPLACE_ALL = 2;
+
+
+public class WriteToLikedFileTask extends AsyncTask<String, Void, Void> {
+    static final public int ADD_ITEM = 0, SET_ALL_CLICKED = 1, REPLACE_ALL = 2, CLEAR_FILE = 3;
 
     Context caller;
     int mode;
@@ -37,6 +39,9 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
                 break;
             case REPLACE_ALL:
                 writeToFile(Context.MODE_PRIVATE, params);
+                break;
+            case CLEAR_FILE:
+                clearFile();
                 break;
             default:
                 Log.e("WriteToLikedFileTask", "Invalid mode argument");
@@ -127,5 +132,9 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void>{
         }
 
         return null;
+    }
+
+    void clearFile() {
+        caller.deleteFile(StaticConstants.SAVED_LIKED_FOODS);
     }
 }
