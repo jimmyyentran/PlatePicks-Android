@@ -47,7 +47,7 @@ public class ImageSaver {
         new SaveImageTask().execute(bitmapImage);
     }
 
-    private static File createFile(String file) {
+    private File createFile(String file) {
         if (contextRef == null || contextRef.get() == null)
             return null;
 
@@ -58,7 +58,7 @@ public class ImageSaver {
     }
 
     public void load(ImageView imageView, OnCompleteListener caller, boolean small) {
-        Log.d("ImageSaver", fileNames[0] + " In Load");
+        Log.d("ImageSaver", " In Load");
         this.small = small;
 
         if (cancelPotentialLoad(imageView)) {
@@ -73,13 +73,12 @@ public class ImageSaver {
         new DeleteImageAsyncTask().execute();
     }
 
-    // FIXME: Next time, 
-    private static boolean cancelPotentialLoad(ImageView imageView, String filename) {
+    private boolean cancelPotentialLoad(ImageView imageView) {
         LoadImageAsyncTask loadTask = getLoadImageAsyncTask(imageView);
 
         if (loadTask != null) {
             String bitmapFile = loadTask.filename;
-            if (!bitmapFile.equals(filename)) {
+            if (!bitmapFile.equals(fileNames[0])) {
                 loadTask.cancel(true);
                 Log.d("ImageSaver", "Cancelled previous task");
             } else {
@@ -91,7 +90,7 @@ public class ImageSaver {
         return true;
     }
 
-    private static LoadImageAsyncTask getLoadImageAsyncTask(ImageView imageView) {
+    private LoadImageAsyncTask getLoadImageAsyncTask(ImageView imageView) {
         if (imageView != null) {
             Drawable drawable = imageView.getDrawable();
             if (drawable instanceof DownloadedDrawable) {
@@ -136,17 +135,16 @@ public class ImageSaver {
         }
     }
 
-    static class LoadImageAsyncTask extends AsyncTask<Void, Void, Bitmap> {
+    class LoadImageAsyncTask extends AsyncTask<Void, Void, Bitmap> {
         WeakReference<ImageView> imageViewRef;  // To not stop garbage collection if imageview is gone
         WeakReference<OnCompleteListener> callerRef;
-        String filename;
-        boolean small;
 
-        LoadImageAsyncTask(ImageView imageView, OnCompleteListener caller, String filename, boolean small) {
+        String filename;
+
+        LoadImageAsyncTask(ImageView imageView, OnCompleteListener caller, String filename) {
             this.imageViewRef = new WeakReference<>(imageView);
             this.callerRef = new WeakReference<>(caller);
             this.filename = filename;
-            this.small = small;
         }
 
         @Override
