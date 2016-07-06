@@ -256,7 +256,7 @@
     </RelativeLayout>
 
     <!--Settings Drawer-->
-    <include layout="@layout/settings_drawer" />
+    <!--<include layout="@layout/settings_drawer" />-->
 
     <!--Splash Screen-->
     <include layout="@layout/splash_screen" />
