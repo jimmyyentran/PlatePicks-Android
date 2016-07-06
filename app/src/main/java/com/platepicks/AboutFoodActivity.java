@@ -145,9 +145,6 @@ public class AboutFoodActivity extends AppCompatActivity
         // Food image
         img = (ImageView) findViewById(R.id.about_image);
 
-        // Load image from the global Application
-        Application app = (Application) getApplication();
-        img.setImageBitmap(app.getImage());
 //        new ImageSaver(AboutFoodActivity.this).
 //                setFileName(item.getFoodId()).
 //                setDirectoryName("images").
@@ -159,6 +156,9 @@ public class AboutFoodActivity extends AppCompatActivity
         origin = getIntent().getStringExtra("origin");
 
         if(origin.equals("main page")) {
+            // Load image from the global Application
+            Application app = (Application) getApplication();
+            img.setImageBitmap(app.getImage());
             aboutButtons.setVisibility(View.VISIBLE);
 //            new ImageSaver(AboutFoodActivity.this).
 //                    setFileName(item.getFoodId()).
@@ -167,6 +167,10 @@ public class AboutFoodActivity extends AppCompatActivity
             Log.d("AboutFoodActivity", "From storage");
         }
         else if(origin.equals("list page")) {
+            new ImageSaver(AboutFoodActivity.this).
+                    setFileName(item.getFoodId()).
+                    setDirectoryName("images").
+                    load(img, this, false);
             item.setClicked(1);
             Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM SET TO CLICKED: " + item.getFoodName() + "::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
