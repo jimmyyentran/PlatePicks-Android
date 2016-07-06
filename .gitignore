@@ -38,6 +38,8 @@ captures/
 .DS_Store
 /build
 /captures
+app/.idea/workspace.xml
+app/.idea/libraries
 
 # Python
 __pycache__/
