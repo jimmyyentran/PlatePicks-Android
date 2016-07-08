@@ -97,6 +97,7 @@ public class SwipeImageFragment extends Fragment {
 
                 if(Build.VERSION.SDK_INT >= 17) {
                     bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
+//                    foodPicture.setBackgroundColor(Color.WHITE);
                 }
                 else {
                     foodPicture.setBackgroundColor(Color.WHITE);

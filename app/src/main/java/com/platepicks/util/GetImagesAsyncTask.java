@@ -52,7 +52,7 @@ public class GetImagesAsyncTask extends AsyncTask<ListItemClass, Void, LinkedLis
 
         for (ListItemClass item : params) {
             Log.d("GetImagesAsyncTask", "Background");
-            Bitmap b = downloadImage(item.getImageUrl());
+            Bitmap b = downloadImage(item.getImageUrl(), 2);
 
             if (b != null) {
                 // Add image to list of successful downloads
@@ -85,8 +85,36 @@ public class GetImagesAsyncTask extends AsyncTask<ListItemClass, Void, LinkedLis
         caller.doSomethingWithDownloadedImages(images);
     }
 
-    // Takes in url and downloads webpage, decoding it into a bitmap
+    /**
+     * No scaling factor is included
+     * @param url
+     * @return
+     */
     Bitmap downloadImage(String url) {
+        return downloadImageScaled(url, 0);
+    }
+
+    /**
+     * If scaling factor is included in constructor
+     * @param url
+     * @param scaleFactor
+     * @return
+     */
+    Bitmap downloadImage(String url, int scaleFactor) {
+        return downloadImageScaled(url, scaleFactor);
+    }
+
+    /**
+     * Takes in url and downloads webpage, decoding it into a bitmap
+     *
+     * @param url
+     * @param scaleFactor : if 0, use automatic scaling which has the side effects of sometimes not
+     *                    scaling image due to algorithm's preference over larger images.
+     *                    if > 0, scale down the iamge by the given factor. Images are guaranteed
+     *                    to be smaller but risk clarity
+     * @return
+     */
+    Bitmap downloadImageScaled(String url, int scaleFactor) {
         Log.d("GetImagesAsyncTask", url);
 
         if (!ConnectionCheck.isConnected(c)) {
@@ -118,40 +146,48 @@ public class GetImagesAsyncTask extends AsyncTask<ListItemClass, Void, LinkedLis
                 baos.write(data, 0, len);
             baos.flush();
 
-            InputStream boundsIn = new ByteArrayInputStream(baos.toByteArray());
             InputStream imageIn = new ByteArrayInputStream(baos.toByteArray());
 
-            // Size in terms of width/height
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(boundsIn, null, options);
-            boundsIn.close();
+            if (scaleFactor == 0) {
+                InputStream boundsIn = new ByteArrayInputStream(baos.toByteArray());
 
-            // Scaling image down to fit the dimensions of the specified imageView
-            int scaledHeight = options.outHeight,
-                scaledWidth = options.outWidth;
-            int sampleSize = 1;     // How much to scale the image down by
+                // Size in terms of width/height
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(boundsIn, null, options);
+                boundsIn.close();
 
-            // Check if height or width of image is greater than those of imageView
-            while (scaledHeight > maxHeight) {
-                Log.d("GetImagesAsyncTask", "Scaling height: " + url + "...");
-                scaledHeight /= 2;
-                scaledWidth /= 2;
-                sampleSize *= 2;
+                // Scaling image down to fit the dimensions of the specified imageView
+                int scaledHeight = options.outHeight,
+                        scaledWidth = options.outWidth;
+                int sampleSize = 1;     // How much to scale the image down by
+
+                // Check if height or width of image is greater than those of imageView
+                while (scaledHeight > maxHeight) {
+                    Log.d("GetImagesAsyncTask", "Scaling height: " + url + "...");
+                    scaledHeight /= 2;
+                    scaledWidth /= 2;
+                    sampleSize *= 2;
+                }
+                while (scaledWidth > maxWidth) {
+                    Log.d("GetImagesAsyncTask", "Scaling width" + url + "...");
+                    scaledHeight /= 2;
+                    scaledWidth /= 2;
+                    sampleSize *= 2;
+                }
+
+                // Resulting sample size is what we use to shrink image
+//            options.inSampleSize = sampleSize;
+                options.inSampleSize = 2;
+
+                Log.d("GetImagesAsyncTask", "width: " + scaledWidth + ", height: " + scaledHeight + " " + url);
+
+                // Decoding image from data to return
+                options.inJustDecodeBounds = false;
+            } else {
+                options.inSampleSize = scaleFactor;
+                options.inJustDecodeBounds = false;
+                Log.d("GetImagesAsyncTask", "Scale Factor: " + scaleFactor);
             }
-            while (scaledWidth > maxWidth) {
-                Log.d("GetImagesAsyncTask", "Scaling width" + url + "...");
-                scaledHeight /= 2;
-                scaledWidth /= 2;
-                sampleSize *= 2;
-            }
-
-            // Resulting sample size is what we use to shrink image
-            options.inSampleSize = sampleSize;
-
-            Log.d("GetImagesAsyncTask", "width: " + scaledWidth + ", height: " + scaledHeight + " " + url);
-
-            // Decoding image from data to return
-            options.inJustDecodeBounds = false;
             image = BitmapFactory.decodeStream(imageIn, null, options);
             imageIn.close();
         } catch (IOException e) {
