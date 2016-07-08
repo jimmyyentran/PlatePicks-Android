@@ -324,7 +324,7 @@ public class AboutFoodActivity extends AppCompatActivity
     }
 
     public void yesHold () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.about_yes_icon);
+        final ImageView yesIcon = (ImageView) findViewById(R.id.about_yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.about_yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.about_yes_shadow);
 
@@ -342,7 +342,7 @@ public class AboutFoodActivity extends AppCompatActivity
     }
 
     public void yesReleased () {
-        final FrameLayout yesIcon = (FrameLayout) findViewById(R.id.about_yes_icon);
+        final ImageView yesIcon = (ImageView) findViewById(R.id.about_yes_icon);
         final ImageView yesCircle = (ImageView) findViewById(R.id.about_yes_circle);
         final ImageView yesShadow = (ImageView) findViewById(R.id.about_yes_shadow);
 
