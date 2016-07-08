@@ -259,7 +259,10 @@
     <!--<include layout="@layout/settings_drawer" />-->
 
     <!--Splash Screen-->
-    <include layout="@layout/splash_screen" />
+    <include layout="@layout/splash_screen"
+        android:layout_alignParentStart="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <!-- The navigation drawer -->
     <android.support.design.widget.NavigationView
