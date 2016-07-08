@@ -18,12 +18,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -31,10 +34,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -107,6 +114,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     DrawerLayout my_drawer = null;              // Drawer layout
     FrameLayout drawer_space = null;
     ImageView fancy_image;
+    NavigationView navigationView;
+    ActionBarDrawerToggle mDrawerToggle;
+    View headerLayout;
 
     List<ListItemClass> listItems = new LinkedList<>();     // Data received from network request
     List<Bitmap> imageList = new LinkedList<>();            // Images downloaded in network request
@@ -323,7 +333,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
         /* initialize radius seekBar and link it to a listener*/
         rad_seekBar = (SeekBar) findViewById(R.id.radius_seekBar);
-        rad_seekBar.setProgress(15);
+//        rad_seekBar.setProgress(15);
         TextView radius_value = (TextView) findViewById(R.id.radius_number);
         radius_value.setText(String.valueOf(rad_seekBar.getProgress()));
         rad_seekBar.setOnSeekBarChangeListener(new rad_seekBar_listener());
@@ -409,38 +419,46 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         splashScreen.setVisibility(View.VISIBLE);
 
         /* Drawer gesture detector */
-        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer1);
-        GestureDetector gd;
-        gd = new GestureDetector(my_drawer.getContext(), new GestureDetector.OnGestureListener() {
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                closeDrawer(my_drawer);
-                return true;
-            }
+        my_drawer = (android.support.v4.widget.DrawerLayout) findViewById(R.id.drawer_layout_fat);
+        navigationView = (NavigationView) findViewById(R.id.nav_view_fat);
 
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return false;
-            }
+        mDrawerToggle = new ActionBarDrawerToggle(this, my_drawer,
+                R.string.drawer_open, R.string.drawer_close);
+        my_drawer.addDrawerListener(mDrawerToggle);
 
-            @Override
-            public void onShowPress(MotionEvent e) {
-            }
 
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return false;
-            }
 
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-            }
-        });
+//        GestureDetector gd;
+//        gd = new GestureDetector(my_drawer.getContext(), new GestureDetector.OnGestureListener() {
+//            @Override
+//            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//                closeDrawer(my_drawer);
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onDown(MotionEvent e) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onShowPress(MotionEvent e) {
+//            }
+//
+//            @Override
+//            public boolean onSingleTapUp(MotionEvent e) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onLongPress(MotionEvent e) {
+//            }
+//        });
 
         /* NavDrawer onClick listeners */
         TextView okBtn = (TextView) findViewById(R.id.types_ok_button);
@@ -873,76 +891,79 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     /* Opens main drawer */
     public void openDrawer(View view) {
-        if (isDrawerOpen)
-            return;
-
-        toggleViews("open");
-        final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
-
-        my_drawer.animate().translationX(0).setDuration(400)
-                .setInterpolator(new DecelerateInterpolator(3.0f))
-                .setListener(new Animator.AnimatorListener() {
-                                 @Override
-                                 public void onAnimationStart(Animator animation) {
-                                     my_drawer.setVisibility(View.VISIBLE);
-                                     dimOverlay.setVisibility(View.VISIBLE);
-                                 }
-
-                                 @Override
-                                 public void onAnimationEnd(Animator animation) {
-
-                                 }
-
-                                 @Override
-                                 public void onAnimationCancel(Animator animation) {
-
-                                 }
-
-                                 @Override
-                                 public void onAnimationRepeat(Animator animation) {
-
-                                 }
-                             });
-        isDrawerOpen = true;
+//        this.openDrawer(view);
+        my_drawer.openDrawer(Gravity.START);
+//        if (isDrawerOpen)
+//            return;
+//
+//        toggleViews("open");
+//        final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
+//
+//        my_drawer.animate().translationX(0).setDuration(400)
+//                .setInterpolator(new DecelerateInterpolator(3.0f))
+//                .setListener(new Animator.AnimatorListener() {
+//                                 @Override
+//                                 public void onAnimationStart(Animator animation) {
+//                                     my_drawer.setVisibility(View.VISIBLE);
+//                                     dimOverlay.setVisibility(View.VISIBLE);
+//                                 }
+//
+//                                 @Override
+//                                 public void onAnimationEnd(Animator animation) {
+//
+//                                 }
+//
+//                                 @Override
+//                                 public void onAnimationCancel(Animator animation) {
+//
+//                                 }
+//
+//                                 @Override
+//                                 public void onAnimationRepeat(Animator animation) {
+//
+//                                 }
+//                             });
+//        isDrawerOpen = true;
     }
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
-        if (!isDrawerOpen)  // Cancel if closed already
-            return;
-
-        toggleViews("close");
-        final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
-        final FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
-
-        my_drawer.animate().translationX(-1 * my_drawer.getWidth()).setDuration(300)
-                .setInterpolator(new DecelerateInterpolator())
-                .setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        dimOverlay.setVisibility(View.GONE);
-                        dimOverlay.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        my_drawer.setVisibility(View.GONE);
-                        if(typesList.getVisibility() == View.VISIBLE)
-                            viewFoodTypeList(my_drawer);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-
-        isDrawerOpen = false;
+        my_drawer.closeDrawer(Gravity.START);
+//        if (!isDrawerOpen)  // Cancel if closed already
+//            return;
+//
+//        toggleViews("close");
+//        final FrameLayout dimOverlay = (FrameLayout) findViewById(R.id.DimOverlay);
+//        final FrameLayout typesList = (FrameLayout) findViewById(R.id.types_list);
+//
+//        my_drawer.animate().translationX(-1 * my_drawer.getWidth()).setDuration(300)
+//                .setInterpolator(new DecelerateInterpolator())
+//                .setListener(new Animator.AnimatorListener() {
+//                    @Override
+//                    public void onAnimationStart(Animator animation) {
+//                        dimOverlay.setVisibility(View.GONE);
+//                        dimOverlay.setVisibility(View.GONE);
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        my_drawer.setVisibility(View.GONE);
+//                        if(typesList.getVisibility() == View.VISIBLE)
+//                            viewFoodTypeList(my_drawer);
+//                    }
+//
+//                    @Override
+//                    public void onAnimationCancel(Animator animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animator animation) {
+//
+//                    }
+//                });
+//
+//        isDrawerOpen = false;
     }
 
     public void toggleViews (String s){
