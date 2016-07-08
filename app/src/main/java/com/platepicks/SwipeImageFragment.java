@@ -184,9 +184,18 @@ public class SwipeImageFragment extends Fragment {
                     public void onAnimationEnd(Animator animation) {
                         flashingBorder.animate().setListener(null);
                         flashingBorder.animate().alpha(0.5f)
-                                .setDuration(300)
+                                .setDuration(250)
                                 .setInterpolator(new DecelerateInterpolator())
-                                .setListener(null);
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        flashingBorder.animate().setListener(null);
+                                        flashingBorder.animate().alpha(0.0f)
+                                                .setDuration(100)
+                                                .setInterpolator(new DecelerateInterpolator())
+                                                .setListener(null);
+                                    }
+                                });
                     }
                 });
     }

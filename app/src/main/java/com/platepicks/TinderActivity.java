@@ -1238,7 +1238,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         yesIcon.animate().scaleX(1f)
-                                .setDuration(400)
+                                .setDuration(350)
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {

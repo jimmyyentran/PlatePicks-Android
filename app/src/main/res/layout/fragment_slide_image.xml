@@ -8,7 +8,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="1dp"
         android:background="@android:color/transparent"
         android:animateLayoutChanges="false">
 
@@ -18,7 +17,7 @@
             android:src="@drawable/theme_light_image_border"
             android:background="@android:color/transparent"
             android:layout_centerVertical="true"
-            android:layout_margin="3dp" />
+            android:layout_margin="7dp" />
 
         <com.platepicks.support.SquareImageButton
             android:layout_width="match_parent"
@@ -38,8 +37,8 @@
             android:layout_alignParentRight="false"
             android:adjustViewBounds="true"
             android:background="@color/dark_red"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_centerVertical="true" />
 
         <com.platepicks.support.SquareImageButton
@@ -50,8 +49,8 @@
             android:layout_alignParentRight="false"
             android:adjustViewBounds="true"
             android:background="@color/dark_red"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_centerVertical="true" />
 
         <com.platepicks.support.SquareImageButton
@@ -65,8 +64,8 @@
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:focusableInTouchMode="true"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_centerVertical="true" />
 
         <LinearLayout
