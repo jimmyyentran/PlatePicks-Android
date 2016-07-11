@@ -14,18 +14,29 @@ import android.util.Log;
 
 import com.amazonaws.mobile.AWSMobileClient;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Application class responsible for initializing singletons and other common components.
  */
 public class Application extends MultiDexApplication {
-
     private final static String LOG_TAG = Application.class.getSimpleName();
+    private static Application singleton;
+
+    public static final String SAVED_LIKED_FOODS = "Saved foods";
+    public ReentrantLock accessList = new ReentrantLock();
+
     Bitmap img = null;
+
+    public static Application getInstance() {
+        return singleton;
+    }
 
     @Override
     public void onCreate() {
         Log.d(LOG_TAG, "Application.onCreate - Initializing application...");
         super.onCreate();
+        singleton = this;
         initializeApplication();
         Log.d(LOG_TAG, "Application.onCreate - Application initialized OK");
     }
@@ -43,6 +54,4 @@ public class Application extends MultiDexApplication {
     Bitmap getImage() {
         return img;
     }
-
-
 }

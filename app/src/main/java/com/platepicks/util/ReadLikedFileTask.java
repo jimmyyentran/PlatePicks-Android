@@ -3,6 +3,7 @@ package com.platepicks.util;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.platepicks.Application;
 import com.platepicks.TinderActivity;
 import com.platepicks.objects.StaticConstants;
 import com.platepicks.objects.ListItemClass;
@@ -20,7 +21,7 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
 
     public ReadLikedFileTask(TinderActivity caller) {
         this.caller = caller;
-        StaticConstants.accessList.lock();
+        Application.getInstance().accessList.lock();
     }
 
 
@@ -32,7 +33,7 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
         StringBuilder builder = new StringBuilder();
 
         try {
-            fis = caller.openFileInput(StaticConstants.SAVED_LIKED_FOODS);
+            fis = caller.openFileInput(Application.SAVED_LIKED_FOODS);
             int c;
 
             while ((c = fis.read()) != -1) {
@@ -69,6 +70,6 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         caller.update_list_number(cnt);
-        StaticConstants.accessList.unlock();
+        Application.getInstance().accessList.unlock();
     }
 }

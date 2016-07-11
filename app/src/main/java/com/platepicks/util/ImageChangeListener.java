@@ -57,7 +57,7 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
             int otherPage;
 
             // Critical section (if request is active)
-            StaticConstants.accessList.lock();
+            Application.getInstance().accessList.lock();
 
                 /* If swiped left (1 -> 0), other page is 2. Otherwise, it's 0. */
             if (imagePager.getCurrentItem() == 0) { // Like
@@ -121,7 +121,7 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
             if (cacheForDatabase.size() >= 6)
                 uploadLikesData();
 
-            StaticConstants.accessList.unlock();
+            Application.getInstance().accessList.unlock();
             // End critical section
 
                 /* The "new image" animation. Only do it if an animation is idle. */

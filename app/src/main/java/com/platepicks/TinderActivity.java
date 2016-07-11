@@ -2,7 +2,7 @@ package com.platepicks;
 
 import android.Manifest;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
+import android.app.*;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -1027,11 +1027,11 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         List<FoodReceive> foodReceives = ConvertToObject.toFoodReceiveList(ob);
 
         // Critical section
-        StaticConstants.accessList.lock();
+        Application.getInstance().accessList.lock();
         Log.d("TinderActivity", "First request done");
         listItems.addAll(ConvertToObject.toListItemClassList(foodReceives));
         requestImages();
-        StaticConstants.accessList.unlock();
+        Application.getInstance().accessList.unlock();
     }
 
     // Called by AWSIntegratorTask if internet request fails
@@ -1046,7 +1046,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     @Override
     public void doSomethingWithDownloadedImages(List<Bitmap> images) {
         // Critical Section: Add images to list here in activity
-        StaticConstants.accessList.lock();
+        Application.getInstance().accessList.lock();
 
         Log.d("TinderActivity", "Finished request");
 
@@ -1070,7 +1070,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         // Reset various variables
         requestMade = false;
         changeSearchButton(false);
-        StaticConstants.accessList.unlock();
+        Application.getInstance().accessList.unlock();
 
         // Remove splash] screen and post first pic
         if (firstRequest) {

@@ -151,14 +151,12 @@ public class AboutFoodActivity extends AppCompatActivity
         origin = getIntent().getStringExtra("origin");
 
         if(origin.equals("main page")) {
+            // Load image from the global Application
+            Application app = (Application) getApplication();
 
-            // Load image from the global Application. In case there is an exception, load the
-            // through internal storage
-            try {
-                Application app = (Application) getApplication();
+            if (app.getImage() != null) {
                 img.setImageBitmap(app.getImage());
-            }catch(Exception e) {
-                Log.e("AboutFoodActivity", e.getMessage());
+            } else {
                 new ImageSaver(AboutFoodActivity.this).
                         setFileName(item.getFoodId()).
                         setDirectoryName("images").
@@ -166,14 +164,9 @@ public class AboutFoodActivity extends AppCompatActivity
             }
 
             aboutButtons.setVisibility(View.VISIBLE);
-//            new ImageSaver(AboutFoodActivity.this).
-//                    setFileName(item.getFoodId()).
-//                    setDirectoryName("images").
-//                    load(img, this);
             Log.d("AboutFoodActivity", "From storage");
         }
         else if(origin.equals("list page")) {
-
             // Load image from storage through AsyncTask
             new ImageSaver(AboutFoodActivity.this).
                     setFileName(item.getFoodId()).

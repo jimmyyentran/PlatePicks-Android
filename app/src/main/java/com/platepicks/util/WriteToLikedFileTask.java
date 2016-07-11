@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.platepicks.Application;
 import com.platepicks.objects.StaticConstants;
 
 import java.io.FileInputStream;
@@ -25,7 +26,7 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void> {
     public WriteToLikedFileTask(Context caller, int mode) {
         this.caller = caller;
         this.mode = mode;
-        StaticConstants.accessList.lock();
+        Application.getInstance().accessList.lock();
     }
 
     @Override
@@ -53,13 +54,13 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        StaticConstants.accessList.unlock();
+        Application.getInstance().accessList.unlock();
     }
 
     void writeToFile(final int mode, String... params) {
         FileOutputStream fos = null;
         try {
-            fos = caller.openFileOutput(StaticConstants.SAVED_LIKED_FOODS, mode);
+            fos = caller.openFileOutput(Application.SAVED_LIKED_FOODS, mode);
 
             for (String p : params) {
                 fos.write(p.getBytes());
@@ -88,7 +89,7 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void> {
 
         FileOutputStream fos = null;
         try {
-            fos = caller.openFileOutput(StaticConstants.SAVED_LIKED_FOODS, Context.MODE_PRIVATE);
+            fos = caller.openFileOutput(Application.SAVED_LIKED_FOODS, Context.MODE_PRIVATE);
             fos.write(file.getBytes());
 
             Log.d("WriteToLikedFileTask", "Finished writing (1)");
@@ -112,7 +113,7 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void> {
         StringBuilder builder = new StringBuilder();
 
         try {
-            fis = caller.openFileInput(StaticConstants.SAVED_LIKED_FOODS);
+            fis = caller.openFileInput(Application.SAVED_LIKED_FOODS);
             int c;
 
             while ((c = fis.read()) != -1) {
@@ -135,6 +136,6 @@ public class WriteToLikedFileTask extends AsyncTask<String, Void, Void> {
     }
 
     void clearFile() {
-        caller.deleteFile(StaticConstants.SAVED_LIKED_FOODS);
+        caller.deleteFile(Application.SAVED_LIKED_FOODS);
     }
 }
