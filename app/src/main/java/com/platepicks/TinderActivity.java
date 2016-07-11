@@ -186,7 +186,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         }
         else {
             Application.getInstance().setLikedData(new ArrayList<ListItemClass>());
-            deleteFile(getLikedFileName());
+            deleteFile(Application.SAVED_LIKED_FOODS);
             System.gc();
             update_list_number(0);
             tapTwice.setText("(tap twice)");
@@ -213,10 +213,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     public int getRadius() {
         return rad_seekBar.getProgress();
-    }
-
-    public String getLikedFileName() {
-        return "Saved foods";
     }
 
     /* onActivityResult() */
@@ -1371,7 +1367,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         StringBuilder builder = new StringBuilder();
 
         try {
-            fis = caller.openFileInput(caller.getLikedFileName());
+            fis = caller.openFileInput(Application.SAVED_LIKED_FOODS);
             int c;
 
             while ((c = fis.read()) != -1) {
