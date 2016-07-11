@@ -150,23 +150,17 @@ public class AboutFoodActivity extends AppCompatActivity
 
         origin = getIntent().getStringExtra("origin");
 
-        if(origin.equals("main page")) {
+        if (origin.equals("main page")) {
             // Load image from the global Application
-            Application app = (Application) getApplication();
+            Application app = Application.getInstance();
 
-            if (app.getImage() != null) {
+            if (app.getImage() != null)
                 img.setImageBitmap(app.getImage());
-            } else {
-                new ImageSaver(AboutFoodActivity.this).
-                        setFileName(item.getFoodId()).
-                        setDirectoryName("images").
-                        load(img, this, false);
-            }
 
             aboutButtons.setVisibility(View.VISIBLE);
             Log.d("AboutFoodActivity", "From storage");
         }
-        else if(origin.equals("list page")) {
+        else if (origin.equals("list page")) {
             // Load image from storage through AsyncTask
             new ImageSaver(AboutFoodActivity.this).
                     setFileName(item.getFoodId()).
@@ -179,7 +173,7 @@ public class AboutFoodActivity extends AppCompatActivity
             aboutButtons.setVisibility(View.GONE);
 //            new GetImagesAsyncTask(this, this, DFLT_IMG_MAX_HEIGHT, DFLT_IMG_MAX_WIDTH)
 //                    .execute(item);
-            Log.d("AboutFoodActivity", "From internet");
+//            Log.d("AboutFoodActivity", "From internet");
         }
 
         RelativeLayout yesButton = (RelativeLayout) findViewById(R.id.about_button_yes);
@@ -214,7 +208,6 @@ public class AboutFoodActivity extends AppCompatActivity
         });
     }
     /* onCreate End */
-
 
     /* OnOptionsItemSelected():
      * The function that is called when a menu option is clicked. If true is returned, we should

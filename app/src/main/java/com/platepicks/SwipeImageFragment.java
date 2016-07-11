@@ -91,10 +91,6 @@ public class SwipeImageFragment extends Fragment {
                 flashingBorder.setAlpha(0.0f);
                 foodPicture.setImageBitmap(image);
 
-                // Set image to global Application class
-                Application app = (Application) getActivity().getApplication();
-                app.setImage(image);
-
                 if(Build.VERSION.SDK_INT >= 17) {
                     bg.setImageBitmap(BlurImageTool.blur(getContext(), image));
 //                    foodPicture.setBackgroundColor(Color.WHITE);
@@ -152,10 +148,8 @@ public class SwipeImageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (item != null) {
-                    new ImageSaver(getContext()).
-                            setFileName(item.getFoodId()).
-                            setDirectoryName("images").
-                            save(image);
+                    // Set image to global Application class
+                    Application.getInstance().setImage(image);
 
                     Intent aboutPage = new Intent(getActivity(), AboutFoodActivity.class);
                     aboutPage.putExtra("key2", item);

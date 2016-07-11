@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -89,10 +90,11 @@ public class LikedListActivity extends AppCompatActivity {
             new WriteToLikedFileTask(this, WriteToLikedFileTask.REPLACE_ALL).execute(array);
         }
         adapter.notifyDataSetChanged();
+
         Intent intent = new Intent(LikedListActivity.this, AboutFoodActivity.class);
         intent.putExtra("key2", item);
         intent.putExtra("origin", "list page");
-        LikedListActivity.this.startActivity(intent);
+        startActivity(intent);
     }
 
     public void backArrow (View view){
