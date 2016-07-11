@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.platepicks.Application;
-import com.platepicks.objects.StaticConstants;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

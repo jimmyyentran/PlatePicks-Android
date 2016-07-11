@@ -17,15 +17,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,14 +33,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -61,7 +56,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.platepicks.objects.StaticConstants;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.support.ConnectivityReceiver;
 import com.platepicks.support.CustomViewPager;
@@ -120,7 +114,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     List<ListItemClass> listItems = new LinkedList<>();     // Data received from network request
     List<Bitmap> imageList = new LinkedList<>();            // Images downloaded in network request
-    ArrayList<ListItemClass> likedData = new ArrayList<>(); // Food liked by user
 
     public ReentrantLock waitForUILock = new ReentrantLock();  // Race condition between first network request and creation of UI
     public ReentrantLock waitForGPSLock = new ReentrantLock(); // Wait for GPS location to be retrieved before making yelp request
@@ -174,15 +167,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         return requestMade;
     }
 
-    public void setLikedData(ArrayList<ListItemClass> likedData) {
-        this.likedData = likedData;
-        ;
-    }
-
-    public void addToLikedData(ListItemClass toAdd) {
-        this.likedData.add(toAdd);
-    }
-
     public void clearLikedData(View view) {
         final TextView tapTwice = (TextView) findViewById(R.id.tap_twice);
 
@@ -201,8 +185,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     });
         }
         else {
-            likedData = null;
-            setLikedData(new ArrayList<ListItemClass>());
+            Application.getInstance().setLikedData(new ArrayList<ListItemClass>());
             deleteFile(getLikedFileName());
             System.gc();
             update_list_number(0);
@@ -246,8 +229,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         switch (requestCode) {
             case (RESULT_LIKED_LIST): {
                 if (resultCode == Activity.RESULT_OK) {
-                    this.likedData = data.getParcelableArrayListExtra(LikedListActivity.LIKED_LIST_TAG);
-
                     int tmp = data.getIntExtra("items clicked", 0);
                     Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::ITEMS CLICKED = " + tmp + ":::::::::::::::::::::::::::::::::::::::::");
                     cnt = cnt - tmp - 1;
@@ -771,7 +752,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public void gotoList(View view) {
         /* Count starts over */
         Intent intent = new Intent(TinderActivity.this, LikedListActivity.class);
-        intent.putParcelableArrayListExtra("key", likedData);
         startActivityForResult(intent, RESULT_LIKED_LIST);
     }
 
@@ -892,7 +872,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     /* Opens main drawer */
     public void openDrawer(View view) {
 //        this.openDrawer(view);
-        my_drawer.openDrawer(Gravity.START);
+        my_drawer.openDrawer(GravityCompat.START);
 //        if (isDrawerOpen)
 //            return;
 //
@@ -928,7 +908,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
-        my_drawer.closeDrawer(Gravity.START);
+        my_drawer.closeDrawer(GravityCompat.START);
 //        if (!isDrawerOpen)  // Cancel if closed already
 //            return;
 //
@@ -1410,7 +1390,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 Log.d("ReadLikedFileTask", s);
             }
 
-            caller.setLikedData(likedData);
+            Application.getInstance().setLikedData(likedData);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

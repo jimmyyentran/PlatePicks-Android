@@ -55,7 +55,7 @@ public class LikedListActivity extends AppCompatActivity {
         likes_title.setTypeface(source_bold);
 
         // Construct the data source
-        data = getIntent().getParcelableArrayListExtra("key");
+        data = Application.getInstance().getLikedData();
 
         // Create the adapter to convert the array to views
         adapter = new ListAdapter(this, data);
@@ -98,7 +98,6 @@ public class LikedListActivity extends AppCompatActivity {
     public void backArrow (View view){
         // set all data to be viewed
         Intent intent = new Intent(LikedListActivity.this, TinderActivity.class);
-        intent.putParcelableArrayListExtra(LIKED_LIST_TAG, data);
         intent.putExtra("items clicked", items_clicked);
         setResult(RESULT_OK, intent);
         finish();

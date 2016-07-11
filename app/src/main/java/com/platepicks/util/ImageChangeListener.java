@@ -5,7 +5,6 @@ import android.support.v4.view.ViewPager;
 
 import com.platepicks.*;
 import com.platepicks.dynamoDB.TableFood;
-import com.platepicks.objects.StaticConstants;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.ListItemClass;
 import com.platepicks.support.CustomViewPager;
@@ -78,7 +77,7 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
                 new WriteToLikedFileTask(caller, WriteToLikedFileTask.ADD_ITEM)
                         .execute(toAdd.getFileString());
 
-                caller.addToLikedData(toAdd);
+                Application.getInstance().addToLikedData(toAdd);
 
                 // Send like to database
                 cacheForDatabase.put(caller.getListItems().get(0).getOriginal(), true);

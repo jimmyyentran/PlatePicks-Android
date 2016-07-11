@@ -13,7 +13,9 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.amazonaws.mobile.AWSMobileClient;
+import com.platepicks.objects.ListItemClass;
 
+import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -26,7 +28,8 @@ public class Application extends MultiDexApplication {
     public static final String SAVED_LIKED_FOODS = "Saved foods";
     public ReentrantLock accessList = new ReentrantLock();
 
-    Bitmap img = null;
+    private Bitmap img = null;
+    private ArrayList<ListItemClass> likedData;
 
     public static Application getInstance() {
         return singleton;
@@ -47,11 +50,23 @@ public class Application extends MultiDexApplication {
         // ...Put any application-specific initialization logic here...
     }
 
-    void setImage(Bitmap img){
+    public void setImage(Bitmap img){
         this.img = img;
     }
 
-    Bitmap getImage() {
+    public Bitmap getImage() {
         return img;
+    }
+
+    public void addToLikedData(ListItemClass toAdd) {
+        this.likedData.add(toAdd);
+    }
+
+    public void setLikedData(ArrayList<ListItemClass> likedData) {
+        this.likedData = likedData;
+    }
+
+    public ArrayList<ListItemClass> getLikedData() {
+        return likedData;
     }
 }

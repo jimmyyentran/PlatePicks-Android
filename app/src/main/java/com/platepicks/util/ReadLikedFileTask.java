@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.platepicks.Application;
 import com.platepicks.TinderActivity;
-import com.platepicks.objects.StaticConstants;
 import com.platepicks.objects.ListItemClass;
 
 import java.io.FileInputStream;
@@ -52,7 +51,7 @@ public class ReadLikedFileTask extends AsyncTask<Void, Void, Void> {
                 Log.d("ReadLikedFileTask", s);
             }
 
-            caller.setLikedData(likedData);
+            Application.getInstance().setLikedData(likedData);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
