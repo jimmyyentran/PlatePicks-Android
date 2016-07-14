@@ -138,6 +138,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public int foodLimit = 3;                       // Number of food per business
     public int firstFoodLimit = 1;                  // Number of foods per business for first call
     public int offset = 0;                          // Number of businesses to offset by in yelp request
+    public int query_method = 1;
     public String gpsLocation;                      // "Latitude, Longitude"
 
     /* yes/no onHold constrictors */

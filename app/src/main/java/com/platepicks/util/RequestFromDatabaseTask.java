@@ -52,7 +52,7 @@ public class RequestFromDatabaseTask extends AsyncTask<Void, Void, Void> {
         Log.d("RequestFromDatabaseTask", "businessLimit: " + String.valueOf(caller.businessLimit));
 
         FoodRequest req = new FoodRequest("", foodLimit, caller.gpsLocation,
-                caller.businessLimit, radius, caller.getAllFoodTypes(), 1, caller.offset);
+                caller.businessLimit, radius, caller.getAllFoodTypes(), 1, caller.offset, caller.query_method);
         new AWSIntegratorAsyncTask()
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "yelpApi2_8", req, caller);
     }
