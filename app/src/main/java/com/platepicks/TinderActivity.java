@@ -25,7 +25,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -68,10 +67,10 @@ import com.platepicks.util.ImageChangeListener;
 import com.platepicks.util.ImageLoaderInterface;
 import com.platepicks.util.ImagePagerAdapter;
 import com.platepicks.objects.ListItemClass;
-import com.platepicks.util.ReadLikedFileTask;
 import com.platepicks.util.RequestFromDatabaseTask;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -150,15 +149,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     /* counter for ClearFavs button */
     int clearCounter = 0;
 
-    // Function: creates list item
-    public ListItemClass createListItem(String foodName) {
-        ListItemClass newItem = new ListItemClass();
-        newItem.setFoodName(foodName);
-        newItem.setRestaurantName("test_restaurant");
-        newItem.setRestaurantAddress("test_address");
-        return newItem;
-    }
-
     public SwipeImageFragment getMainPageFragment() {
         return mainPageFragment;
     }
@@ -185,7 +175,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     });
         }
         else {
-            Application.getInstance().setLikedData(new ArrayList<ListItemClass>());
+            Application.getInstance().clearLikedData();
             deleteFile(Application.SAVED_LIKED_FOODS);
             System.gc();
             update_list_number(0);
@@ -380,9 +370,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         });
 
         /* Create task to load likedData with persistent data */
-        new ReadLikedFileTask(this).execute();
-        //jordansReadLikedFile();
-
+        readLikedFile();
 
         // First batch of images
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
@@ -402,8 +390,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         mDrawerToggle = new ActionBarDrawerToggle(this, my_drawer,
                 R.string.drawer_open, R.string.drawer_close);
         my_drawer.addDrawerListener(mDrawerToggle);
-
-
 
 //        GestureDetector gd;
 //        gd = new GestureDetector(my_drawer.getContext(), new GestureDetector.OnGestureListener() {
@@ -1360,14 +1346,13 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 });
     }
 
-    private void jordansReadLikedFile () {
-        TinderActivity caller = this;
-
+    // Jordan's read
+    private void readLikedFile() {
         FileInputStream fis = null;
         StringBuilder builder = new StringBuilder();
 
         try {
-            fis = caller.openFileInput(Application.SAVED_LIKED_FOODS);
+            fis = openFileInput(Application.SAVED_LIKED_FOODS);
             int c;
 
             while ((c = fis.read()) != -1) {
@@ -1376,17 +1361,16 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
             cnt = 0;
             String[] lines = builder.toString().split("\n");
-            ArrayList<ListItemClass> likedData = new ArrayList<>(lines.length);
+            LinkedList<ListItemClass> likedData = new LinkedList<>();
             for (String s : lines) {
                 ListItemClass item = ListItemClass.createFrom(s);
                 likedData.add(item);
                 if (!item.isClicked())
                     cnt++;
-
-                Log.d("ReadLikedFileTask", s);
             }
 
             Application.getInstance().setLikedData(likedData);
+            update_list_number(cnt);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -1394,7 +1378,10 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 if (fis != null)
                     fis.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                if (e instanceof FileNotFoundException)
+                    Log.d("TinderActivity", "No file yet");
+                else
+                    e.printStackTrace();
             }
         }
     }

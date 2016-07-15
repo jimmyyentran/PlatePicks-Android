@@ -15,10 +15,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.platepicks.Application;
 import com.platepicks.R;
 import com.platepicks.objects.ListItemClass;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -30,18 +32,16 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
     final int DFLT_IMG_MAX_WIDTH = 258, DFLT_IMG_MAX_HEIGHT = 258;
 
     private Context mCtx; //<-- declare a Context reference
-    ArrayList<ListItemClass> data;
+    List<ListItemClass> data;
     LruCache<String,Bitmap> mMemoryCache;
-    ReentrantLock accessCache;
 
-    public ListAdapter(Context context, ArrayList<ListItemClass> data) {
-        super(context, 0, data);
+    public ListAdapter(Context context) {
+        super(context, 0, Application.getInstance().getLikedData());
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);  // maxMemory for LruCache
         final int cacheSize = maxMemory / 8;    // Use 1/8th of the available memory for this memory cache.
 
+        data = Application.getInstance().getLikedData();
         mCtx = context; //<-- fill it with the Context you are passed
-        this.data = data;
-        accessCache = new ReentrantLock();
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
@@ -53,19 +53,15 @@ public class ListAdapter extends ArrayAdapter<ListItemClass>
     }
 
     public Bitmap getBitmapFromMemCache(String key) {
-        accessCache.lock();
-        Bitmap b = mMemoryCache.get(key);
-        accessCache.unlock();
-
-        return b;
+        Log.d("ListAdapter", String.valueOf(key == null));
+        Log.d("ListAdapter", String.valueOf(mMemoryCache == null));
+        return mMemoryCache.get(key);
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        accessCache.lock();
         if (getBitmapFromMemCache(key) == null) {
             mMemoryCache.put(key, bitmap);
         }
-        accessCache.unlock();
     }
 
     public static Bitmap RotateBitmap(Bitmap source, float angle)

@@ -16,28 +16,25 @@ import com.platepicks.util.ListAdapter;
 import com.platepicks.objects.ListItemClass;
 import com.platepicks.util.WriteToLikedFileTask;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by elizamae on 4/18/16.
  */
 public class LikedListActivity extends AppCompatActivity {
-
     /**
      * Creates a list of all liked foods.
      * Add to list when swiped right.
      */
-
-    public static final String LIKED_LIST_TAG = "gohead";
-    public static final String CHANGE_LIST = "change list";
-
     ListAdapter adapter = null;
     int items_clicked;
 
     // Construct the data source
-    ArrayList<ListItemClass> data = new ArrayList<>();
-    ListItemClass item = new ListItemClass();
-    boolean listChanged = false;
+    List<ListItemClass> data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,21 +42,17 @@ public class LikedListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_liked_list);
 
         // font stuff
-        String fontPath = "fonts/Hamburger_Heaven.TTF";
         TextView likes_title = (TextView) findViewById(R.id.likes_title);
 
-        // Loading Font Face
-        Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+        // Loading Font Face, Applying font
         Typeface source_bold = Typeface.createFromAsset(getAssets(), "fonts/SourceSansPro-Bold.otf");
-
-        // Applying font
         likes_title.setTypeface(source_bold);
 
         // Construct the data source
         data = Application.getInstance().getLikedData();
 
         // Create the adapter to convert the array to views
-        adapter = new ListAdapter(this, data);
+        adapter = new ListAdapter(this);
 
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.listview_liked);
@@ -77,17 +70,12 @@ public class LikedListActivity extends AppCompatActivity {
     }
 
     public void gotoAbout(int index) {
-        item = data.get(index);
+        ListItemClass item = data.get(index);
         if(!item.isClicked()) {
             item.setClicked(1);
             ++items_clicked;
 
-            // Change file to account for click
-            String[] array = new String[data.size()];
-            for (int i = 0; i < array.length; i++)
-                array[i] = data.get(i).getFileString();
-
-            new WriteToLikedFileTask(this, WriteToLikedFileTask.REPLACE_ALL).execute(array);
+            new WriteToLikedFileTask(this).execute();
         }
         adapter.notifyDataSetChanged();
 
@@ -108,6 +96,32 @@ public class LikedListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         backArrow(null);
+    }
+
+    void writeToFile() {
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(Application.SAVED_LIKED_FOODS, MODE_PRIVATE);
+
+            for (ListItemClass item : data) {
+                fos.write(item.getFileString().getBytes());
+                fos.write('\n');
+            }
+
+            Log.d("WriteToLikedFileTask", "Finished writing (0)");
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException)
+                Log.e("WriteToLikedFileTask", "File does not exist (0)");
+            else
+                e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 

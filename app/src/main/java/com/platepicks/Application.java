@@ -16,6 +16,8 @@ import com.amazonaws.mobile.AWSMobileClient;
 import com.platepicks.objects.ListItemClass;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -29,7 +31,7 @@ public class Application extends MultiDexApplication {
     public ReentrantLock accessList = new ReentrantLock();
 
     private Bitmap img = null;
-    private ArrayList<ListItemClass> likedData;
+    private LinkedList<ListItemClass> likedData = new LinkedList<>();
 
     public static Application getInstance() {
         return singleton;
@@ -62,11 +64,20 @@ public class Application extends MultiDexApplication {
         this.likedData.add(toAdd);
     }
 
-    public void setLikedData(ArrayList<ListItemClass> likedData) {
-        this.likedData = likedData;
+    public void setLikedData(List<ListItemClass> likedData) {
+        if (likedData instanceof LinkedList) {
+            this.likedData = (LinkedList<ListItemClass>) likedData;
+        } else {
+            this.likedData.clear();
+            this.likedData.addAll(likedData);
+        }
     }
 
-    public ArrayList<ListItemClass> getLikedData() {
+    public List<ListItemClass> getLikedData() {
         return likedData;
+    }
+
+    public void clearLikedData() {
+        this.likedData.clear();
     }
 }

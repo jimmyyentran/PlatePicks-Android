@@ -1,7 +1,9 @@
 package com.platepicks.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.platepicks.*;
 import com.platepicks.dynamoDB.TableFood;
@@ -9,6 +11,9 @@ import com.platepicks.objects.FoodReceive;
 import com.platepicks.objects.ListItemClass;
 import com.platepicks.support.CustomViewPager;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 /* Algorithm for Tinder Image Swiping Infinitely
@@ -73,10 +78,8 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
                         setDirectoryName("images").
                         save(toSend);
 
-                /* Save file to internal storage */
-                new WriteToLikedFileTask(caller, WriteToLikedFileTask.ADD_ITEM)
-                        .execute(toAdd.getFileString());
-
+                /* Save file to internal storage and existing list*/
+                appendToFile(toAdd.getFileString());
                 Application.getInstance().addToLikedData(toAdd);
 
                 // Send like to database
@@ -123,7 +126,7 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
             Application.getInstance().accessList.unlock();
             // End critical section
 
-                /* The "new image" animation. Only do it if an animation is idle. */
+            /* The "new image" animation. Only do it if an animation is idle. */
             imagePager.setCurrentItem(otherPage, false);    /* false = no animation on change */
             imagePager.setCurrentItem(1, true);             /* true = animate */
         }
@@ -152,5 +155,26 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
         }).start();
     }
 
+    void appendToFile(String item) {
+        FileOutputStream fos = null;
+        try {
+            fos = caller.openFileOutput(Application.SAVED_LIKED_FOODS, Context.MODE_PRIVATE);
+            fos.write(item.getBytes());
+            fos.write('\n');
 
+            Log.d("ImageChangeListener", "Finished writing");
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException)
+                Log.e("ImageChangeListener", "File does not exist");
+            else
+                e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
