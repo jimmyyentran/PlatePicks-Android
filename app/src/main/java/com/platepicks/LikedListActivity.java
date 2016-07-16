@@ -8,18 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.platepicks.util.ListAdapter;
 import com.platepicks.objects.ListItemClass;
-import com.platepicks.util.WriteToLikedFileTask;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -77,7 +74,7 @@ public class LikedListActivity extends AppCompatActivity {
 
             // FIXME: HERE
 //            new WriteToLikedFileTask(this).execute();
-            writeToFile(index);
+            writeToClickedFile(index);
         }
         adapter.notifyDataSetChanged();
 
@@ -100,7 +97,7 @@ public class LikedListActivity extends AppCompatActivity {
         backArrow(null);
     }
 
-    void writeToFile(int index) {
+    void writeToClickedFile(int index) {
         FileOutputStream fos = null;
         try {
             fos = openFileOutput(Application.SAVED_CLICKED_FOODS, MODE_APPEND);

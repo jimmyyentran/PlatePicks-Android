@@ -71,6 +71,7 @@ import com.platepicks.util.RequestFromDatabaseTask;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -120,6 +121,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     boolean firstRequest;                               // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
     boolean isDrawerOpen = false;                       // Flag to indicate drawer status
+    boolean saveFileEdited = false;                     // Flag to indicate added clicks or food removed
 
     int cnt = 1;                                    // used for notification count of new liked foods
     boolean triedLocSettingsFlag = false;           // flag to know if app attempted to get location setting enabled
@@ -370,7 +372,12 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         });
 
         /* Create task to load likedData with persistent data */
-        loadSavedFoods();
+        cnt = loadSavedFoods();
+        if (saveFileEdited) {
+            saveChangesLikedFood();
+            saveFileEdited = false;
+        }
+        update_list_number();
 
         // First batch of images
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
@@ -1346,15 +1353,15 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 });
     }
 
-    // Jordan's read
-    private void loadSavedFoods() {
-        // FIXME: Use .contains() in hashset to change items while reading!
+    // Jordan's read function: Now returns count instead of setting it here
+    private int loadSavedFoods() {
         // FIXME: Then write all results to file
         HashSet<String> clicked = readClickedFile();
         deleteFile(Application.SAVED_CLICKED_FOODS);
 
         FileInputStream fis = null;
         StringBuilder builder = new StringBuilder();
+        int cnt = 0;
 
         try {
             fis = openFileInput(Application.SAVED_LIKED_FOODS);
@@ -1363,18 +1370,24 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             while ((c = fis.read()) != -1)
                 builder.append((char) c);
 
-            cnt = 0;
             String[] lines = builder.toString().split("\n");
             LinkedList<ListItemClass> likedData = new LinkedList<>();
+
             for (String s : lines) {
                 ListItemClass item = ListItemClass.createFrom(s);
                 likedData.add(item);
-                if (!item.isClicked())
-                    cnt++;
+
+                if (!item.isClicked()) {
+                    if (clicked != null && clicked.contains(item.getFoodId())) {
+                        item.setClicked(1);
+                        saveFileEdited = true;
+                    } else {
+                        cnt++;
+                    }
+                }
             }
 
             Application.getInstance().setLikedData(likedData);
-            update_list_number(cnt);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -1383,11 +1396,13 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     fis.close();
             } catch (IOException e) {
                 if (e instanceof FileNotFoundException)
-                    Log.d("TinderActivity", "No file yet");
+                    Log.d("TinderActivity", "No saved file yet");
                 else
                     e.printStackTrace();
             }
         }
+
+        return cnt;
     }
 
     HashSet<String> readClickedFile() {
@@ -1412,7 +1427,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             return clickedFoods;
         } catch (IOException e) {
             if (e instanceof FileNotFoundException)
-                Log.d("TinderActivity", "No file yet");
+                Log.d("TinderActivity", "No clicked file yet");
             else
                 e.printStackTrace();
         } finally {
@@ -1425,5 +1440,32 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         }
 
         return null;
+    }
+
+    void saveChangesLikedFood() {
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(Application.SAVED_LIKED_FOODS, MODE_PRIVATE);
+            List<ListItemClass> data = Application.getInstance().getLikedData();
+
+            for (ListItemClass item : data) {
+                fos.write(item.getFileString().getBytes());
+                fos.write('\n');
+            }
+
+            Log.d("TinderActivity", "Finished writing changes");
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException)
+                Log.e("WriteToLikedFileTask", "Liked file does not exist");
+            else
+                e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
