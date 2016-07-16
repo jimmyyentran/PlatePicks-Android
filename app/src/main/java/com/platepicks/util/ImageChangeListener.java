@@ -158,7 +158,7 @@ public class ImageChangeListener extends ViewPager.SimpleOnPageChangeListener {
     void appendToFile(String item) {
         FileOutputStream fos = null;
         try {
-            fos = caller.openFileOutput(Application.SAVED_LIKED_FOODS, Context.MODE_PRIVATE);
+            fos = caller.openFileOutput(Application.SAVED_LIKED_FOODS, Context.MODE_APPEND);
             fos.write(item.getBytes());
             fos.write('\n');
 

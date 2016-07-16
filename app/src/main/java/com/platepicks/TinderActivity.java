@@ -72,7 +72,7 @@ import com.platepicks.util.RequestFromDatabaseTask;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -370,7 +370,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         });
 
         /* Create task to load likedData with persistent data */
-        readLikedFile();
+        loadSavedFoods();
 
         // First batch of images
         waitForGPSLock.lock();  // Ensure that first network request waits for GPS first
@@ -1347,7 +1347,12 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     }
 
     // Jordan's read
-    private void readLikedFile() {
+    private void loadSavedFoods() {
+        // FIXME: Use .contains() in hashset to change items while reading!
+        // FIXME: Then write all results to file
+        HashSet<String> clicked = readClickedFile();
+        deleteFile(Application.SAVED_CLICKED_FOODS);
+
         FileInputStream fis = null;
         StringBuilder builder = new StringBuilder();
 
@@ -1355,9 +1360,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             fis = openFileInput(Application.SAVED_LIKED_FOODS);
             int c;
 
-            while ((c = fis.read()) != -1) {
+            while ((c = fis.read()) != -1)
                 builder.append((char) c);
-            }
 
             cnt = 0;
             String[] lines = builder.toString().split("\n");
@@ -1384,5 +1388,42 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     e.printStackTrace();
             }
         }
+    }
+
+    HashSet<String> readClickedFile() {
+        FileInputStream fis = null;
+        StringBuilder builder = new StringBuilder();
+
+        try {
+            fis = openFileInput(Application.SAVED_CLICKED_FOODS);
+            int c;
+
+            while ((c = fis.read()) != -1)
+                builder.append((char) c);
+
+            String[] lines = builder.toString().split("\n");
+            for (String s : lines)
+                Log.d("Test", s);
+
+            HashSet<String> clickedFoods = new HashSet<>(lines.length);
+            for (String s : lines)
+                clickedFoods.add(s);
+
+            return clickedFoods;
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException)
+                Log.d("TinderActivity", "No file yet");
+            else
+                e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null)
+                    fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 }

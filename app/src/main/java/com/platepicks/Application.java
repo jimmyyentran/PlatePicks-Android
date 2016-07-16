@@ -28,6 +28,7 @@ public class Application extends MultiDexApplication {
     private static Application singleton;
 
     public static final String SAVED_LIKED_FOODS = "Saved foods";
+    public static final String SAVED_CLICKED_FOODS = "Clicked foods";
     public ReentrantLock accessList = new ReentrantLock();
 
     private Bitmap img = null;

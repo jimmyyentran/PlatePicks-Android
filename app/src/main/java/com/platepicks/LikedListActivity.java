@@ -75,7 +75,9 @@ public class LikedListActivity extends AppCompatActivity {
             item.setClicked(1);
             ++items_clicked;
 
-            new WriteToLikedFileTask(this).execute();
+            // FIXME: HERE
+//            new WriteToLikedFileTask(this).execute();
+            writeToFile(index);
         }
         adapter.notifyDataSetChanged();
 
@@ -98,20 +100,17 @@ public class LikedListActivity extends AppCompatActivity {
         backArrow(null);
     }
 
-    void writeToFile() {
+    void writeToFile(int index) {
         FileOutputStream fos = null;
         try {
-            fos = openFileOutput(Application.SAVED_LIKED_FOODS, MODE_PRIVATE);
+            fos = openFileOutput(Application.SAVED_CLICKED_FOODS, MODE_APPEND);
+            fos.write(data.get(index).getFoodId().getBytes());
+            fos.write('\n');
 
-            for (ListItemClass item : data) {
-                fos.write(item.getFileString().getBytes());
-                fos.write('\n');
-            }
-
-            Log.d("WriteToLikedFileTask", "Finished writing (0)");
+            Log.d("LikedListActivity", "Added to clicked list");
         } catch (IOException e) {
             if (e instanceof FileNotFoundException)
-                Log.e("WriteToLikedFileTask", "File does not exist (0)");
+                Log.d("LikedListActivity", "Clicked list does not exist");
             else
                 e.printStackTrace();
         } finally {
