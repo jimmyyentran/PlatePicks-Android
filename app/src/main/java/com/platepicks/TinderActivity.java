@@ -1255,7 +1255,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         }
         */
     }
-    
+
     public void noHeld () {
         final ImageView noIcon = (ImageView) findViewById(R.id.no_icon);
         final ImageView noCircle = (ImageView) findViewById(R.id.no_circle);
@@ -1456,7 +1456,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             Log.d("TinderActivity", "Finished writing changes");
         } catch (IOException e) {
             if (e instanceof FileNotFoundException)
-                Log.e("WriteToLikedFileTask", "Liked file does not exist");
+                Log.e("TinderActivity", "Liked file does not exist");
             else
                 e.printStackTrace();
         } finally {

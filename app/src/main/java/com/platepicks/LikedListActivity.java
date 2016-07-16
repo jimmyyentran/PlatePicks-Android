@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -64,6 +66,18 @@ public class LikedListActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
         items_clicked = 0;
+
+        final EditText deleteField = (EditText) findViewById(R.id.editText);
+        final Button deleteButton = (Button) findViewById(R.id.button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int del = data.size() - 1 - Integer.parseInt(deleteField.getText().toString());
+                writeToDeletedFile(del);
+                data.remove(del);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void gotoAbout(int index) {
@@ -72,8 +86,6 @@ public class LikedListActivity extends AppCompatActivity {
             item.setClicked(1);
             ++items_clicked;
 
-            // FIXME: HERE
-//            new WriteToLikedFileTask(this).execute();
             writeToClickedFile(index);
         }
         adapter.notifyDataSetChanged();
@@ -108,6 +120,29 @@ public class LikedListActivity extends AppCompatActivity {
         } catch (IOException e) {
             if (e instanceof FileNotFoundException)
                 Log.d("LikedListActivity", "Clicked list does not exist");
+            else
+                e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    void writeToDeletedFile(int index) {
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(Application.SAVED_DELETED_FOODS, MODE_APPEND);
+            fos.write(data.get(index).getFoodId().getBytes());
+            fos.write('\n');
+
+            Log.d("LikedListActivity", "Added to deleted list");
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException)
+                Log.d("LikedListActivity", "Deleted list does not exist");
             else
                 e.printStackTrace();
         } finally {
