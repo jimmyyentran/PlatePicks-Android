@@ -87,6 +87,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         LocationListener {
     static public final int MAX_RADIUS = 40000;    // meters
     static public final int LIMIT_WITH_WIFI = 20, LIMIT_WITHOUT_WIFI = 5;
+    static public final int FIRST_LIMIT = 5;
 
     static final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
     static final int REQUEST_PERMISSION_LOCATION = 1;
@@ -117,7 +118,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public ReentrantLock waitForUILock = new ReentrantLock();  // Race condition between first network request and creation of UI
     public ReentrantLock waitForGPSLock = new ReentrantLock(); // Wait for GPS location to be retrieved before making yelp request
     boolean requestMade = false;                        // Flag to indicate making a request
-    boolean firstRequest;                               // Flag to indicate first request
+    public boolean firstRequest = false;                // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
     boolean isDrawerOpen = false;                       // Flag to indicate drawer status
     boolean saveFileEdited = false;                     // Flag to indicate added clicks or food removed
@@ -127,7 +128,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     boolean haveLocationUpdatesFlag = false;        // flag for location updates
     public int businessLimit = LIMIT_WITHOUT_WIFI;  // Number of businesses returned per request
     public int foodLimit = 3;                       // Number of food per business
+    public int firstFoodLimit = 1;                  // Number of foods per business for first call
     public int offset = 0;                          // Number of businesses to offset by in yelp request
+    public int query_method = 1;
     public String gpsLocation;                      // "Latitude, Longitude"
 
     /* yes/no onHold constrictors */

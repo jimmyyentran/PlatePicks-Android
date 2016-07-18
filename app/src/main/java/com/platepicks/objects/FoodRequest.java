@@ -12,6 +12,7 @@ public class FoodRequest {
     public String category_filter;
     public Integer sort;
     private Integer offset;
+    private Integer query_method;
 
     // https://www.yelp.com/developers/documentation/v2/search_api
     // Daniel's notes:
@@ -20,7 +21,7 @@ public class FoodRequest {
     public FoodRequest(String query, Integer food_per_business,
                        String location, Integer number_of_businesses,
                        Integer radius_filter, String category_filter,
-                       Integer sort_option, Integer offset){
+                       Integer sort_option, Integer offset, Integer query_method){
         this.term = query;
         this.food_per_business = food_per_business;
         this.ll = location;
@@ -29,6 +30,7 @@ public class FoodRequest {
         this.category_filter = category_filter;
         this.sort = sort_option;
         this.offset = offset;
+        this.query_method = query_method;
         String delims = "[,]";
         String[] tokens = location.split(delims);
     }
