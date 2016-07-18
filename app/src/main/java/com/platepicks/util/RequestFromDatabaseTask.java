@@ -31,11 +31,11 @@ public class RequestFromDatabaseTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        int radius = convertMilesToMeters(Math.min(caller.getRadius(), caller.MAX_RADIUS));
+        int radius = convertMilesToMeters(Math.min(caller.getRadius(), TinderActivity.MAX_RADIUS));
         if (ConnectionCheck.isWifi(caller))
-            caller.businessLimit = caller.LIMIT_WITH_WIFI;
+            caller.businessLimit = TinderActivity.LIMIT_WITH_WIFI;
         else
-            caller.businessLimit = caller.LIMIT_WITHOUT_WIFI;
+            caller.businessLimit = TinderActivity.LIMIT_WITHOUT_WIFI;
 
         Log.d("RequestFromDatabaseTask", "businessLimit: " + String.valueOf(caller.businessLimit));
 

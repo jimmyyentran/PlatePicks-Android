@@ -53,7 +53,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.platepicks.objects.FoodReceive;
 import com.platepicks.support.ConnectivityReceiver;
@@ -86,12 +85,12 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
-    public final int MAX_RADIUS = 40000;    // meters
-    public final int LIMIT_WITH_WIFI = 20, LIMIT_WITHOUT_WIFI = 5;
+    static public final int MAX_RADIUS = 40000;    // meters
+    static public final int LIMIT_WITH_WIFI = 20, LIMIT_WITHOUT_WIFI = 5;
 
-    final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
-    final int REQUEST_PERMISSION_LOCATION = 1;
-    final int RESULT_LIKED_LIST = 1, RESULT_SETTINGS_LOCATION = 2;
+    static final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
+    static final int REQUEST_PERMISSION_LOCATION = 1;
+    static final int RESULT_LIKED_LIST = 1, RESULT_SETTINGS_LOCATION = 2;
 
     GoogleApiClient mGoogleApiClient;   // Google location client
     LocationRequest mLocationRequest;   // Google location request
@@ -210,12 +209,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     /* onActivityResult() */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d("onActivityResult", "BEFORE SWITCH CASES: " + requestCode);
-
         switch (requestCode) {
-            case (RESULT_LIKED_LIST): {
+            case (RESULT_LIKED_LIST):
                 if (resultCode == Activity.RESULT_OK) {
                     int tmp = data.getIntExtra("items clicked", 0);
                     Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::ITEMS CLICKED = " + tmp + ":::::::::::::::::::::::::::::::::::::::::");
@@ -225,17 +220,11 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     update_list_number();
                 }
                 break;
-            }
-            case (RESULT_SETTINGS_LOCATION): {
-                Log.d("TinderActivity", "Resolution for location");
-                if (resultCode == Activity.RESULT_OK) {
-                    Log.d("TinderActivity", "Approved!");
-                }
+            case (RESULT_SETTINGS_LOCATION):
                 handleLocationSetting();
                 break;
-            }
-            case (99): {
-                Log.d("onActivityResult", "INISED CASE #99");
+            case (99):
+                Log.d("onActivityResult", "INSIDE CASE #99");
                 if(resultCode == 0){
 
                 }
@@ -258,16 +247,11 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     }, 400);
                 }
                 break;
-            }
         }
-
-        Log.d("onActivityResult", "AFTER SWITCH CASES");
-
     }
 
     /* onCreate():
-     * First function called by Android when creating an activity
-     * */
+     * First function called by Android when creating an activity */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -294,7 +278,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
         /* Ensure that we start on page 1, the middle page with the image. */
         imagePager.setCurrentItem(1, false);
-//        imagePager.getCurrentItem();            // Ensure item is defined
 
         /* Listen for change in swipe animation's current state */
         changeListener = new ImageChangeListener(this, imagePager);
@@ -398,38 +381,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 R.string.drawer_open, R.string.drawer_close);
         my_drawer.addDrawerListener(mDrawerToggle);
 
-//        GestureDetector gd;
-//        gd = new GestureDetector(my_drawer.getContext(), new GestureDetector.OnGestureListener() {
-//            @Override
-//            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//                closeDrawer(my_drawer);
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onDown(MotionEvent e) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onShowPress(MotionEvent e) {
-//            }
-//
-//            @Override
-//            public boolean onSingleTapUp(MotionEvent e) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onLongPress(MotionEvent e) {
-//            }
-//        });
-
         /* NavDrawer onClick listeners */
         TextView okBtn = (TextView) findViewById(R.id.types_ok_button);
         TextView clearFavBtn = (TextView) findViewById(R.id.reset_list);
@@ -460,8 +411,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     @Override
     protected void onStart() {
-        mGoogleApiClient.connect();
         super.onStart();
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -570,23 +521,13 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             public void onResult(@NonNull LocationSettingsResult result) {
                 Log.d("TinderActivity", "In callback");
                 final Status status = result.getStatus();
-                final LocationSettingsStates settingsStates = result.getLocationSettingsStates();
 
                 switch (status.getStatusCode()) {
                     // Location settings are satisfied
                     case LocationSettingsStatusCodes.SUCCESS:
-                        if (!setLocation()) {
-                            // Permission not given: should not happen
-                            if (!isLocationPermitted()) {
-                                Log.e("TinderActivity", "Handling location setting but no " +
-                                        "permission was given");
-                                askForUserLocation();
-                            } else {
-                                Log.d("TinderActivity", "Location not set, waiting for callback");
-                                startLocationUpdates();
-                                // FIXME: Wait for callback
-//                                askForUserLocation();
-                            }
+                        if (!setFastLocation()) {
+                            Log.d("TinderActivity", "Location not set, waiting for callback");
+                            startLocationUpdates();
                         }
                         break;
                     // Location settings are not satisfied, but this can be fixed
@@ -625,7 +566,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     // Retrieves location and sets it to gpsLocation
     // Returns true if location successfully retrieved and gpsLocation is set
     // Returns false if there is no permission or last known location
-    boolean setLocation() {
+    boolean setFastLocation() {
         // All location settings are satisfied. The client can
         // initialize location requests here.
         // Get location coordinates
@@ -645,12 +586,11 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                     + String.valueOf(mLastLocation.getLongitude());
 
             // Location succeeded, release lock
-            if (waitForGPSLock.isHeldByCurrentThread())
+            if (waitForGPSLock.isLocked())
                 waitForGPSLock.unlock();
             return true;
         }
 
-        Log.d("TinderActivity", "last location was null");
         return false;
     }
 
@@ -658,26 +598,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         Toast.makeText(this, "Using Riverside for default", Toast.LENGTH_SHORT).show();
         gpsLocation = "33.7175, -117.8311"; // FIXME: Default is riverside
 
-        if (waitForGPSLock.isHeldByCurrentThread())
+        if (waitForGPSLock.isLocked())
             waitForGPSLock.unlock();
-
-        // FIXME: if getting location fails
-//        if (gpsLocation != null) {
-        // Location succeeded, release lock
-//            if (waitForGPSLock.isHeldByCurrentThread())
-//                waitForGPSLock.unlock();
-//        } else {
-//            onNoLocationGiven();
-//        }
-    }
-
-    void onNoLocationGiven() {
-        try {
-            throw new Exception("NO LOCATION AT ALL and NO PLAN");
-        } catch (Exception e) {
-            e.printStackTrace();
-            finish();
-        }
     }
 
     // Creates location request for database request
@@ -1014,12 +936,11 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     // Called by GetImagesAsyncTask to return list of bitmaps
     @Override
     public void doSomethingWithDownloadedImages(List<Bitmap> images) {
-        // Critical Section: Add images to list here in activity
-        Application.getInstance().accessList.lock();
-
         Log.d("TinderActivity", "Finished request");
 
         if (images != null && !images.isEmpty()) {
+            // Critical Section: Add images to list here in activity
+            Application.getInstance().accessList.lock();
             // Put images into list of images
             imageList.addAll(images);
 
@@ -1031,6 +952,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             }
 
             imagePager.setSwiping(true);
+            Application.getInstance().accessList.unlock();
         } else {
             Log.e("TinderActivity", "Request failed");
             mainPageFragment.changeText(SwipeImageFragment.OUT_OF_IMG);
@@ -1039,7 +961,6 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         // Reset various variables
         requestMade = false;
         changeSearchButton(false);
-        Application.getInstance().accessList.unlock();
 
         // Remove splash] screen and post first pic
         if (firstRequest) {
@@ -1060,19 +981,21 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     @Override
     public void onConnected(Bundle bundle) {
-        // Currently, just want 1 location. If statement avoids another location on return to
-        // activity and repeat onConnected
+        // Currently, just want 1 location. Check if gpsLocation exists to avoid another location on
+        // return to activity and repeat of onConnected
         if (gpsLocation == null) {
             if (!isLocationPermitted())
                 askForLocationPermission();
             else
                 handleLocationSetting();
+        } else if (waitForGPSLock.isLocked()) {
+            waitForGPSLock.unlock();
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.e("TinderActivity", "Error on connecting for location");
     }
 
     @Override

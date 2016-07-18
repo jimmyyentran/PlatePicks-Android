@@ -39,9 +39,6 @@ public class ImagePagerAdapter extends FragmentStatePagerAdapter {
         arguments.putInt(SwipeImageFragment.PAGE_POSITION, position);
         imageFragment.setArguments(arguments);
 
-//        if (position == 1 && !caller.isMainPageFragmentSet())
-//            caller.setMainPageFragment(imageFragment);
-
         return imageFragment;
     }
 
