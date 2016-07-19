@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -118,13 +117,13 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
 
         // handle if food has been clicked or not
         if (!item.isClicked()) {
-            Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM NOT CLICKED BEFORE::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+            Log.d("ListSwipeAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM NOT CLICKED BEFORE::::::::::::::::::::::::::::::::::::::::::::::::::::::");
             viewHolder.foodImg.setAlpha(1.0f);
             viewHolder.fname.setAlpha(1.0f);
             viewHolder.rname.setAlpha(1.0f);
         }
         else {
-            Log.d("ListAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM CLICKED BEFORE::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+            Log.d("ListSwipeAdapter", "::::::::::::::::::::::::::::::::::::::::::::::::::::::ITEM CLICKED BEFORE::::::::::::::::::::::::::::::::::::::::::::::::::::::");
             viewHolder.foodImg.setAlpha(0.5f);
             viewHolder.fname.setAlpha(0.5f);
             viewHolder.rname.setAlpha(0.5f);
@@ -155,8 +154,8 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
     }
 
     Bitmap getBitmapFromMemCache(String key) {
-        Log.d("ListAdapter", String.valueOf(key == null));
-        Log.d("ListAdapter", String.valueOf(mMemoryCache == null));
+        Log.d("ListSwipeAdapter", String.valueOf(key == null));
+        Log.d("ListSwipeAdapter", String.valueOf(mMemoryCache == null));
         return mMemoryCache.get(key);
     }
 

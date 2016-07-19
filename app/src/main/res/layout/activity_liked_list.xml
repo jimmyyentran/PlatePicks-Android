@@ -13,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="50dp"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -85,23 +85,5 @@
 
     </RelativeLayout>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_below="@+id/toolbar_tinder"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete #"
-        android:id="@+id/button"
-        android:layout_below="@+id/toolbar_tinder"
-        android:layout_toRightOf="@+id/editText"
-        android:layout_toEndOf="@+id/editText" />
     <!--Top Checker Border-->
 </RelativeLayout>

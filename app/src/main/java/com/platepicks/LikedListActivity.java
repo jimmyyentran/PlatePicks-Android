@@ -8,12 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.platepicks.util.ListAdapter;
 import com.platepicks.objects.ListItemClass;
 import com.platepicks.util.ListSwipeAdapter;
 
@@ -65,18 +62,6 @@ public class LikedListActivity extends AppCompatActivity {
         adapter = new ListSwipeAdapter(this);
         listView.setAdapter(adapter);
         items_clicked = 0;
-
-//        final EditText deleteField = (EditText) findViewById(R.id.editText);
-//        final Button deleteButton = (Button) findViewById(R.id.button);
-//        deleteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int del = data.size() - 1 - Integer.parseInt(deleteField.getText().toString());
-//                writeToDeletedFile(del);
-//                data.remove(del);
-//                adapter.notifyDataSetChanged();
-//            }
-//        });
     }
 
     public void gotoAbout(int index) {
