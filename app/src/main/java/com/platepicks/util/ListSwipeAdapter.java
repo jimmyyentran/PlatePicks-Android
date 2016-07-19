@@ -1,6 +1,7 @@
 package com.platepicks.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
+import com.platepicks.AboutFoodActivity;
 import com.platepicks.Application;
 import com.platepicks.R;
 import com.platepicks.objects.ListItemClass;
@@ -31,6 +33,8 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
     List<ListItemClass> data;
     LruCache<String,Bitmap> mMemoryCache;
 
+    int items_clicked;
+
     public ListSwipeAdapter(Context context) {
         this.context = context;
         this.data = Application.getInstance().getLikedData();
@@ -45,6 +49,8 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
                 return bitmap.getByteCount() / 1024;
             }
         };
+
+        this.items_clicked = 0;
     }
 
     @Override
@@ -69,6 +75,14 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
             SwipeLayout swipeLayout =  (SwipeLayout) convertView.findViewById(R.id.swipe_item);
             swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);  // How swipe is shown
             swipeLayout.setClickToClose(true);                      // Clicks close the swipe layout
+            swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewHolder viewHolder = (ViewHolder) v.getTag();
+                    if (viewHolder != null)
+                        gotoAbout(viewHolder.pos);
+                }
+            });
 
             // lookup view for data population
             TextView fname = (TextView) convertView.findViewById(R.id.fname);
@@ -86,6 +100,7 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
             viewHolder.rname = rname;
             viewHolder.foodImg = foodImg;
             convertView.setTag(viewHolder);
+            swipeLayout.getSurfaceView().setTag(viewHolder);
             delete.setTag(viewHolder);
         }
 
@@ -153,6 +168,10 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
             imageView.setImageBitmap(RotateBitmap(b, 0));
     }
 
+    public int getItemsClicked() {
+        return items_clicked;
+    }
+
     Bitmap getBitmapFromMemCache(String key) {
         Log.d("ListSwipeAdapter", String.valueOf(key == null));
         Log.d("ListSwipeAdapter", String.valueOf(mMemoryCache == null));
@@ -195,6 +214,29 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
         }
     }
 
+    void writeToClickedFile(int index) {
+        FileOutputStream fos = null;
+        try {
+            fos = context.openFileOutput(Application.SAVED_CLICKED_FOODS, Context.MODE_APPEND);
+            fos.write(data.get(index).getFoodId().getBytes());
+            fos.write('\n');
+
+            Log.d("LikedListActivity", "Added to clicked list");
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException)
+                Log.d("LikedListActivity", "Clicked list does not exist");
+            else
+                e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     // Returns index
     public void deleteItem(View view) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
@@ -204,6 +246,22 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
         writeToDeletedFile(del);                    // Add food id to delete log
         data.remove(del);                           // Remove food listItemClass
         notifyDataSetChanged();                     // Notify adapter to refill views
+    }
+
+    public void gotoAbout(int index) {
+        ListItemClass item = data.get(index);
+        if(!item.isClicked()) {
+            item.setClicked(1);
+            ++items_clicked;
+
+            writeToClickedFile(index);
+        }
+        notifyDataSetChanged();
+
+        Intent intent = new Intent(context, AboutFoodActivity.class);
+        intent.putExtra("key2", item);
+        intent.putExtra("origin", "list page");
+        context.startActivity(intent);
     }
 
     static class ViewHolder {
