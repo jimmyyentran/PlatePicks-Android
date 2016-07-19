@@ -32,15 +32,27 @@ public class RequestFromDatabaseTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         int radius = convertMilesToMeters(Math.min(caller.getRadius(), caller.MAX_RADIUS));
-        if (ConnectionCheck.isWifi(caller))
+
+        //First request use FIRST_LIMIT to reduce user delay. The subsequent requests use the
+        //original settings
+
+        int foodLimit;
+
+        if (caller.firstRequest) {
+            caller.businessLimit = caller.FIRST_LIMIT;
+            foodLimit = caller.firstFoodLimit;
+        } else if (ConnectionCheck.isWifi(caller)) {
             caller.businessLimit = caller.LIMIT_WITH_WIFI;
-        else
+            foodLimit = caller.foodLimit;
+        } else {
             caller.businessLimit = caller.LIMIT_WITHOUT_WIFI;
+            foodLimit = caller.foodLimit;
+        }
 
         Log.d("RequestFromDatabaseTask", "businessLimit: " + String.valueOf(caller.businessLimit));
 
-        FoodRequest req = new FoodRequest("", caller.foodLimit, caller.gpsLocation,
-                caller.businessLimit, radius, caller.getAllFoodTypes(), 1, caller.offset);
+        FoodRequest req = new FoodRequest("", foodLimit, caller.gpsLocation,
+                caller.businessLimit, radius, caller.getAllFoodTypes(), 1, caller.offset, caller.query_method);
         new AWSIntegratorAsyncTask()
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "yelpApi2_8", req, caller);
     }

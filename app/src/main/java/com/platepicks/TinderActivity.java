@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -94,6 +95,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         LocationListener {
     public final int MAX_RADIUS = 40000;    // meters
     public final int LIMIT_WITH_WIFI = 20, LIMIT_WITHOUT_WIFI = 5;
+    public final int FIRST_LIMIT = 5;
 
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
     final int REQUEST_PERMISSION_LOCATION = 1;
@@ -125,7 +127,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     public ReentrantLock waitForUILock = new ReentrantLock();  // Race condition between first network request and creation of UI
     public ReentrantLock waitForGPSLock = new ReentrantLock(); // Wait for GPS location to be retrieved before making yelp request
     boolean requestMade = false;                        // Flag to indicate making a request
-    boolean firstRequest;                               // Flag to indicate first request
+    public boolean firstRequest = false;                // Flag to indicate first request
     boolean placeholderIsPresent = false;               // Flag to indicate out of images
     boolean isDrawerOpen = false;                       // Flag to indicate drawer status
 
@@ -134,7 +136,9 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     boolean haveLocationUpdatesFlag = false;        // flag for location updates
     public int businessLimit = LIMIT_WITHOUT_WIFI;  // Number of businesses returned per request
     public int foodLimit = 3;                       // Number of food per business
+    public int firstFoodLimit = 1;                  // Number of foods per business for first call
     public int offset = 0;                          // Number of businesses to offset by in yelp request
+    public int query_method = 1;
     public String gpsLocation;                      // "Latitude, Longitude"
 
     /* yes/no onHold constrictors */
@@ -892,7 +896,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     /* Opens main drawer */
     public void openDrawer(View view) {
 //        this.openDrawer(view);
-        my_drawer.openDrawer(Gravity.START);
+        my_drawer.openDrawer(GravityCompat.START);
 //        if (isDrawerOpen)
 //            return;
 //
@@ -928,7 +932,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
-        my_drawer.closeDrawer(Gravity.START);
+        my_drawer.closeDrawer(GravityCompat.START);
 //        if (!isDrawerOpen)  // Cancel if closed already
 //            return;
 //
@@ -1032,6 +1036,10 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         listItems.addAll(ConvertToObject.toListItemClassList(foodReceives));
         requestImages();
         StaticConstants.accessList.unlock();
+
+        // Immediately after first batch of images, should request for a new search
+            //TODO: Do new search here
+//        if(firstRequest)
     }
 
     // Called by AWSIntegratorTask if internet request fails
