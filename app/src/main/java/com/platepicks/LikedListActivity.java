@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.platepicks.util.ListAdapter;
 import com.platepicks.objects.ListItemClass;
+import com.platepicks.util.ListSwipeAdapter;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,7 +30,7 @@ public class LikedListActivity extends AppCompatActivity {
      * Creates a list of all liked foods.
      * Add to list when swiped right.
      */
-    ListAdapter adapter = null;
+    ListSwipeAdapter adapter = null;
     int items_clicked;
 
     // Construct the data source
@@ -50,12 +51,8 @@ public class LikedListActivity extends AppCompatActivity {
         // Construct the data source
         data = Application.getInstance().getLikedData();
 
-        // Create the adapter to convert the array to views
-        adapter = new ListAdapter(this);
-
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.listview_liked);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -64,20 +61,22 @@ public class LikedListActivity extends AppCompatActivity {
             }
         });
 
+        // Create the adapter to convert the array to views
+        adapter = new ListSwipeAdapter(this);
         listView.setAdapter(adapter);
         items_clicked = 0;
 
-        final EditText deleteField = (EditText) findViewById(R.id.editText);
-        final Button deleteButton = (Button) findViewById(R.id.button);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int del = data.size() - 1 - Integer.parseInt(deleteField.getText().toString());
-                writeToDeletedFile(del);
-                data.remove(del);
-                adapter.notifyDataSetChanged();
-            }
-        });
+//        final EditText deleteField = (EditText) findViewById(R.id.editText);
+//        final Button deleteButton = (Button) findViewById(R.id.button);
+//        deleteButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int del = data.size() - 1 - Integer.parseInt(deleteField.getText().toString());
+//                writeToDeletedFile(del);
+//                data.remove(del);
+//                adapter.notifyDataSetChanged();
+//            }
+//        });
     }
 
     public void gotoAbout(int index) {
@@ -153,6 +152,13 @@ public class LikedListActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void deleteItem(View view) {
+        int del = (int) view.getTag();
+        writeToDeletedFile(del);
+        data.remove(del);
+        adapter.notifyDataSetChanged();
     }
 }
 
