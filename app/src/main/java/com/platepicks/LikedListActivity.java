@@ -131,34 +131,8 @@ public class LikedListActivity extends AppCompatActivity {
         }
     }
 
-    void writeToDeletedFile(int index) {
-        FileOutputStream fos = null;
-        try {
-            fos = openFileOutput(Application.SAVED_DELETED_FOODS, MODE_APPEND);
-            fos.write(data.get(index).getFoodId().getBytes());
-            fos.write('\n');
-
-            Log.d("LikedListActivity", "Added to deleted list");
-        } catch (IOException e) {
-            if (e instanceof FileNotFoundException)
-                Log.d("LikedListActivity", "Deleted list does not exist");
-            else
-                e.printStackTrace();
-        } finally {
-            try {
-                if (fos != null)
-                    fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void deleteItem(View view) {
-        int del = (int) view.getTag();
-        writeToDeletedFile(del);
-        data.remove(del);
-        adapter.notifyDataSetChanged();
+        adapter.deleteItem(view);
     }
 }
 

@@ -19,6 +19,9 @@ import com.platepicks.Application;
 import com.platepicks.R;
 import com.platepicks.objects.ListItemClass;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -68,16 +71,14 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
             swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);  // How swipe is shown
             swipeLayout.setClickToClose(true);                      // Clicks close the swipe layout
 
-            // font stuff
-            Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/SourceSansPro-Black.otf");
-
             // lookup view for data population
             TextView fname = (TextView) convertView.findViewById(R.id.fname);
             TextView rname = (TextView) convertView.findViewById(R.id.rname);
             ImageView foodImg = (ImageView) convertView.findViewById(R.id.list_food_picture);
             ImageView delete = (ImageView) convertView.findViewById(R.id.delete_item);
 
-            // set font
+            // font stuff
+            Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/SourceSansPro-Black.otf");
             fname.setTypeface(tf);
 
             viewHolder = new ViewHolder();
@@ -85,15 +86,9 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
             viewHolder.fname = fname;
             viewHolder.rname = rname;
             viewHolder.foodImg = foodImg;
-            viewHolder.delete = delete;
-            viewHolder.isOpen = false;
             convertView.setTag(viewHolder);
+            delete.setTag(viewHolder);
         }
-
-        if (viewHolder.isOpen)
-            viewHolder.swipeLayout.open(false, false);
-        else
-            viewHolder.swipeLayout.close(false, false);
 
         // populate the data into the template view using the data object
         viewHolder.fname.setText(item.getFoodName());
@@ -118,8 +113,8 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
             viewHolder.foodImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
 
-        // Give imageButton the index of view's item for delete button
-        viewHolder.delete.setTag(pos);
+        // Set index of view's item for delete button
+        viewHolder.pos = pos;
 
         // handle if food has been clicked or not
         if (!item.isClicked()) {
@@ -178,13 +173,46 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
+    void writeToDeletedFile(int index) {
+        FileOutputStream fos = null;
+        try {
+            fos = context.openFileOutput(Application.SAVED_DELETED_FOODS, Context.MODE_APPEND);
+            fos.write(data.get(index).getFoodId().getBytes());
+            fos.write('\n');
+
+            Log.d("LikedListActivity", "Added to deleted list");
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException)
+                Log.d("LikedListActivity", "Deleted list does not exist");
+            else
+                e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Returns index
+    public void deleteItem(View view) {
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
+        int del = viewHolder.pos;
+
+        viewHolder.swipeLayout.close(true, false); // Close view first
+        writeToDeletedFile(del);                    // Add food id to delete log
+        data.remove(del);                           // Remove food listItemClass
+        notifyDataSetChanged();                     // Notify adapter to refill views
+    }
+
     static class ViewHolder {
         SwipeLayout swipeLayout;
         TextView fname;
         TextView rname;
         ImageView foodImg;
-        ImageView delete;
 
-        boolean isOpen;
+        int pos;
     }
 }
