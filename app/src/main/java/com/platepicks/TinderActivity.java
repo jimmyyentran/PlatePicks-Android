@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -48,6 +49,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.mobile.AWSMobileClient;
+import com.amazonaws.mobileconnectors.amazonmobileanalytics.AnalyticsEvent;
+import com.amazonaws.mobileconnectors.amazonmobileanalytics.EventClient;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -94,6 +98,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         LocationListener {
     public final int MAX_RADIUS = 40000;    // meters
     public final int LIMIT_WITH_WIFI = 20, LIMIT_WITHOUT_WIFI = 5;
+    private static final String LOG_TAG = TinderActivity.class.getSimpleName();
 
     final int DFLT_IMG_MAX_WIDTH = 1000, DFLT_IMG_MAX_HEIGHT = 1000;
     final int REQUEST_PERMISSION_LOCATION = 1;
@@ -313,6 +318,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 .build();
         createLocationRequest();
 
+        final AWSMobileClient awsMobileClient = AWSMobileClient.defaultMobileClient();
+
         /* XML Layout: selecting which file to set as layout */
         setContentView(R.layout.fresh_and_trendy);
 
@@ -496,18 +503,34 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     @Override
     protected void onResume() {
+        Log.d(LOG_TAG, "onResume");
         if (connectionRx != null)
             registerReceiver(connectionRx, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         super.onResume();
+
+        // pause/resume Mobile Analytics collection
+        final AWSMobileClient awsMobileClient = AWSMobileClient.defaultMobileClient();
+        awsMobileClient.handleOnResume();
     }
 
     @Override
     protected void onPause() {
+        Log.d(LOG_TAG, "onPause");
         if (connectionRx != null)
             unregisterReceiver(connectionRx);
         stopLocationUpdates();
+
         super.onPause();
+
+        // get reference to the global AWSMobileClient
+        final AWSMobileClient awsMobileClient = AWSMobileClient.defaultMobileClient();
+
+        // submit all tracking events
+        awsMobileClient.getMobileAnalyticsManager().getEventClient().submitEvents();
+
+        // pause/resume Mobile Analytics collection
+        awsMobileClient.handleOnResume();
     }
 
     @Override
@@ -892,7 +915,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
     /* Opens main drawer */
     public void openDrawer(View view) {
 //        this.openDrawer(view);
-        my_drawer.openDrawer(Gravity.START);
+        my_drawer.openDrawer(GravityCompat.START);
 //        if (isDrawerOpen)
 //            return;
 //
@@ -928,7 +951,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     /* Closes main drawer */
     public void closeDrawer(View view) {
-        my_drawer.closeDrawer(Gravity.START);
+        my_drawer.closeDrawer(GravityCompat.START);
 //        if (!isDrawerOpen)  // Cancel if closed already
 //            return;
 //
@@ -1285,6 +1308,8 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             //mp.start();
         }
         */
+
+//        generatePressedButtonEvent(true);
     }
     
     public void noHeld () {
@@ -1357,7 +1382,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         }
         */
 
-
+//        generatePressedButtonEvent(false);
     }
 
     public void borderFlash (String color){
@@ -1421,5 +1446,23 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
                 e.printStackTrace();
             }
         }
+    }
+
+    private void generatePressedButtonEvent(boolean yes_or_no) {
+        Log.d("TinderActivity", "Generating Button Pressed event...");
+
+        final EventClient eventClient =
+                AWSMobileClient.defaultMobileClient().getMobileAnalyticsManager().getEventClient();
+
+        final AnalyticsEvent ButtonPressedEvent = eventClient.createEvent("ButtonPressed");
+
+        if(yes_or_no)
+            ButtonPressedEvent.addAttribute("Type", "Yes");
+        else
+            ButtonPressedEvent.addAttribute("Type", "No");
+
+        eventClient.recordEvent(ButtonPressedEvent);
+        eventClient.submitEvents();
+//        showAlertMessageForEvent(event);
     }
 }
