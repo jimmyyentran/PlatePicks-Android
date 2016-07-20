@@ -216,7 +216,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             case (RESULT_LIKED_LIST):
                 if (resultCode == Activity.RESULT_OK) {
                     int tmp = data.getIntExtra("items clicked", 0);
-                    Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::ITEMS CLICKED = " + tmp + ":::::::::::::::::::::::::::::::::::::::::");
+                    Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::ITEMS CLICKED = " + tmp + ", CNT = " + cnt + ":::::::::::::::::::::::::::::::::::::::::");
                     cnt = cnt - tmp - 1;
                     Log.d("TinderActivity", ":::::::::::::::::::::::::::::::::::::::::NEW CNT = " + cnt + ":::::::::::::::::::::::::::::::::::::::::");
 
@@ -654,7 +654,7 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
             notification_number.setPadding(0, 0, 0, 4);
         }
 
-        cnt++;  // Increment cnt after call (only called by imageChangeListener
+        cnt++;  // Increment cnt after call (only called by imageChangeListener)
     }
 
     public void update_list_number(int cnt) {

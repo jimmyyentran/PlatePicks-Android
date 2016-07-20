@@ -242,8 +242,11 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         int del = viewHolder.pos;
 
-        viewHolder.swipeLayout.close(true, false); // Close view first
+        viewHolder.swipeLayout.close(true, false);  // Close view first
         writeToDeletedFile(del);                    // Add food id to delete log
+
+        if (!data.get(del).isClicked())             // Decrement new items
+            ++items_clicked;
         data.remove(del);                           // Remove food listItemClass
         notifyDataSetChanged();                     // Notify adapter to refill views
     }
@@ -255,8 +258,8 @@ public class ListSwipeAdapter extends BaseSwipeAdapter implements ImageSaver.OnC
             ++items_clicked;
 
             writeToClickedFile(index);
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
 
         Intent intent = new Intent(context, AboutFoodActivity.class);
         intent.putExtra("key2", item);
