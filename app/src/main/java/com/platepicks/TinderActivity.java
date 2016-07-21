@@ -1281,9 +1281,12 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
     // Jordan's read function: Now returns count instead of setting it here
     private int loadSavedFoods() {
-        // FIXME: Then write all results to file
-        HashSet<String> clicked = readClickedFile();
-        deleteFile(Application.SAVED_CLICKED_FOODS);
+        HashSet<String> clicked = readFile(Application.SAVED_CLICKED_FOODS);
+        HashSet<String> deleted = readFile(Application.SAVED_DELETED_FOODS);
+        if (clicked != null)
+            deleteFile(Application.SAVED_CLICKED_FOODS);
+        if (deleted != null)
+            deleteFile(Application.SAVED_DELETED_FOODS);
 
         FileInputStream fis = null;
         StringBuilder builder = new StringBuilder();
@@ -1301,15 +1304,20 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
 
             for (String s : lines) {
                 ListItemClass item = ListItemClass.createFrom(s);
-                likedData.add(item);
 
-                if (!item.isClicked()) {
-                    if (clicked != null && clicked.contains(item.getFoodId())) {
-                        item.setClicked(1);
-                        saveFileEdited = true;
-                    } else {
-                        cnt++;
+                if (deleted != null && deleted.contains(item.getFoodId())) {
+                    saveFileEdited = true;  // Don't add to list
+                } else {
+                    if (!item.isClicked()) {
+                        if (clicked != null && clicked.contains(item.getFoodId())) {
+                            item.setClicked(1);
+                            saveFileEdited = true;
+                        } else {
+                            cnt++;
+                        }
                     }
+
+                    likedData.add(item);
                 }
             }
 
@@ -1331,12 +1339,12 @@ public class TinderActivity extends AppCompatActivity implements AWSIntegratorIn
         return cnt;
     }
 
-    HashSet<String> readClickedFile() {
+    HashSet<String> readFile(String clickOrDeleteFile) {
         FileInputStream fis = null;
         StringBuilder builder = new StringBuilder();
 
         try {
-            fis = openFileInput(Application.SAVED_CLICKED_FOODS);
+            fis = openFileInput(clickOrDeleteFile);
             int c;
 
             while ((c = fis.read()) != -1)
